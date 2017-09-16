@@ -72,6 +72,10 @@ public class ImageSharpener implements IColorScheme {
     }
    }
   }
+  // Canny edge detection stage here begin
+  // sharpenedMap is the resource
+  
+  // Canny edge detection stage here end
  }
 
  /**
