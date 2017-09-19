@@ -7,7 +7,7 @@ public class Node implements Comparable < Node > {
 
  private int x;
  private int y;
- private double distToCenter = 10000.0;
+ private double distToCenter = Double.MAX_VALUE;
  private boolean isBottleneck = false;
  private HashSet < Node > adjacentNodes;
  private ArrayList < Pixel > mask; //these are copies of Pixels from noded;

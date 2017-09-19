@@ -57,7 +57,6 @@ public class NodeFinder implements IColorScheme {
    iteratorRound.reset();
    iteratorRound.setImageResource(sharpened);
 
-
    for (int x = lookAheadAndBack + 1; x < width - (lookAheadAndBack + 1); x++) {
     for (int y = lookAheadAndBack + 1; y < height - (lookAheadAndBack + 1); y++) {
 
@@ -173,7 +172,7 @@ public class NodeFinder implements IColorScheme {
        centerGravityX = sumX / maximusNodes.size();
        centerGravityY = sumY / maximusNodes.size();
 
-       double minDist = 10000.0;
+       double minDist = Double.MAX_VALUE;
 
        //select one of maximusNodes and add it to nodes;
 

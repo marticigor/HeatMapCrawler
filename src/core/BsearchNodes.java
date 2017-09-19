@@ -9,7 +9,7 @@ public class BsearchNodes {
  private int middle;
  private int currentY;
 
- int counterForUpDownSearch = 1;
+ int counterUpDownSearch = 1;
  Node returning;
  Node iterated;
  
@@ -40,20 +40,20 @@ public class BsearchNodes {
    //now it is sure that nodes.get(middle).getY() = y
 
    returning = nodes.get(middle);
-   counterForUpDownSearch = 1;
+   counterUpDownSearch = 1;
 
    if (returning.getX() == x) return returning;
    else {
 
-    while (middle - counterForUpDownSearch >= 0 && middle + counterForUpDownSearch < nodes.size()) {
+    while (middle - counterUpDownSearch >= 0 && middle + counterUpDownSearch < nodes.size()) {
 
-     iterated = nodes.get(middle - counterForUpDownSearch);
+     iterated = nodes.get(middle - counterUpDownSearch);
      if (iterated.getY() == y && iterated.getX() == x) return iterated;
 
-     iterated = nodes.get(middle + counterForUpDownSearch);
+     iterated = nodes.get(middle + counterUpDownSearch);
      if (iterated.getY() == y && iterated.getX() == x) return iterated;
 
-     counterForUpDownSearch++;
+     counterUpDownSearch++;
     }
 
    }

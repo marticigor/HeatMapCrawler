@@ -15,7 +15,7 @@ public class IteratorTester {
         
         for (Pixel iterated : ip){
         
-            System.out.println("iterovany pixel x y "+ iterated.getX()+" "+iterated.getY());
+            System.out.println("pixel x y "+ iterated.getX()+" "+iterated.getY());
         
         }        
     }

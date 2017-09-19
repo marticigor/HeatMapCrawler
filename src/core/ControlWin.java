@@ -18,7 +18,7 @@ public class ControlWin implements Runnable {
  private JTextField textField_2;
  private JTextField textField_3;
 
- private int valueOfDev, valueOfLook, valueOfSurface;
+ private int devi, look, surface;
 
  
  //TODO DI for defaults
@@ -96,11 +96,11 @@ public class ControlWin implements Runnable {
    @Override
    public void mouseClicked(MouseEvent e) {
 
-    valueOfDev = Integer.parseInt(textField_1.getText());
-    valueOfLook = Integer.parseInt(textField_2.getText());
-    valueOfSurface = Integer.parseInt(textField_3.getText());
+    devi = Integer.parseInt(textField_1.getText());
+    look = Integer.parseInt(textField_2.getText());
+    surface = Integer.parseInt(textField_3.getText());
 
-    Runner runner = new Runner(valueOfDev, valueOfLook, valueOfSurface);
+    Runner runner = new Runner(devi, look, surface);
     Thread forked = new Thread(runner);
     forked.start();
    }

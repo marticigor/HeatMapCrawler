@@ -295,7 +295,7 @@ public class AdjacencyFinder implements IColorScheme {
   toSizes = (maskSize - 1) / 2;
 
   if (!doMask && (maskSize != (int) Math.sqrt(n.getMask().size()))) {
-   throw new RuntimeException("Mask size problem." + n.getMask().size()); //normally this would be a custom exception
+   throw new RuntimeException("Mask size problem." + n.getMask().size());
   }
   if (!doMask) retrievedMask = n.getMask();
 

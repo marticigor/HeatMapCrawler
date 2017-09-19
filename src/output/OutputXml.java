@@ -17,29 +17,28 @@ import java.util.*;
 
 public class OutputXml {
 
-	private Document outputDocument;
-	private String filenameOutput = "stravaHeatMap.gpx";
-	private String trackName = "heatExp";
-	private static final String URI = "http://www.topografix.com/GPX/1/1";
-	
-	private ArrayList <Trackpoint> track;
-	
-	
-	private Element mainRootElement;
-	private Element nameElement;
-	private Element trackElement;
-	private Element trackSeqElement;
-	private Element trackpointElement;
-	
-	public OutputXml (ArrayList <Trackpoint> track) {
-	   this.track = track;
-	}
-	
+    private Document outputDocument;
+    private String filenameOutput = "stravaHeatMap.gpx";
+    private String trackName = "heatExp";
+    private static final String URI = "http://www.topografix.com/GPX/1/1";
+
+    private ArrayList <Trackpoint> track;
+    
+    private Element mainRootElement;
+    private Element nameElement;
+    private Element trackElement;
+    private Element trackSeqElement;
+    private Element trackpointElement;
+
+    public OutputXml (ArrayList <Trackpoint> track) {
+        this.track = track;
+    }
+
   /**
-   *  
+   *
    */
   public void composeOutputDoc() throws ParserConfigurationException{
-	   
+
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
     dbf.setNamespaceAware(true);
@@ -81,7 +80,7 @@ public class OutputXml {
   }
 	
   /**
-  * 
+  *
   */
   public void writeOutputFile()throws TransformerException{
 
