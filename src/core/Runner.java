@@ -143,8 +143,8 @@ public class Runner implements Runnable {
   /**
 	 * 
 	 */
-	private static final long serialVersionUID = 8116076238536681371L;
-final int xFromIncl;
+ private static final long serialVersionUID = 8116076238536681371L;
+  final int xFromIncl;
   final int xToExcl;
 
   final int yFromIncl;

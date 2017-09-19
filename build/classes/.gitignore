@@ -1,5 +1,2 @@
-/core/
-/ifaces/
-/lib_duke/
-/output/
-/path_find/
+/core
+/lib_duke
