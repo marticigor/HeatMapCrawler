@@ -1,5 +1,6 @@
 package core.image_filters;
 
+import core.image_filters.filter_utils.ChunksOrWhole;
 import ifaces.IColorScheme;
 import ifaces.IImageProcesor;
 import lib_duke.ImageResource;
@@ -7,37 +8,35 @@ import lib_duke.Pixel;
 
 public class Sharpen implements IImageProcesor, IColorScheme {
 
-    private int widthFrom;
-    private int widthTo;
-    private int heightFrom;
-    private int heightTo;
     private int borderSharpenStage;
     private int devToMakeItValidRoutable;
-    private boolean wholePicture;
+    private boolean wholeImage;
+    private boolean debug;
+    private int [] args;//first 4 always chunk, maybe dummy
 
-    public Sharpen(boolean boolArg, int...intArgs) {
-        this.wholePicture = boolArg;
-        if (intArgs.length != 6) throw new RuntimeException("Arguments length");
-        widthFrom = intArgs[0];
-        widthTo = intArgs[1];
-        heightFrom = intArgs[2];
-        heightTo = intArgs[3];
+    public Sharpen(boolean w, boolean d, int...intArgs) {
+        this.wholeImage = w;
+        this.debug = d;
+        if (intArgs.length != 6) throw new RuntimeException("Arguments length"); 
+        this.args = intArgs;
         borderSharpenStage = intArgs[4];
         devToMakeItValidRoutable = intArgs[5];
 
-        for (int i: intArgs) System.out.println("Args in Sharpen: " + i);
-
+        if (debug) for (int i: intArgs) System.out.println("Args in Sharpen: " + i);
     }
-
+    /**
+     * 
+     */
     @Override
-    public void proces(ImageResource in , ImageResource out) {
+    public void doYourThing(ImageResource in , ImageResource out) {
 
-        widthFrom = (wholePicture) ? 0 : widthFrom;
-        widthTo = (wholePicture) ? in .getWidth() : widthTo;
-
-        heightFrom = (wholePicture) ? 0 : heightFrom;
-        heightTo = (wholePicture) ? in .getHeight() : heightTo;
-
+        int [] values = ChunksOrWhole.decide(args, wholeImage, in.getWidth(), in.getHeight());
+        
+        int widthFrom = values[0];
+        int widthTo = values[1];
+        int heightFrom = values[2];
+        int heightTo = values[3];    	
+        
         Pixel outP;
         Pixel inP;
         int valueOfGray;
@@ -69,6 +68,7 @@ public class Sharpen implements IImageProcesor, IColorScheme {
                 }
             }
         }
+        if(debug)System.out.println("CHUNK PROCESSED " + System.currentTimeMillis());
     }
 
     private int avg;

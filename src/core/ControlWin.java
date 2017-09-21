@@ -17,6 +17,12 @@ public class ControlWin implements Runnable {
  private JTextField textField_1;
  private JTextField textField_2;
  private JTextField textField_3;
+ private JTextField textField_4;
+ private JTextField textField_5;
+ private JTextField textField_6;
+ private JTextField textField_7;
+ private JTextField textField_8;
+ private JTextField textField_9;
 
  private int devi, look, surface;
 
@@ -32,16 +38,39 @@ public class ControlWin implements Runnable {
  private static final String lookAheadAndBack = "3";
  private static final String surfaceLimit = "46";
  //
+ private static final String param4 = "param4";
+ private static final String param5 = "param5";
+ private static final String param6 = "param6";
+ private static final String param7 = "param7";
+ private static final String param8 = "param8";
+ private static final String param9 = "param9";
  //
  //
  //
-
+ //
+ private JFrame frame;
+ 
+ private void decorateTF(JTextField tf){
+	  tf.setBorder(new EmptyBorder(10, 10, 10, 10));
+	  tf.setHorizontalAlignment(SwingConstants.CENTER);
+	  frame.getContentPane().add(tf);
+	  tf.setColumns(10);
+ }
+ private void decorateL(JLabel lb){
+	  lb.setBorder(new EmptyBorder(10, 10, 10, 10));
+	  lb.setHorizontalAlignment(SwingConstants.CENTER);
+	  lb.setToolTipText("toolTip");
+	  frame.getContentPane().add(lb);
+ }
+ 
  public void run() {
 
+  //
+	 
   System.out.println("ControlWin is EDT " + SwingUtilities.isEventDispatchThread());
 
-  JFrame frame = new JFrame("Controls");
-  Dimension def = new Dimension(260, 320);
+  frame = new JFrame("Controls");
+  Dimension def = new Dimension(260, 820);
   Dimension min = new Dimension(80, 160);
   frame.setSize(def);
   frame.setMinimumSize(min);
@@ -52,50 +81,74 @@ public class ControlWin implements Runnable {
   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
   JLabel label1 = new JLabel("dev to make it valid routable");
-  label1.setBorder(new EmptyBorder(10, 10, 10, 10));
-  label1.setHorizontalAlignment(SwingConstants.CENTER);
-  label1.setToolTipText("toolTip1");
-  frame.getContentPane().add(label1);
+  decorateL(label1);
 
   textField_1 = new JTextField();
   textField_1.setText(devToMakeItValidRoutable); //default for dev to make it valid routable
-  textField_1.setBorder(new EmptyBorder(10, 10, 10, 10));
-  textField_1.setHorizontalAlignment(SwingConstants.CENTER);
-  frame.getContentPane().add(textField_1);
-  textField_1.setColumns(10);
+  decorateTF(textField_1);
 
   JLabel label2 = new JLabel("look ahead and back");
-  label2.setBorder(new EmptyBorder(10, 10, 10, 10));
-  label2.setHorizontalAlignment(SwingConstants.CENTER);
-  label2.setToolTipText("toolTip2");
-  frame.getContentPane().add(label2);
+  decorateL(label2);
 
   textField_2 = new JTextField();
   textField_2.setText(lookAheadAndBack); //default for look ahead and back
-  textField_2.setBorder(new EmptyBorder(10, 10, 10, 10));
-  textField_2.setHorizontalAlignment(SwingConstants.CENTER);
-  frame.getContentPane().add(textField_2);
-  textField_2.setColumns(10);
+  decorateTF(textField_2);
 
   JLabel label3 = new JLabel("surface limit");
-  label3.setBorder(new EmptyBorder(10, 10, 10, 10));
-  label3.setHorizontalAlignment(SwingConstants.CENTER);
-  label3.setToolTipText("toolTip3");
-  frame.getContentPane().add(label3);
+  decorateL(label3);
 
   textField_3 = new JTextField();
   textField_3.setText(surfaceLimit); //default for surface limit
-  textField_3.setBorder(new EmptyBorder(10, 10, 10, 10));
-  textField_3.setHorizontalAlignment(SwingConstants.CENTER);
-  frame.getContentPane().add(textField_3);
-  textField_3.setColumns(10);
+  decorateTF(textField_3);
+  
+  JLabel label4 = new JLabel("param4");
+  decorateL(label4);
 
+  textField_4 = new JTextField();
+  textField_4.setText(param4);
+  decorateTF(textField_4);
+  
+  JLabel label5 = new JLabel("param5");
+  decorateL(label5);
+  
+  textField_5 = new JTextField();
+  textField_5.setText(param5);
+  decorateTF(textField_5);
+
+  JLabel label6 = new JLabel("param6");
+  decorateL(label6);
+  
+  textField_6 = new JTextField();
+  textField_6.setText(param6);
+  decorateTF(textField_6);
+  
+  JLabel label7 = new JLabel("param7");
+  decorateL(label7);
+
+  textField_7 = new JTextField();
+  textField_7.setText(param7);
+  decorateTF(textField_7);
+  
+  JLabel label8 = new JLabel("param8");
+  decorateL(label8);
+  
+  textField_8 = new JTextField();
+  textField_8.setText(param8);
+  decorateTF(textField_8);
+
+  JLabel label9 = new JLabel("param9");
+  decorateL(label9);
+  
+  textField_9 = new JTextField();
+  textField_9.setText(param9);
+  decorateTF(textField_9);
+  
   JButton button1 = new JButton("OK");
   button1.setBorder(new EmptyBorder(10, 10, 10, 10));
   button1.addMouseListener(new MouseAdapter() {
    @Override
    public void mouseClicked(MouseEvent e) {
-
+    
     devi = Integer.parseInt(textField_1.getText());
     look = Integer.parseInt(textField_2.getText());
     surface = Integer.parseInt(textField_3.getText());
