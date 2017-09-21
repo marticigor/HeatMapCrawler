@@ -1,0 +1,77 @@
+        
+        //TODO write a decoratorFactory that uses reflection to instantiate
+        // so no duplicate clumsy code here
+        
+        //testing playground here
+        
+        @SuppressWarnings("rawtypes")
+		Class thisStage = TaskSharpen.class;
+        Class mockClass = mock.getClass();
+        
+        System.out.println("EQUALS " + (thisStage == mockClass));
+        
+        @SuppressWarnings({ "rawtypes" })
+		Class superClass = thisStage.getSuperclass();
+        @SuppressWarnings("rawtypes")
+		Class[] interfaces = thisStage.getInterfaces();
+        /*
+        NOTE: Only the interfaces specifically declared implemented
+        by a given class is returned. If a superclass of
+        the class implements an interface, but the class doesn't specifically
+        state that it also implements that interface,
+        that interface will not be returned in the array.
+        Even if the class in practice implements that interface, because the superclass does. 
+        */
+        @SuppressWarnings("rawtypes")
+		Constructor[] constructors = mockClass.getConstructors();
+        System.out.println("REFLECTION TRAINING");
+        for(Constructor c : constructors)System.out.println("CONSTRUCTOR -- " + c);
+        try {
+        	
+			@SuppressWarnings("rawtypes")
+			Constructor con = mockClass.getConstructor(
+					core.ImagePreprocesor.class, Integer.class,Integer.class,Integer.class,Integer.class);
+	        sharpenTask[0] = (TaskSharpen) con.newInstance(ip, 1,11,2,12);
+	        System.out.println(sharpenTask[0]);
+	        
+        } catch (NoSuchMethodException | SecurityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        try {
+			System.out.println(Class.forName(thisStage.getName()));
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+java.lang.NoSuchMethodException: core.Runner$TaskSharpen.<init>(core.ImagePreprocesor, java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.Integer)REFLECTION TRAINING
+CONSTRUCTOR -- public core.Runner$TaskSharpen(core.Runner,core.ImagePreprocesor,java.lang.Integer,java.lang.Integer,java.lang.Integer,java.lang.Integer)
+CONSTRUCTOR -- public core.Runner$TaskSharpen(core.Runner,java.lang.Integer)
+class core.Runner$TaskSharpen
+
+
+        TaskSharpen mock = new TaskSharpen(1);
+        Class mockClass = mock.getClass();
+        @SuppressWarnings("rawtypes")
+		Constructor[] constructors = mockClass.getConstructors();
+        System.out.println("REFLECTION TRAINING");
+        for(Constructor c : constructors)System.out.println("CONSTRUCTOR -- " + c);
+        
+        //boolean stopHere = true;
+        //if (stopHere) throw new RuntimeException("BALL_OUT_OF_PLAYGROUND");
+		
+        
