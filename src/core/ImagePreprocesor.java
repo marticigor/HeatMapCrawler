@@ -1,5 +1,6 @@
 package core;
 
+import core.image_filters.CannyEdgeDetection;
 import core.image_filters.Sharpen;
 import ifaces.IColorScheme;
 import ifaces.IImageProcesor;
@@ -15,7 +16,9 @@ public class ImagePreprocesor implements IColorScheme {
     private final int devToMakeItValidRoutable; //80;
     private final int borderAtSharpenStage;
 
-    public ImagePreprocesor(int deviation, int border) {
+    private boolean visual, debug;
+    
+    public ImagePreprocesor(int deviation, int border, boolean visual, boolean debug) {
         this.devToMakeItValidRoutable = deviation;
         this.borderAtSharpenStage = border;
 
@@ -29,6 +32,9 @@ public class ImagePreprocesor implements IColorScheme {
         procesedImageResourceStage1 = new ImageResource(w, h);
         procesedImageResourceStage2 = new ImageResource(w, h);
         procesedImageResourceStage3 = new ImageResource(w, h);
+        
+        this.visual = visual;
+        this.debug = debug;
     }
 
     public int getX() {
@@ -39,9 +45,14 @@ public class ImagePreprocesor implements IColorScheme {
     }
 
     /**
-     *
+     * 
+     * @param widthFrom
+     * @param widthTo
+     * @param heightFrom
+     * @param heightTo
+     * @param wholePicture - so no params needed, only dummies
      */
-    public void proces(int widthFrom,
+    public void procesSharpen(int widthFrom,
         int widthTo,
         int heightFrom,
         int heightTo,
@@ -49,6 +60,7 @@ public class ImagePreprocesor implements IColorScheme {
 
         IImageProcesor sharpen = new Sharpen(
             wholePicture,
+            debug,
             widthFrom,
             widthTo,
             heightFrom,
@@ -56,9 +68,16 @@ public class ImagePreprocesor implements IColorScheme {
             borderAtSharpenStage,
             devToMakeItValidRoutable
         );
-        sharpen.proces(inputImageResource, procesedImageResourceStage1);
+        if(debug | visual) System.out.println(this.getClass().toString() + " call " + "sharpen.proces");
+        sharpen.doYourThing(inputImageResource, procesedImageResourceStage1);
     }
 
+    
+    public void procesGaussian(){
+    	CannyEdgeDetection canny = new CannyEdgeDetection();
+    	canny.doYourThing(procesedImageResourceStage1, procesedImageResourceStage2);
+    }
+    
     /**
      *
      */
