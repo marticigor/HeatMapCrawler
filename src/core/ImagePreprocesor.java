@@ -1,6 +1,6 @@
 package core;
 
-import core.image_filters.CannyEdgeDetection;
+import core.image_filters.GaussianBlur;
 import core.image_filters.Sharpen;
 import ifaces.IColorScheme;
 import ifaces.IImageProcesor;
@@ -52,7 +52,8 @@ public class ImagePreprocesor implements IColorScheme {
      * @param heightTo
      * @param wholePicture - so no params needed, only dummies
      */
-    public void procesSharpen(int widthFrom,
+    public void procesSharpen(
+    	int widthFrom,
         int widthTo,
         int heightFrom,
         int heightTo,
@@ -72,16 +73,38 @@ public class ImagePreprocesor implements IColorScheme {
         sharpen.doYourThing(inputImageResource, procesedImageResourceStage1);
     }
 
-    
-    public void procesGaussian(){
-    	CannyEdgeDetection canny = new CannyEdgeDetection();
-    	canny.doYourThing(procesedImageResourceStage1, procesedImageResourceStage2);
+    /**
+     * 
+     * @param widthFrom
+     * @param widthTo
+     * @param heightFrom
+     * @param heightTo
+     * @param wholePicture
+     */
+    public void procesGaussian(
+    		int widthFrom,
+            int widthTo,
+            int heightFrom,
+            int heightTo,
+            boolean wholePicture){
+
+    	IImageProcesor gaussian = new GaussianBlur(
+    			wholePicture,
+    			debug,
+                widthFrom,
+                widthTo,
+                heightFrom,
+                heightTo,
+                borderAtSharpenStage
+    			);
+    	
+    	gaussian.doYourThing(procesedImageResourceStage1, procesedImageResourceStage2);
     }
     
     /**
      *
      */
     public ImageResource getProcesed() {
-        return procesedImageResourceStage1;
+        return procesedImageResourceStage2;
     }
 }

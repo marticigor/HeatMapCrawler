@@ -63,7 +63,7 @@ public class NodeFinder implements IColorScheme {
      p = sharpened.getPixel(x, y);
 
      if (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]) {
-
+    	 
       for (int xIn = x - lookAheadAndBack; xIn < x + lookAheadAndBack; xIn++) {
        for (int yIn = y - lookAheadAndBack; yIn < y + lookAheadAndBack; yIn++) {
 

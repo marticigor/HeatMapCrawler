@@ -1,5 +1,6 @@
 package core.image_filters;
 
+import core.image_filters.filter_utils.ChunksNotMessedAssertion;
 import core.image_filters.filter_utils.ChunksOrWhole;
 import ifaces.IColorScheme;
 import ifaces.IImageProcesor;
@@ -25,24 +26,21 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
     public void doYourThing(ImageResource in , ImageResource out) {
 
         int borderG = Gaussian.BORDER_GAUS_5;
+
+        int[] values = ChunksOrWhole.decide(args, wholeImage, in .getWidth(), in .getHeight());
         final int xSize = in .getWidth();
         final int ySize = in .getHeight();
-        boolean halt;
-        int[] values = ChunksOrWhole.decide(args, wholeImage, in .getWidth(), in .getHeight());
+        boolean halt = ChunksNotMessedAssertion.assertOK(xSize, ySize, values, borderSharpenStage);
+        if (halt) throw new RuntimeException("chunks messed");
+
         int widthFrom = values[0];
-        halt = (widthFrom != 0 && widthFrom < borderG) ? true : false;
         widthFrom = (widthFrom == 0) ? borderG : widthFrom;
         int widthTo = values[1];
-        halt = (widthTo != xSize && widthTo > xSize - borderG) ? true : false;
         widthTo = (widthTo == xSize) ? xSize - borderG : widthTo;
         int heightFrom = values[2];
-        halt = (heightFrom != 0 && heightFrom < borderG) ? true : false;
         heightFrom = (heightFrom == 0) ? borderG : heightFrom;
         int heightTo = values[3];
-        halt = (heightTo != xSize && heightTo > xSize - borderG) ? true : false;
         heightTo = (heightTo == ySize) ? ySize - borderG : heightTo;
-
-        if (halt) throw new RuntimeException("chunks messed");
 
         Pixel pixelOut, matrixPixel;
 
@@ -63,6 +61,11 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
 
         final int MAX = 255;
 
+        int minXreached = Integer.MAX_VALUE;
+        int maxXreached = Integer.MIN_VALUE;
+        int minYreached = Integer.MAX_VALUE;
+        int maxYreached = Integer.MIN_VALUE;
+        
         for (int absX = widthFrom; absX < widthTo; absX++) {
             for (int absY = heightFrom; absY < heightTo; absY++) {
 
@@ -97,6 +100,11 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
                         matrixX = countX;
                         matrixY = countY;
 
+                        if (absKernelX < minXreached) minXreached = absKernelX;
+                        if (absKernelY < minYreached) minYreached = absKernelY;
+                        if (absKernelX > maxXreached) maxXreached = absKernelX;
+                        if (absKernelY > maxYreached) maxYreached = absKernelY;
+                        
                         /*
                         if(debug){
                           System.out.println("\n\n var: absX " + absX);
@@ -109,18 +117,18 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
                         */
 
                         matrixPixel = in .getPixel(absKernelX, absKernelY);
-                        cumulR += (matrixPixel.getRed() * Gaussian.GAUS_KERNEL_5[matrixX][matrixY]);
-                        cumulG += (matrixPixel.getGreen() * Gaussian.GAUS_KERNEL_5[matrixX][matrixY]);
-                        cumulB += (matrixPixel.getBlue() * Gaussian.GAUS_KERNEL_5[matrixX][matrixY]);
+                        cumulR += (matrixPixel.getRed() * Gaussian.GAUS_KERNEL_52[matrixX][matrixY]);
+                        cumulG += (matrixPixel.getGreen() * Gaussian.GAUS_KERNEL_52[matrixX][matrixY]);
+                        cumulB += (matrixPixel.getBlue() * Gaussian.GAUS_KERNEL_52[matrixX][matrixY]);
                         countY++;
                     }
                     countY = 0;
                     countX++;
                 }
 
-                r = (int)(((double) cumulR) * Gaussian.NORMALIZE_GAUS_5);
-                g = (int)(((double) cumulG) * Gaussian.NORMALIZE_GAUS_5);
-                b = (int)(((double) cumulB) * Gaussian.NORMALIZE_GAUS_5);
+                r = (int)(((double) cumulR) * Gaussian.NORMALIZE_GAUS_52);
+                g = (int)(((double) cumulG) * Gaussian.NORMALIZE_GAUS_52);
+                b = (int)(((double) cumulB) * Gaussian.NORMALIZE_GAUS_52);
 
                 if (r > MAX || g > MAX || b > MAX) {
                     System.out.println("CULPRIT R " + r);
@@ -134,44 +142,71 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
                 pixelOut.setBlue(b);
             }
         }
+        /*
+        System.out.println("_________________________");
+        System.out.println("xSize " + xSize);
+        System.out.println("ySize " + ySize);
+        System.out.println("wFrom " + widthFrom);
+        System.out.println("wTo " + widthTo);
+        System.out.println("hFrom " + heightFrom);
+        System.out.println("hTo " + heightTo);
+        System.out.println("minXreached " + minXreached);
+        System.out.println("maxXreached " + maxXreached);
+        System.out.println("minYreached " + minYreached);
+        System.out.println("maxYreached " + maxYreached);
+        System.out.println("_________________________");
+        */
     }
 
     static class Gaussian {
         private static final int[][] GAUS_KERNEL_5 = new int[][] {
             {
-                2,
-                4,
-                5,
-                4,
-                2
+                2,4,5,4,2
             }, {
-                4,
-                9,
-                12,
-                9,
-                4
+                4,9,12,9,4
             }, {
-                5,
-                12,
-                15,
-                12,
-                5
+                5,12,15,12,5
             }, {
-                4,
-                9,
-                12,
-                9,
-                4
+                4,9,12,9,4
             }, {
-                2,
-                4,
-                5,
-                4,
-                2
+                2,4,5,4,2
             }
         };
         private static final double NORMALIZE_GAUS_5 = 1 / 159d;
         private static final byte BORDER_GAUS_5 = 2;
+        
+        private static final int[][] GAUS_KERNEL_51 = new int[][] {
+            {
+                0,1,2,1,0
+            }, {
+                1,2,3,2,1
+            }, {
+                2,3,9,3,2
+            }, {
+                1,2,3,2,1
+            }, {
+                0,1,2,1,0
+            }
+        };
+        private static final double NORMALIZE_GAUS_51 = 1 / 45d;
+        private static final byte BORDER_GAUS_51 = 2;
         //private static final byte SIZE_GAUS = 5;
+    
+    private static final int[][] GAUS_KERNEL_52 = new int[][] {
+        {
+            0,0,0,0,0
+        }, {
+            0,2,3,2,0
+        }, {
+            0,3,9,3,0
+        }, {
+            0,2,3,2,0
+        }, {
+            0,0,0,0,0
+        }
+    };
+    private static final double NORMALIZE_GAUS_52 = 1 / 29d;
+    private static final byte BORDER_GAUS_52 = 2;
+    //private static final byte SIZE_GAUS = 5;
     }
 }

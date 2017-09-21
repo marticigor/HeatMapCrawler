@@ -3,9 +3,13 @@ package core;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+
 import javax.swing.SwingUtilities;
 
+import core.tasks.TaskGaussian;
+import core.tasks.TaskSharpen;
 import lib_duke.ImageResource;
+
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
@@ -97,26 +101,21 @@ public class Runner implements Runnable {
      */
     private void perManyTasksProces(final ImagePreprocesor ip) {
 
-    	//testCode
-    	//testCode
-    	//testCode
-    	//testCode
-    	
-    	ip.procesSharpen(1, 1, 1, 1, true);
-    	ip.procesGaussian();
-    	
-    	
-    	
-    	
-    	
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "8");
               
         List<RecursiveAction []> stages = new ArrayList<RecursiveAction []>();
         
         //FILTERS QUEUE FIFO START
-        TaskSharpen[] sharpenTask = new TaskSharpen[sizeDivKonq * sizeDivKonq];
+          
+        TaskSharpen [] sharpenTask = new TaskSharpen[sizeDivKonq * sizeDivKonq];
         decorateFactory(sharpenTask, TaskSharpen.class, ip);
         stages.add(sharpenTask);
+        
+        TaskGaussian [] gaussianTask = new TaskGaussian[sizeDivKonq * sizeDivKonq];
+        decorateFactory(gaussianTask, TaskGaussian.class, ip);
+        stages.add(gaussianTask);
+        
+
         //--------------------------------------------------
         //FILTERS QUEUE FIFO END
         

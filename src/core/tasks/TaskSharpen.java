@@ -1,8 +1,10 @@
-package core;
+package core.tasks;
 
 import java.util.concurrent.RecursiveAction;
 
-    class TaskSharpen extends RecursiveAction {
+import core.ImagePreprocesor;
+
+    public class TaskSharpen extends RecursiveAction {
     	
         //Instances of RecursiveAction represent executions that do not yield a return value.
 
@@ -25,7 +27,7 @@ import java.util.concurrent.RecursiveAction;
         private final int yToExcl;
 
         private final ImagePreprocesor ip;
-
+        
         /**
          * 
          */
@@ -40,7 +42,7 @@ import java.util.concurrent.RecursiveAction;
 
         @Override
         protected void compute() {
-            System.out.println("COMPUTE SHARPEN ON THREAD " + Thread.currentThread());
+            //System.out.println("COMPUTE SHARPEN ON THREAD " + Thread.currentThread());
             ip.procesSharpen(xFromIncl, xToExcl, yFromIncl, yToExcl, false); //false for real segments
         }
         
@@ -48,7 +50,7 @@ import java.util.concurrent.RecursiveAction;
          * 
          */
         public String toString(){
-        	return this.hashCode() + " -----| " + this.xFromIncl + " | " +
+        	return this.hashCode() + this.getClass().getName() + " -----| " + this.xFromIncl + " | " +
             this.xToExcl + " | " + this.yFromIncl + " | " + this.yToExcl + " -----| " + ip;
         }
     }

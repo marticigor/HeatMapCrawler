@@ -1,5 +1,6 @@
 package core.image_filters;
 
+import core.image_filters.filter_utils.ChunksNotMessedAssertion;
 import core.image_filters.filter_utils.ChunksOrWhole;
 import ifaces.IColorScheme;
 import ifaces.IImageProcesor;
@@ -31,6 +32,11 @@ public class Sharpen implements IImageProcesor, IColorScheme {
     public void doYourThing(ImageResource in , ImageResource out) {
 
         int [] values = ChunksOrWhole.decide(args, wholeImage, in.getWidth(), in.getHeight());
+        
+        final int xSize = in .getWidth();
+        final int ySize = in .getHeight();
+        boolean halt = ChunksNotMessedAssertion.assertOK(xSize, ySize, values, borderSharpenStage);
+        if (halt) throw new RuntimeException("chunks messed");
         
         int widthFrom = values[0];
         int widthTo = values[1];
