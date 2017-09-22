@@ -32,7 +32,7 @@ public class CannyDetect implements IImageProcesor {
 
     static class Sobel {
     	private static final int KERNEL_BORDER = 1;
-        private static final int[][] VER_KERNEL = new int[][] {
+        private static final int[][] HOR_KERNEL = new int[][] {
             {
                 1,0,-1
             }, {
@@ -41,7 +41,7 @@ public class CannyDetect implements IImageProcesor {
                 1,0,-1
             }
         };
-        private static final int[][] HOR_KERNEL = new int[][] {
+        private static final int[][] VER_KERNEL = new int[][] {
             {
                 1,2,1
             }, {
@@ -103,12 +103,14 @@ public class CannyDetect implements IImageProcesor {
                 AugmentedPixel augPix = new AugmentedPixel(verGrad,horGrad);
                 augPix.compute();
                 int gradientSteep = (int) augPix.getGradientComputed();
-                int gradientDir = (int) (augPix.getDirection() * 35d);
-                //System.out.println("Pixel out " + outPix.toString() + " horGrad " + horGrad + " verGrad " + verGrad +
-                		//" computed "+gradientSteep + " direction " + augPix.getDirection());
-                //System.out.println("_______________________________________________");
                 outPix.setRed(gradientSteep / 4);
-                if(gradientDir < 210)outPix.setGreen(gradientDir);
+                if(outPix.getRed() > 80){
+                    int gradientDir = (int) (augPix.getDirection());
+                    System.out.println("Pixel out " + outPix.toString() + " horGrad " + horGrad + " verGrad " + verGrad +
+                    		" computed "+gradientSteep + " direction " + augPix.getDirection());
+                    System.out.println("_______________________________________________");
+                }
+
             }
         }
     }
