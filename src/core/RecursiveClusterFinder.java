@@ -92,7 +92,7 @@ import lib_duke.Pixel;
    if (visualize && allClusterAroundNode.size() == 1) vis.displayInitial();
    if (visualize && allClusterAroundNode.size() % 50 == 0) vis.displayProgres();
 
-   iteratorRound.reset();
+   iteratorRound.resetCount();
    iteratorRound.setPixelToCheckAround(p);
 
    if (redClusterSearch) {
@@ -107,7 +107,7 @@ import lib_duke.Pixel;
         return;
      }
     }
-    iteratorRound.reset();
+    iteratorRound.resetCount();
    }
 
    HashSet < Pixel > neighbours = new HashSet < Pixel > ();
@@ -184,7 +184,7 @@ import lib_duke.Pixel;
 
      Pixel pVis = visIr.getPixel(p.getX(), p.getY());
 
-     riop.reset();
+     riop.resetCount();
      riop.setPixelToCheckAround(pVis);
 
      for (Pixel pHighlight: riop) {

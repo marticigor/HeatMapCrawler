@@ -54,8 +54,9 @@ public class NodeFinder implements IColorScheme {
    Pixel pIn = null;
 
    int surfaceArea = 0;
-   iteratorRound.reset();
+
    iteratorRound.setImageResource(sharpened);
+   iteratorRound.resetCount();
 
    for (int x = lookAheadAndBack + 1; x < width - (lookAheadAndBack + 1); x++) {
     for (int y = lookAheadAndBack + 1; y < height - (lookAheadAndBack + 1); y++) {
@@ -72,7 +73,7 @@ public class NodeFinder implements IColorScheme {
         if (pIn.getRed() == redScheme[0] && pIn.getGreen() == redScheme[1] && pIn.getBlue() == redScheme[2]) {
 
          iteratorRound.setPixelToCheckAround(pIn);
-         iteratorRound.reset();
+         iteratorRound.resetCount();
 
          for (Pixel p1: iteratorRound) {
 
@@ -95,6 +96,7 @@ public class NodeFinder implements IColorScheme {
    //
    //
    //noded.draw();
+   //noded.saveAs();
    //Pause.pause(8000);
    //
    rcf = new RecursiveClusterFinder(noded, whiteScheme[0], whiteScheme[1], whiteScheme[2]);
@@ -296,7 +298,7 @@ public class NodeFinder implements IColorScheme {
 
   int neighbours = 0;
 
-  iteratorRound.reset();
+  iteratorRound.resetCount();
   iteratorRound.setImageResource(ir);
   iteratorRound.setPixelToCheckAround(p);
 

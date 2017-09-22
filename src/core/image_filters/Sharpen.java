@@ -35,7 +35,7 @@ public class Sharpen implements IImageProcesor, IColorScheme {
         
         final int xSize = in .getWidth();
         final int ySize = in .getHeight();
-        boolean halt = ChunksNotMessedAssertion.assertOK(xSize, ySize, values, borderSharpenStage);
+        final boolean halt = ChunksNotMessedAssertion.assertOK(xSize, ySize, values, borderSharpenStage);
         if (halt) throw new RuntimeException("chunks messed");
         
         int widthFrom = values[0];
@@ -72,6 +72,7 @@ public class Sharpen implements IImageProcesor, IColorScheme {
                     outP.setGreen(lightGreenScheme[1]);
                     outP.setBlue(lightGreenScheme[2]);
                 }
+       
             }
         }
         if(debug)System.out.println("CHUNK PROCESSED " + System.currentTimeMillis());

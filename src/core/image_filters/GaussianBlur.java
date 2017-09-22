@@ -1,5 +1,6 @@
 package core.image_filters;
 
+import core.image_filters.filter_utils.BorderWatch;
 import core.image_filters.filter_utils.ChunksNotMessedAssertion;
 import core.image_filters.filter_utils.ChunksOrWhole;
 import ifaces.IColorScheme;
@@ -25,22 +26,20 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
     @Override
     public void doYourThing(ImageResource in , ImageResource out) {
 
-        int borderG = Gaussian.BORDER_GAUS_5;
+        int borderG = Gaussian.BORDER_GAUS_52;
 
         int[] values = ChunksOrWhole.decide(args, wholeImage, in .getWidth(), in .getHeight());
         final int xSize = in .getWidth();
         final int ySize = in .getHeight();
-        boolean halt = ChunksNotMessedAssertion.assertOK(xSize, ySize, values, borderSharpenStage);
+        final boolean halt = ChunksNotMessedAssertion.assertOK(xSize, ySize, values, borderSharpenStage);
         if (halt) throw new RuntimeException("chunks messed");
 
-        int widthFrom = values[0];
-        widthFrom = (widthFrom == 0) ? borderG : widthFrom;
-        int widthTo = values[1];
-        widthTo = (widthTo == xSize) ? xSize - borderG : widthTo;
-        int heightFrom = values[2];
-        heightFrom = (heightFrom == 0) ? borderG : heightFrom;
-        int heightTo = values[3];
-        heightTo = (heightTo == ySize) ? ySize - borderG : heightTo;
+        BorderWatch border = new BorderWatch(values, borderG, xSize, ySize);
+        
+        int widthFrom = border.getWidthFrom();
+        int widthTo = border.getWidthTo();
+        int heightFrom = border.getHeightFrom();
+        int heightTo = border.getHeightTo();
 
         Pixel pixelOut, matrixPixel;
 
@@ -51,8 +50,8 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
         if (borderG != borderSharpenStage) throw new RuntimeException("borders");
 
         if (debug) {
-            System.out.println(" var: xSize " + xSize);
-            System.out.println(" var: ySize " + ySize);
+            System.out.println(" GaussianBlur var: xSize " + xSize);
+            System.out.println(" GaussianBlur var: ySize " + ySize);
         }
 
         //matrix counters
@@ -60,15 +59,10 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
         int countY;
 
         final int MAX = 255;
-
-        int minXreached = Integer.MAX_VALUE;
-        int maxXreached = Integer.MIN_VALUE;
-        int minYreached = Integer.MAX_VALUE;
-        int maxYreached = Integer.MIN_VALUE;
         
         for (int absX = widthFrom; absX < widthTo; absX++) {
             for (int absY = heightFrom; absY < heightTo; absY++) {
-
+          	
                 pixelOut = out.getPixel(absX, absY);
 
                 matrixX = 0;
@@ -100,22 +94,6 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
                         matrixX = countX;
                         matrixY = countY;
 
-                        if (absKernelX < minXreached) minXreached = absKernelX;
-                        if (absKernelY < minYreached) minYreached = absKernelY;
-                        if (absKernelX > maxXreached) maxXreached = absKernelX;
-                        if (absKernelY > maxYreached) maxYreached = absKernelY;
-                        
-                        /*
-                        if(debug){
-                          System.out.println("\n\n var: absX " + absX);
-                          System.out.println(" var: absY " + absY);
-                          System.out.println(" var: absKernelX " + absKernelX);
-                          System.out.println(" var: absKernelY " + absKernelY);
-                          System.out.println(" var: matrixX " + matrixX);
-                          System.out.println(" var: matrixY " + matrixY);
-                        }
-                        */
-
                         matrixPixel = in .getPixel(absKernelX, absKernelY);
                         cumulR += (matrixPixel.getRed() * Gaussian.GAUS_KERNEL_52[matrixX][matrixY]);
                         cumulG += (matrixPixel.getGreen() * Gaussian.GAUS_KERNEL_52[matrixX][matrixY]);
@@ -137,27 +115,15 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
                     System.out.println("CULPRIT MAX " + MAX);
                     throw new RuntimeException("MAX_VALUES_IN_GB");
                 }
+                
                 pixelOut.setRed(r);
                 pixelOut.setGreen(g);
                 pixelOut.setBlue(b);
+                  
             }
         }
-        /*
-        System.out.println("_________________________");
-        System.out.println("xSize " + xSize);
-        System.out.println("ySize " + ySize);
-        System.out.println("wFrom " + widthFrom);
-        System.out.println("wTo " + widthTo);
-        System.out.println("hFrom " + heightFrom);
-        System.out.println("hTo " + heightTo);
-        System.out.println("minXreached " + minXreached);
-        System.out.println("maxXreached " + maxXreached);
-        System.out.println("minYreached " + minYreached);
-        System.out.println("maxYreached " + maxYreached);
-        System.out.println("_________________________");
-        */
     }
-
+    
     static class Gaussian {
         private static final int[][] GAUS_KERNEL_5 = new int[][] {
             {
@@ -190,7 +156,6 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
         };
         private static final double NORMALIZE_GAUS_51 = 1 / 45d;
         private static final byte BORDER_GAUS_51 = 2;
-        //private static final byte SIZE_GAUS = 5;
     
     private static final int[][] GAUS_KERNEL_52 = new int[][] {
         {
@@ -207,6 +172,5 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
     };
     private static final double NORMALIZE_GAUS_52 = 1 / 29d;
     private static final byte BORDER_GAUS_52 = 2;
-    //private static final byte SIZE_GAUS = 5;
     }
 }

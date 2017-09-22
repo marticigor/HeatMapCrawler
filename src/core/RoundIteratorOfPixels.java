@@ -53,7 +53,7 @@ public class RoundIteratorOfPixels implements Iterable < Pixel > , Iterator < Pi
  /**
   *  
   */
- public void reset() { count = 0; }
+ public void resetCount() { count = 0; }
 
  /**
   *  

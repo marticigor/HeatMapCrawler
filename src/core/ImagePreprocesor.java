@@ -1,10 +1,12 @@
 package core;
 
+import core.image_filters.CannyDetect;
 import core.image_filters.GaussianBlur;
 import core.image_filters.Sharpen;
 import ifaces.IColorScheme;
 import ifaces.IImageProcesor;
 import lib_duke.ImageResource;
+import lib_duke.Pixel;
 
 public class ImagePreprocesor implements IColorScheme {
 
@@ -69,7 +71,8 @@ public class ImagePreprocesor implements IColorScheme {
             borderAtSharpenStage,
             devToMakeItValidRoutable
         );
-        if(debug | visual) System.out.println(this.getClass().toString() + " call " + "sharpen.proces");
+        
+        debugPrint("procesSharpen");
         sharpen.doYourThing(inputImageResource, procesedImageResourceStage1);
     }
 
@@ -97,14 +100,44 @@ public class ImagePreprocesor implements IColorScheme {
                 heightTo,
                 borderAtSharpenStage
     			);
-    	
+    	debugPrint("procesGaussian");
     	gaussian.doYourThing(procesedImageResourceStage1, procesedImageResourceStage2);
     }
+    
+	public void procesCanny(
+    		int widthFrom,
+            int widthTo,
+            int heightFrom,
+            int heightTo,
+            boolean wholePicture
+			) {
+			
+		IImageProcesor canny = new CannyDetect(
+				wholePicture,
+				debug, 
+                widthFrom,
+                widthTo,
+                heightFrom,
+                heightTo,
+                borderAtSharpenStage
+				);
+		debugPrint("procesCanny");
+		canny.doYourThing(procesedImageResourceStage2, procesedImageResourceStage3);
+	}
     
     /**
      *
      */
     public ImageResource getProcesed() {
+    	//
+    	// test save
+    	procesedImageResourceStage3.draw();
+    	// procesedImageResourceStage2.saveAs();
+    	//
+    	//
         return procesedImageResourceStage2;
+    }
+    private void debugPrint(String job){
+    	if(debug | visual) System.out.println(this.getClass().toString() + " call " + job);
     }
 }

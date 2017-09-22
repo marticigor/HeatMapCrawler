@@ -6,6 +6,7 @@ import java.util.*;
 
 import javax.swing.SwingUtilities;
 
+import core.tasks.TaskCanny;
 import core.tasks.TaskGaussian;
 import core.tasks.TaskSharpen;
 import lib_duke.ImageResource;
@@ -22,7 +23,7 @@ public class Runner implements Runnable {
     private final int bottleneckSize = 3;
     private final int passableSize = 5;
 
-    private final int sizeDivKonq = 8;
+    private final int sizeDivKonq = 4;
 
     private ImageChunks chunks;
 
@@ -115,7 +116,10 @@ public class Runner implements Runnable {
         decorateFactory(gaussianTask, TaskGaussian.class, ip);
         stages.add(gaussianTask);
         
-
+        TaskCanny[] cannyTask = new TaskCanny[sizeDivKonq * sizeDivKonq];
+        decorateFactory(cannyTask, TaskCanny.class, ip);
+        stages.add(cannyTask);
+        
         //--------------------------------------------------
         //FILTERS QUEUE FIFO END
         

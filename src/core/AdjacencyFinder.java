@@ -117,7 +117,7 @@ public class AdjacencyFinder implements IColorScheme {
      currY = buildForThis.getY();
      currP = noded.getPixel(currX, currY);
 
-     riop.reset();
+     riop.resetCount();
      riop.setPixelToCheckAround(currP);
      int count = 0;
 
@@ -172,7 +172,7 @@ public class AdjacencyFinder implements IColorScheme {
 
     for (Node n: nodes) {
      boolean bottleneck = n.getBottleneck();
-     makeYellow.reset();
+     makeYellow.resetCount();
      Pixel pY = noded.getPixel(n.getX(), n.getY());
      makeYellow.setPixelToCheckAround(pY);
      for (Pixel pix: makeYellow) {
@@ -339,7 +339,7 @@ public class AdjacencyFinder implements IColorScheme {
    byte counter = 0;
    boolean[] takenSeat = new boolean[8];
    Pixel p;
-   riop.reset();
+   riop.resetCount();
 
    p = noded.getPixel(n.getX(), n.getY());
 

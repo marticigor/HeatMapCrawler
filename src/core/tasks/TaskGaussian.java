@@ -1,30 +1,16 @@
 package core.tasks;
 
-import java.util.concurrent.RecursiveAction;
-
 import core.ImagePreprocesor;
 
-public class TaskGaussian extends RecursiveAction{
-
-	private static final long serialVersionUID = 2573784757014343735L;
+public class TaskGaussian extends BaseTask{
 	
-	private final int xFromIncl;
-    private final int xToExcl;
-    private final int yFromIncl;
-    private final int yToExcl;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4178515888257000505L;
 
-    private final ImagePreprocesor ip;
-    
-    /**
-     * 
-     */
     public TaskGaussian(ImagePreprocesor ip, Integer xFrom, Integer xTo, Integer yFrom, Integer yTo) {
-        this.ip = ip;
-        //note (int) only, of course
-        this.xFromIncl = (int)xFrom;
-        this.xToExcl = (int)xTo;
-        this.yFromIncl = (int)yFrom;
-        this.yToExcl = (int)yTo;
+        super(ip,xFrom, xTo, yFrom, yTo);
     }
 
 	@Override
@@ -33,13 +19,8 @@ public class TaskGaussian extends RecursiveAction{
         ip.procesGaussian(xFromIncl, xToExcl, yFromIncl, yToExcl, false); //false for real segments
 		
 	}
-	
-    /**
-     * 
-     */
+
     public String toString(){
-    	return this.hashCode() + this.getClass().getName() + " -----| " + this.xFromIncl + " | " +
-        this.xToExcl + " | " + this.yFromIncl + " | " + this.yToExcl + " -----| " + ip;
+    	return super.toString() + this.hashCode() + this.getClass().getName();
     }
-	
 }

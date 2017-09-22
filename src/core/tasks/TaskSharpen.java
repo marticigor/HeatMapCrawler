@@ -1,10 +1,8 @@
 package core.tasks;
 
-import java.util.concurrent.RecursiveAction;
-
 import core.ImagePreprocesor;
 
-    public class TaskSharpen extends RecursiveAction {
+    public class TaskSharpen extends BaseTask {
     	
         //Instances of RecursiveAction represent executions that do not yield a return value.
 
@@ -17,27 +15,12 @@ import core.ImagePreprocesor;
         //http://www.oracle.com/technetwork/articles/java/fork-join-422606.html
 
         /**
-         * 
-         */
-        private static final long serialVersionUID = 8116076238536681371L;
-        
-        private final int xFromIncl;
-        private final int xToExcl;
-        private final int yFromIncl;
-        private final int yToExcl;
+		 * 
+		 */
+		private static final long serialVersionUID = 3395050943108602251L;
 
-        private final ImagePreprocesor ip;
-        
-        /**
-         * 
-         */
         public TaskSharpen(ImagePreprocesor ip, Integer xFrom, Integer xTo, Integer yFrom, Integer yTo) {
-            this.ip = ip;
-            //note (int) only, of course
-            this.xFromIncl = (int)xFrom;
-            this.xToExcl = (int)xTo;
-            this.yFromIncl = (int)yFrom;
-            this.yToExcl = (int)yTo;
+            super(ip,xFrom, xTo, yFrom, yTo);
         }
 
         @Override
@@ -46,12 +29,8 @@ import core.ImagePreprocesor;
             ip.procesSharpen(xFromIncl, xToExcl, yFromIncl, yToExcl, false); //false for real segments
         }
         
-        /**
-         * 
-         */
         public String toString(){
-        	return this.hashCode() + this.getClass().getName() + " -----| " + this.xFromIncl + " | " +
-            this.xToExcl + " | " + this.yFromIncl + " | " + this.yToExcl + " -----| " + ip;
+        	return super.toString() + this.hashCode() + this.getClass().getName();
         }
     }
 
