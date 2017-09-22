@@ -47,7 +47,6 @@ public class RoundIteratorOfPixels implements Iterable < Pixel > , Iterator < Pi
   //this.home = home;
   this.homeX = home.getX();
   this.homeY = home.getY();
-
  }
 
  /**
@@ -62,7 +61,6 @@ public class RoundIteratorOfPixels implements Iterable < Pixel > , Iterator < Pi
  
   if (count < 8) return true;
     else return false;
-    
  }
 
  /**
@@ -76,17 +74,10 @@ public class RoundIteratorOfPixels implements Iterable < Pixel > , Iterator < Pi
 
   count++;
   return returning;
-  
  }
 
- /**
-  *  
-  */
  public void remove() { throw new UnsupportedOperationException(); }
 
- /**
-  *  
-  */
  public Iterator < Pixel > iterator() { return this; }
  
 }

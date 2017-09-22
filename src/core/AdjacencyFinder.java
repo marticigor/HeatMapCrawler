@@ -131,7 +131,6 @@ public class AdjacencyFinder implements IColorScheme {
      HashSet < Node > adjacents = rcf.getAdjacents();
      for(Node singleAdjacent : adjacents) {
          buildForThis.addAdjacentNode(singleAdjacent);
-         //System.out.println("node "+buildForThis.toString()+" adding adjacent node "+singleAdjacent.toString());
      }
      rcf.resetToNewAdjacents();
 
@@ -214,9 +213,6 @@ public class AdjacencyFinder implements IColorScheme {
    redCluster.add(p);
 
   }
-
-  //debug print
-  //System.out.println("DEBUG copy size of branch "+branch.size());
  }
 
  /**
@@ -267,7 +263,6 @@ public class AdjacencyFinder implements IColorScheme {
      }
    * 
    */
-   
    
  /**
   *
@@ -369,36 +364,20 @@ public class AdjacencyFinder implements IColorScheme {
     if (!takenSeat[i] && !takenSeat[firstPoint] && !takenSeat[secondPoint]) return true;
 
    }
-
    return false;
   }
-  
-  /**
-   * 
-   */
+ 
  private boolean isWhite(Pixel p) {
-
    if (p.getRed() == whiteScheme[0] && p.getGreen() == whiteScheme[1] && p.getBlue() == whiteScheme[2]) return true;
    return false;
   }
-  
-  /**
-   * 
-   */
  private boolean isRed(Pixel p) {
-
    if (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]) return true;
    return false;
   }
-  
-  /**
-   * 
-   */
  @SuppressWarnings("unused")
  private boolean isYellow(Pixel p) {
-
   if (p.getRed() == yellowScheme[0] && p.getGreen() == yellowScheme[1] && p.getBlue() == yellowScheme[2]) return true;
   return false;
-
  }
 }

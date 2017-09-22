@@ -87,7 +87,6 @@ public class NodeFinder implements IColorScheme {
        Pixel pNoded = noded.getPixel(x, y);
        setWhite(pNoded);
       }
-
       surfaceArea = 0;
      }
     }
@@ -150,14 +149,11 @@ public class NodeFinder implements IColorScheme {
       * testing code
       *
      for(Node maximus : maximusNodes){
-       
        Pixel pixelBlue = noded.getPixel(maximus.getX(),maximus.getY());
        pixelBlue.setRed(0);
        pixelBlue.setGreen(100);
        pixelBlue.setBlue(255);
-         
        }
-      
      noded.draw();
       */
 
@@ -180,15 +176,10 @@ public class NodeFinder implements IColorScheme {
 
        for (Node maybeClosest: maximusNodes) {
 
-        //System.out.println("current maybeClosest NODE " + maybeClosest.getX() + " " + maybeClosest.getY());
-
         //we do have (among maximusNodes) a node with exactly avg x y values 
         if (maybeClosest.getX() == centerGravityX && maybeClosest.getY() == centerGravityY) {
          nodes.add(maybeClosest);
          nmbOfNodes++;
-
-         //System.out.println("  -------------");
-         //System.out.println("  what we finally decided to store BREAK " + centerGravityX + " " + centerGravityY);
 
          break out;
         }
@@ -225,11 +216,7 @@ public class NodeFinder implements IColorScheme {
          yToOut = possiblyClosestNode.getY();
          break;
         }
-
        }
-
-       //System.out.println("  -------------");
-       //System.out.println("  what we finally decided to store " + xToOut + " " + yToOut);
 
        /**
          * 
@@ -247,29 +234,20 @@ public class NodeFinder implements IColorScheme {
        */
 
        nmbOfNodes++;
-
       } //out
 
      for (Pixel toRed: allClusterAroundNode) {
-
       setRed(toRed);
-
      }
-
     } //2
-
    } //1
 
    //now set pixels white
    Pixel px;
-
    for (Node n: nodes) {
-
     px = noded.getPixel(n.getX(), n.getY());
     setWhite(px);
-
    }
-
   }
   
   /**
@@ -358,66 +336,32 @@ public class NodeFinder implements IColorScheme {
   }
  }
  
- /**
-  * 
-  */
  public void drawNoded(){ noded.draw(); }
- 
- /**
-  * 
-  */
+
  public void vizualizeNoded() {
   System.out.println("Number of nodes: " + nmbOfNodes);
   drawNoded();
  }
-
- /**
-  * 
-  */
  public ImageResource getNodedImage() {
    return noded;
   }
-  
- /**
-  *  
-  */
  public ArrayList < Node > getNodes() {
   return nodes;
  }
-
- /**
-  * 
-  */
  private void setRed(Pixel p) {
-
    p.setRed(redScheme[0]);
    p.setGreen(redScheme[1]);
    p.setBlue(redScheme[2]);
-
-
   }
-  
- /**
-  * 
-  */
  private void setWhite(Pixel p) {
-
    p.setRed(whiteScheme[0]);
    p.setGreen(whiteScheme[1]);
    p.setBlue(whiteScheme[2]);
-
-
   }
-  
- /**
-  * 
-  */
  @SuppressWarnings("unused")
  private void setYellow(Pixel p) {
-
   p.setRed(yellowScheme[0]);
   p.setGreen(yellowScheme[1]);
   p.setBlue(yellowScheme[2]);
-
  }
 }
