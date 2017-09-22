@@ -71,26 +71,44 @@ public class CannyDetect implements IImageProcesor {
         int borderS = Sobel.KERNEL_BORDER;
         
         int countX, countY;
+        int verGrad, horGrad;
+        
+        Pixel inPix = null;
+        Pixel outPix = null;
         
         for (int absX = widthFrom; absX < widthTo; absX++) {
             for (int absY = heightFrom; absY < heightTo; absY++) {
+            	
                 //SobelOperator
             	//iterate kernel
-
                 countX = 0;
                 countY = 0;
+                
+                horGrad = 0;
+                verGrad = 0;
+                
                 for (int absKernelX = absX - borderS; absKernelX < absX + borderS + 1; absKernelX++) {
                     for (int absKernelY = absY - borderS; absKernelY < absY + borderS + 1; absKernelY++) {
-            	    //System.out.println("ITER KERNEL " + absKernelX + " " +absKernelY + " count " + countX + " " + countY);
             	    
-                    	
+                    	inPix = in.getPixel(absKernelX, absKernelY); 
+                    	horGrad += inPix.getRed() * Sobel.HOR_KERNEL[countX][countY];
+                    	verGrad += inPix.getRed() * Sobel.VER_KERNEL[countX][countY];
                     	
                     countY++;
                     }
                     countY = 0;
                     countX++;
                 }
+                outPix = out.getPixel(absX, absY);
+                AugmentedPixel augPix = new AugmentedPixel(verGrad,horGrad);
+                augPix.compute();
+                int gradientSteep = (int) augPix.getGradientComputed();
+                int gradientDir = (int) (augPix.getDirection() * 35d);
+                //System.out.println("Pixel out " + outPix.toString() + " horGrad " + horGrad + " verGrad " + verGrad +
+                		//" computed "+gradientSteep + " direction " + augPix.getDirection());
                 //System.out.println("_______________________________________________");
+                outPix.setRed(gradientSteep / 4);
+                if(gradientDir < 210)outPix.setGreen(gradientDir);
             }
         }
     }

@@ -131,11 +131,11 @@ public class ImagePreprocesor implements IColorScheme {
     public ImageResource getProcesed() {
     	//
     	// test save
-    	procesedImageResourceStage3.draw();
+    	// procesedImageResourceStage3.draw();
     	// procesedImageResourceStage2.saveAs();
     	//
     	//
-        return procesedImageResourceStage2;
+        return procesedImageResourceStage3;
     }
     private void debugPrint(String job){
     	if(debug | visual) System.out.println(this.getClass().toString() + " call " + job);
