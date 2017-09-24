@@ -104,11 +104,65 @@ public class CannyDetect implements IImageProcesor {
                 augPix.compute();
                 int gradientSteep = (int) augPix.getGradientComputed();
                 outPix.setRed(gradientSteep / 4);
-                if(outPix.getRed() > 80){
-                    int gradientDir = (int) (augPix.getDirection());
-                    System.out.println("Pixel out " + outPix.toString() + " horGrad " + horGrad + " verGrad " + verGrad +
-                    		" computed "+gradientSteep + " direction " + augPix.getDirection());
-                    System.out.println("_______________________________________________");
+                if(outPix.getRed() > 40){
+                	
+                    //System.out.println("Pixel out " + outPix.toString() + " horGrad " + horGrad + " verGrad " + verGrad +
+                    		//" computed "+gradientSteep + " directionDEG " + augPix.getDirection() +" "+ augPix.getDirEnum());
+                    //System.out.println("_____________________________________________________");
+                    
+                    switch (augPix.getDirEnum()){
+                    
+                    case N : {
+                    	if(augPix.getDirection() > 90 && augPix.getDirection() < 270 ){
+                    	    outPix.setRed(100);
+                    	    outPix.setGreen(100);
+                    	    outPix.setBlue(100);
+                    	}else{
+                    	    outPix.setRed(255);
+                    	    outPix.setGreen(255);
+                    	    outPix.setBlue(255);                    		
+                    	}
+                    };break;
+                    case NE : {
+                    	if(augPix.getDirection() > 180){
+                    	    outPix.setRed(255);
+                    	    outPix.setGreen(100);
+                    	    outPix.setBlue(100);
+                    	}else{
+                    	    outPix.setRed(100);
+                    	    outPix.setGreen(255);
+                    	    outPix.setBlue(255);                    		
+                    	}
+                    	
+                    };break;
+                    case E : {
+                    	if(augPix.getDirection() > 180){
+                    	    outPix.setRed(50);
+                    	    outPix.setGreen(100);
+                    	    outPix.setBlue(180);
+                    	}else{
+                    	    outPix.setRed(180);
+                    	    outPix.setGreen(50);
+                    	    outPix.setBlue(25);                    		
+                    	}
+                    };break;
+                    case SE : {
+                    	if(augPix.getDirection() > 180){
+                    	    outPix.setRed(200);
+                    	    outPix.setGreen(100);
+                    	    outPix.setBlue(255);
+                    	}else{
+                    	    outPix.setRed(100);
+                    	    outPix.setGreen(255);
+                    	    outPix.setBlue(20);                    		
+                    	}
+                    };break;
+                    case ERROR : {
+                    	throw new RuntimeException("ERROR"); 
+                    }
+                    
+                    }
+                    
                 }
 
             }
