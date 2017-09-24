@@ -53,16 +53,16 @@ public class DirectionEnumeration {
     public static Direction getDirection(double dirD) {
 
         if ((dirD >= DIRDEG[7] || dirD < DIRDEG[0])) return Direction.N;
-        if ((dirD >= DIRDEG[3] && dirD < DIRDEG[4])) return Direction.N;
+        if ((dirD >= DIRDEG[3] && dirD < DIRDEG[4])) return Direction.S;
 
         if ((dirD >= DIRDEG[0] && dirD < DIRDEG[1])) return Direction.NE;
-        if ((dirD >= DIRDEG[4] && dirD < DIRDEG[5])) return Direction.NE;
+        if ((dirD >= DIRDEG[4] && dirD < DIRDEG[5])) return Direction.SW;
 
         if ((dirD >= DIRDEG[1] && dirD < DIRDEG[2])) return Direction.E;
-        if ((dirD >= DIRDEG[5] && dirD < DIRDEG[6])) return Direction.E;
+        if ((dirD >= DIRDEG[5] && dirD < DIRDEG[6])) return Direction.W;
 
         if ((dirD >= DIRDEG[2] && dirD < DIRDEG[3])) return Direction.SE;
-        if ((dirD >= DIRDEG[6] && dirD < DIRDEG[7])) return Direction.SE;
+        if ((dirD >= DIRDEG[6] && dirD < DIRDEG[7])) return Direction.NW;
 
         return Direction.ERROR;
     }
@@ -72,6 +72,11 @@ public class DirectionEnumeration {
         NE,
         E,
         SE,
+        S,
+        SW,
+        W,
+        NW,
+        ZERO,
         ERROR
     }
 }

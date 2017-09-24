@@ -81,17 +81,20 @@ public class Runner implements Runnable {
         chunks = new ImageChunks(ip.getX(), ip.getY(), sizeDivKonq);
         perManyTasksProces(ip);
 
+        final ImageResource procesedMapStage = ip.getProcesedStage();
+        procesedMapStage.draw();
         final ImageResource procesedMap = ip.getProcesed();
+        procesedMap.draw();
 
-        NodeFinder nf = new NodeFinder(procesedMap, look, surface);
-        nf.findNodes();
-        nf.vizualizeNoded(); //DRAW
+        //NodeFinder nf = new NodeFinder(procesedMap, look, surface);
+        //nf.findNodes();
+        //nf.vizualizeNoded(); //DRAW
 
-        final ImageResource noded = nf.getNodedImage();
-        final List < Node > nodes = nf.getNodes();
+        //final ImageResource noded = nf.getNodedImage();
+        //final List < Node > nodes = nf.getNodes();
 
-        AdjacencyFinder af = new AdjacencyFinder(noded, nodes, visual, debug, bottleneckSize, passableSize);
-        af.buildAdjacencyLists();
+        //AdjacencyFinder af = new AdjacencyFinder(noded, nodes, visual, debug, bottleneckSize, passableSize);
+        //af.buildAdjacencyLists();
 
         //TEST PRINT
         //printBuiltNodes(nodes);

@@ -26,7 +26,7 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
     @Override
     public void doYourThing(ImageResource in , ImageResource out) {
 
-        int borderG = Gaussian.BORDER_GAUS_52;
+        int borderG = Gaussian.BORDER_GAUS_5;
 
         int[] values = ChunksOrWhole.decide(args, wholeImage, in .getWidth(), in .getHeight());
         final int xSize = in .getWidth();
@@ -95,18 +95,18 @@ public class GaussianBlur implements IImageProcesor, IColorScheme {
                         matrixY = countY;
 
                         matrixPixel = in .getPixel(absKernelX, absKernelY);
-                        cumulR += (matrixPixel.getRed() * Gaussian.GAUS_KERNEL_52[matrixX][matrixY]);
-                        cumulG += (matrixPixel.getGreen() * Gaussian.GAUS_KERNEL_52[matrixX][matrixY]);
-                        cumulB += (matrixPixel.getBlue() * Gaussian.GAUS_KERNEL_52[matrixX][matrixY]);
+                        cumulR += (matrixPixel.getRed() * Gaussian.GAUS_KERNEL_5[matrixX][matrixY]);
+                        cumulG += (matrixPixel.getGreen() * Gaussian.GAUS_KERNEL_5[matrixX][matrixY]);
+                        cumulB += (matrixPixel.getBlue() * Gaussian.GAUS_KERNEL_5[matrixX][matrixY]);
                         countY++;
                     }
                     countY = 0;
                     countX++;
                 }
 
-                r = (int)(((double) cumulR) * Gaussian.NORMALIZE_GAUS_52);
-                g = (int)(((double) cumulG) * Gaussian.NORMALIZE_GAUS_52);
-                b = (int)(((double) cumulB) * Gaussian.NORMALIZE_GAUS_52);
+                r = (int)(((double) cumulR) * Gaussian.NORMALIZE_GAUS_5);
+                g = (int)(((double) cumulG) * Gaussian.NORMALIZE_GAUS_5);
+                b = (int)(((double) cumulB) * Gaussian.NORMALIZE_GAUS_5);
 
                 if (r > MAX || g > MAX || b > MAX) {
                     System.out.println("CULPRIT R " + r);

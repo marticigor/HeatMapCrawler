@@ -124,7 +124,18 @@ public class ImagePreprocesor implements IColorScheme {
 		debugPrint("procesCanny");
 		canny.doYourThing(procesedImageResourceStage2, procesedImageResourceStage3);
 	}
-    
+    /**
+    *
+    */
+   public ImageResource getProcesedStage() {
+   	//
+   	// test save
+   	// procesedImageResourceStage3.draw();
+   	// procesedImageResourceStage2.saveAs();
+   	//
+   	//
+       return procesedImageResourceStage2;
+   }
     /**
      *
      */

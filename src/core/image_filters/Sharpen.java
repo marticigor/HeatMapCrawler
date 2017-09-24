@@ -55,11 +55,15 @@ public class Sharpen implements IImageProcesor, IColorScheme {
 
                 if (inP.getRed() == inP.getGreen() && inP.getGreen() == inP.getBlue()) {
 
-                    valueOfGray = inP.getRed();
-                    outP.setRed(valueOfGray);
-                    outP.setGreen(valueOfGray);
-                    outP.setBlue(valueOfGray);
+                    //valueOfGray = inP.getRed();
+                    //outP.setRed(valueOfGray);
+                    //outP.setGreen(valueOfGray);
+                    //outP.setBlue(valueOfGray);
 
+                	outP.setRed(0);
+                	outP.setGreen(0);
+                	outP.setBlue(0);
+                	
 
                 } else if (isRoutable(inP) && (inP.getX() > borderSharpenStage &&
                         inP.getX() < in .getWidth() - borderSharpenStage) &&
@@ -68,9 +72,9 @@ public class Sharpen implements IImageProcesor, IColorScheme {
                     outP.setGreen(redScheme[1]);
                     outP.setBlue(redScheme[2]);
                 } else {
-                    outP.setRed(lightGreenScheme[0]);
-                    outP.setGreen(lightGreenScheme[1]);
-                    outP.setBlue(lightGreenScheme[2]);
+                    //outP.setRed(lightGreenScheme[0]);
+                    //outP.setGreen(lightGreenScheme[1]);
+                    //outP.setBlue(lightGreenScheme[2]);
                 }
        
             }
