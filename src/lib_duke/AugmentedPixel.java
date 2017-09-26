@@ -14,6 +14,7 @@ public class AugmentedPixel{
 	public AugmentedPixel(int v, int h) {
 		this.verGradient = v;
 		this.horGradient = h;
+		compute();
 	}
 	
 	public int getVerGr(){return verGradient;}
@@ -28,12 +29,17 @@ public class AugmentedPixel{
 		return dirEnum;
 	}
 
-	public void compute(){
+	private void compute(){
 		//hypot function
 		gradientComputed = Math.sqrt((verGradient * verGradient) + (horGradient * horGradient));
 	    //atan2 function
 		dirDeg = 180 + Math.toDegrees(Math.atan2((double)(verGradient), (double)(horGradient)));//19 widening primitive conversions
 		dirEnum = DirectionEnumeration.getDirection(dirDeg);
+	}
+	
+	public String toString(){
+		return "\nverGrad " + verGradient + "\nhorGrad " + horGradient + "\ngradientComputed " + gradientComputed +
+				"\ndirDeg " + dirDeg + "\ndirEnum " + dirEnum;
 	}
 }
 

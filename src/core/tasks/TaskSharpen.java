@@ -25,7 +25,7 @@ import core.ImagePreprocesor;
 
         @Override
         protected void compute() {
-            //System.out.println("COMPUTE SHARPEN ON THREAD " + Thread.currentThread());
+            //System.out.println("COMPUTE SHARPEN ON THREAD " + Thread.currentThread() + this.toString());
             ip.procesSharpen(xFromIncl, xToExcl, yFromIncl, yToExcl, false); //false for real segments
         }
         

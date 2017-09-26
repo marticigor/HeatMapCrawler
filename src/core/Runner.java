@@ -8,6 +8,7 @@ import javax.swing.SwingUtilities;
 
 import core.tasks.TaskCanny;
 import core.tasks.TaskGaussian;
+import core.tasks.TaskHighlight;
 import core.tasks.TaskSharpen;
 import lib_duke.ImageResource;
 
@@ -65,16 +66,16 @@ public class Runner implements Runnable {
         SwingUtilities.invokeLater(control);
         
     }
-
+    
+    //#################################################################################
+    boolean visual = false;
+    boolean debug = false;
+    //################################################################################# 
+    
     /**
      *
      */
     public void run() {
-
-        //#################################################################################
-        boolean visual = false;
-        boolean debug = false;
-        //#################################################################################   
 
         final ImagePreprocesor ip = new ImagePreprocesor(devi, borderInSharpenStage, visual, debug);
 
@@ -86,15 +87,15 @@ public class Runner implements Runnable {
         final ImageResource procesedMap = ip.getProcesed();
         procesedMap.draw();
 
-        //NodeFinder nf = new NodeFinder(procesedMap, look, surface);
-        //nf.findNodes();
-        //nf.vizualizeNoded(); //DRAW
+        NodeFinder nf = new NodeFinder(procesedMap, look, surface);
+        nf.findNodes();
+        nf.vizualizeNoded(); //DRAW
 
-        //final ImageResource noded = nf.getNodedImage();
-        //final List < Node > nodes = nf.getNodes();
+        final ImageResource noded = nf.getNodedImage();
+        final List < Node > nodes = nf.getNodes();
 
-        //AdjacencyFinder af = new AdjacencyFinder(noded, nodes, visual, debug, bottleneckSize, passableSize);
-        //af.buildAdjacencyLists();
+        AdjacencyFinder af = new AdjacencyFinder(noded, nodes, visual, debug, bottleneckSize, passableSize);
+        af.buildAdjacencyLists();
 
         //TEST PRINT
         //printBuiltNodes(nodes);
@@ -123,6 +124,10 @@ public class Runner implements Runnable {
         decorateFactory(cannyTask, TaskCanny.class, ip);
         stages.add(cannyTask);
         
+        TaskHighlight [] highlightTask = new TaskHighlight [sizeDivKonq * sizeDivKonq];
+        decorateFactory(highlightTask, TaskHighlight.class, ip);
+        stages.add(highlightTask);
+        
         //--------------------------------------------------
         //FILTERS QUEUE FIFO END
         
@@ -133,9 +138,9 @@ public class Runner implements Runnable {
 					//debug print1 at bottom
 					forkJoinPool.invoke(segment);//commonPool?
 			}
-			System.out.println("RETURNED IN LOOP  " + System.currentTimeMillis());
+			if (debug) System.out.println("RETURNED IN LOOP  " + System.currentTimeMillis());
 		}
-		
+				
     }
     @SuppressWarnings("unchecked")
 	private <T extends RecursiveAction> void decorateFactory(T[] task,

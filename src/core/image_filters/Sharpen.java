@@ -45,8 +45,6 @@ public class Sharpen implements IImageProcesor, IColorScheme {
         
         Pixel outP;
         Pixel inP;
-        int valueOfGray;
-
         for (int y = heightFrom; y < heightTo; y++) {
             for (int x = widthFrom; x < widthTo; x++) {
 

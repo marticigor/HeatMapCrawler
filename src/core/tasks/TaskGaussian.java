@@ -15,7 +15,7 @@ public class TaskGaussian extends BaseTask{
 
 	@Override
 	protected void compute() {
-        //System.out.println("COMPUTE GAUSSIAN ON THREAD " + Thread.currentThread());
+        //System.out.println("COMPUTE GAUSSIAN ON THREAD " + Thread.currentThread() + this.toString());
         ip.procesGaussian(xFromIncl, xToExcl, yFromIncl, yToExcl, false); //false for real segments
 	}
 

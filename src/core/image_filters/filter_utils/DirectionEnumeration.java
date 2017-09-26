@@ -46,37 +46,49 @@ public class DirectionEnumeration {
     private static void initDirection() {
         for (int i = 0; i < 8; i++) {
             DIRDEG[i] = 22.5 + ((i * 2) * 22.5);
-            System.out.println(" INIT " + DIRDEG[i]);
+            //System.out.println(" INIT " + DIRDEG[i]);
         }
     }
 
     public static Direction getDirection(double dirD) {
 
-        if ((dirD >= DIRDEG[7] || dirD < DIRDEG[0])) return Direction.N;
-        if ((dirD >= DIRDEG[3] && dirD < DIRDEG[4])) return Direction.S;
+        if ((dirD >= DIRDEG[7] || dirD < DIRDEG[0])) return Direction.S;
+        if ((dirD >= DIRDEG[3] && dirD < DIRDEG[4])) return Direction.N;
 
-        if ((dirD >= DIRDEG[0] && dirD < DIRDEG[1])) return Direction.NE;
-        if ((dirD >= DIRDEG[4] && dirD < DIRDEG[5])) return Direction.SW;
+        if ((dirD >= DIRDEG[0] && dirD < DIRDEG[1])) return Direction.SE;
+        if ((dirD >= DIRDEG[4] && dirD < DIRDEG[5])) return Direction.NW;
 
         if ((dirD >= DIRDEG[1] && dirD < DIRDEG[2])) return Direction.E;
         if ((dirD >= DIRDEG[5] && dirD < DIRDEG[6])) return Direction.W;
 
-        if ((dirD >= DIRDEG[2] && dirD < DIRDEG[3])) return Direction.SE;
-        if ((dirD >= DIRDEG[6] && dirD < DIRDEG[7])) return Direction.NW;
+        if ((dirD >= DIRDEG[2] && dirD < DIRDEG[3])) return Direction.NE;
+        if ((dirD >= DIRDEG[6] && dirD < DIRDEG[7])) return Direction.SW;
 
         return Direction.ERROR;
     }
 
     public enum Direction {
-        N,
-        NE,
-        E,
-        SE,
-        S,
-        SW,
-        W,
-        NW,
-        ZERO,
-        ERROR
+    	// and how to travel in the oposite direction to this heading
+        N((byte)0,(byte)-1),
+        NE((byte)1,(byte)-1),
+        E((byte)1,(byte)0),
+        SE((byte)1,(byte)1),
+        S((byte)0,(byte)1),
+        SW((byte)-1,(byte)1),
+        W((byte)-1,(byte)0),
+        NW((byte)-1,(byte)-1),
+        ZERO((byte)0,(byte)0),
+        ERROR((byte)0,(byte)0)
+        ;
+    	
+    	private final byte xMove, yMove;
+    	
+    	Direction(byte xMove, byte yMove){
+    		this.xMove = xMove;
+    		this.yMove = yMove;
+    	}
+
+		public byte getxMove() { return xMove; }
+		public byte getyMove() { return yMove; }
     }
 }

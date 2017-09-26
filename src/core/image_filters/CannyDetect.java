@@ -3,6 +3,7 @@ package core.image_filters;
 import java.util.HashMap;
 import java.util.Map;
 
+import core.ImagePreprocesor;
 import core.image_filters.filter_utils.BorderWatch;
 import core.image_filters.filter_utils.ChunksNotMessedAssertion;
 import core.image_filters.filter_utils.ChunksOrWhole;
@@ -20,8 +21,10 @@ public class CannyDetect implements IImageProcesor, IColorScheme {
     private boolean wholeImage;
     private boolean debug;
     private int [] args;//first 4 always chunk, maybe dummy
+    private ImagePreprocesor ip;
 
-    public CannyDetect(boolean w, boolean d, int...intArgs) {
+    public CannyDetect(ImagePreprocesor ip, boolean w, boolean d, int...intArgs) {
+    	this.ip = ip;
         this.wholeImage = w;
         this.debug = d;
         if (intArgs.length != 5) throw new RuntimeException("Arguments length"); 
@@ -75,11 +78,11 @@ public class CannyDetect implements IImageProcesor, IColorScheme {
         int verGrad, horGrad;
         
         Pixel inPix = null;
-        Pixel outPix = null;
+        //Pixel outPix = null;
         
         for (int absX = widthFrom; absX < widthTo; absX++) {
             for (int absY = heightFrom; absY < heightTo; absY++) {
-            	
+
                 //SobelOperator
             	//iterate kernel
                 countX = 0;
@@ -91,7 +94,7 @@ public class CannyDetect implements IImageProcesor, IColorScheme {
                 for (int absKernelX = absX - borderS; absKernelX < absX + borderS + 1; absKernelX++) {
                     for (int absKernelY = absY - borderS; absKernelY < absY + borderS + 1; absKernelY++) {
             	    
-                    	inPix = in.getPixel(absKernelX, absKernelY); 
+                    	inPix = in.getPixel(absKernelX, absKernelY);
                     	horGrad += inPix.getRed() * Sobel.HOR_KERNEL[countX][countY];
                     	verGrad += inPix.getRed() * Sobel.VER_KERNEL[countX][countY];
                     	
@@ -100,98 +103,23 @@ public class CannyDetect implements IImageProcesor, IColorScheme {
                     countY = 0;
                     countX++;
                 }
-                outPix = out.getPixel(absX, absY);
+                //outPix = out.getPixel(absX, absY);
+                
                 AugmentedPixel augPix = new AugmentedPixel(verGrad,horGrad);
-                augPix.compute();
-                int gradientSteep = (int) augPix.getGradientComputed();
-                //gradientSteep > 0
-                if(gradientSteep > 0){
-                	
-                    //System.out.println("Pixel out " + outPix.toString() + " horGrad " + horGrad + " verGrad " + verGrad +
-                    		//" computed "+gradientSteep + " directionDEG " + augPix.getDirection() +" "+ augPix.getDirEnum());
-                    //System.out.println("_____________________________________________________");
-                    
-                    switch (augPix.getDirEnum()){
-                    
-                    case N : {
-
-                    	    outPix.setRed(255);
-                    	    outPix.setGreen(255);
-                    	    outPix.setBlue(255);                    		
-                    	
-                    };break;
-                    case NE : {
-
-                    	    outPix.setRed(100);
-                    	    outPix.setGreen(255);
-                    	    outPix.setBlue(255);                    		
-                    	
-                    	
-                    };break;
-                    case E : {
-
-                    	    outPix.setRed(180);
-                    	    outPix.setGreen(50);
-                    	    outPix.setBlue(25);                    		
-
-                    };break;
-                    case SE : {
-
-                    	    outPix.setRed(100);
-                    	    outPix.setGreen(255);
-                    	    outPix.setBlue(20);                    		
-                    	    
-                    };break;
-                    
-					case NW:{
-						
-                	    outPix.setRed(200);
-                	    outPix.setGreen(100);
-                	    outPix.setBlue(255);
-                	    
-					}
-						break;
-					case S:{
-						
-                	    outPix.setRed(100);
-                	    outPix.setGreen(100);
-                	    outPix.setBlue(100);
-                	    
-					}
-						break;
-					case SW:{
-						
-                	    outPix.setRed(255);
-                	    outPix.setGreen(100);
-                	    outPix.setBlue(100);
-                	    
-					}
-						break;
-					case W:{
-						
-                	    outPix.setRed(50);
-                	    outPix.setGreen(100);
-                	    outPix.setBlue(180);
-                	    
-					}
-						break;
-					case ZERO:{
-						
-                	    outPix.setRed(0);
-                	    outPix.setGreen(255);
-                	    outPix.setBlue(0);
-						
-					}
-						break;
-					case ERROR : {
-                    	throw new RuntimeException("ERROR"); 
-                    }
-					default:
-						throw new RuntimeException("DEFAULT");
-                    }
-                    
-                } else if(inPix.getRed() > 0) outPix.setRed(redScheme[0]);
+                inPix = in.getPixel(absX, absY);
+                toAugmented.put(inPix, augPix);
+                
+                //outPix.setRed(inPix.getRed());
+                //outPix.setGreen(inPix.getGreen());
+                //outPix.setBlue(inPix.getBlue());
+                
             }
         }
+        ip.addMap(toAugmented);
+        if(debug) System.out.println("toAugmented.size() in CannyDetect " + toAugmented.size());
     }
+
+	public Map < Pixel, AugmentedPixel > getToAugmented() {
+		return toAugmented;
+	}
 }
