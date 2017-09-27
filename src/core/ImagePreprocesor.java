@@ -76,6 +76,8 @@ public class ImagePreprocesor implements IColorScheme {
         boolean wholePicture) {
 
         IImageProcesor sharpen = new Sharpen(
+        	inputImageResource,
+        	procesedImageResourceStage1,
             wholePicture,
             debug,
             widthFrom,
@@ -87,7 +89,7 @@ public class ImagePreprocesor implements IColorScheme {
         );
         
         debugPrint("procesSharpen");
-        sharpen.doYourThing(inputImageResource, procesedImageResourceStage1);
+        sharpen.doYourThing();
     }
 
     /**
@@ -106,6 +108,8 @@ public class ImagePreprocesor implements IColorScheme {
             boolean wholePicture){
 
     	IImageProcesor gaussian = new GaussianBlur(
+    			procesedImageResourceStage1,
+    			procesedImageResourceStage2,
     			wholePicture,
     			debug,
                 widthFrom,
@@ -115,7 +119,7 @@ public class ImagePreprocesor implements IColorScheme {
                 borderAtSharpenStage
     			);
     	debugPrint("procesGaussian");
-    	gaussian.doYourThing(procesedImageResourceStage1, procesedImageResourceStage2);
+    	gaussian.doYourThing();
     }
     
 	CannyDetect canny; //implements IImageProcesor
@@ -137,6 +141,7 @@ public class ImagePreprocesor implements IColorScheme {
 			) {
 			
 		canny = new CannyDetect(
+				procesedImageResourceStage2,
 				this,
 				wholePicture,
 				debug, 
@@ -147,7 +152,7 @@ public class ImagePreprocesor implements IColorScheme {
                 borderAtSharpenStage
 				);
 		debugPrint("procesCanny");
-		canny.doYourThing(procesedImageResourceStage2, null);
+		canny.doYourThing();
 	}
 	
 	Map<Pixel, AugmentedPixel> toAugmented;
@@ -172,6 +177,8 @@ public class ImagePreprocesor implements IColorScheme {
 		if(toAugmented == null || toAugmented.size() == 0) throw new RuntimeException("INVARIANT 2");
 		
 		IImageProcesor highlight = new EdgeHighlight(
+				procesedImageResourceStage2,
+				procesedImageResourceStage3,
 				toAugmented,
 				wholePicture,
 				debug, 
@@ -182,7 +189,7 @@ public class ImagePreprocesor implements IColorScheme {
                 borderAtSharpenStage
 				);
 		debugPrint("procesHighlight");
-		highlight.doYourThing(procesedImageResourceStage2, procesedImageResourceStage3);
+		highlight.doYourThing();
 	}
    public void addMap(Map <Pixel, AugmentedPixel> chop){
 	   chopsToAugmentedList.add(chop);

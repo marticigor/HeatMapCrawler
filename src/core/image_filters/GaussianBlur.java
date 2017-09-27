@@ -8,25 +8,19 @@ import ifaces.IImageProcesor;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
-public class GaussianBlur implements IImageProcesor, IColorScheme {
+public class GaussianBlur extends BaseFilter implements IImageProcesor, IColorScheme {
 
-    private int borderSharpenStage;
-    private boolean wholeImage;
-    private boolean debug;
-    private int[] args; //first 4 always chunk, maybe dummy
-
-    public GaussianBlur(boolean w, boolean d, int...intArgs) {
-        this.wholeImage = w;
-        this.debug = d;
-        args = intArgs;
-        if (intArgs.length != 5) throw new RuntimeException("Arguments length");
-        borderSharpenStage = intArgs[4];
+	private ImageResource in, out;
+	private int borderG = Gaussian.BORDER_GAUS_3;
+	
+    public GaussianBlur(ImageResource in, ImageResource out, boolean w, boolean d, int...intArgs) {
+    	super (in.getWidth(), in.getHeight(),Gaussian.BORDER_GAUS_3,w, d, 5, intArgs);
+    	this.in = in;
+    	this.out = out;
     }
 
     @Override
-    public void doYourThing(ImageResource in , ImageResource out) {
-
-        int borderG = Gaussian.BORDER_GAUS_3;
+    public void doYourThing() {
 
         int[] values = ChunksOrWhole.decide(args, wholeImage, in .getWidth(), in .getHeight());
         final int xSize = in .getWidth();

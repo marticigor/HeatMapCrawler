@@ -12,7 +12,8 @@ public class RoundIteratorOfPixels implements Iterable < Pixel > , Iterator < Pi
     //private Pixel home = null;
     private int homeX,
     homeY;
-    private byte[] roundHomeX = {-1,
+    private byte[] roundHomeX = {
+    	-1,
         0,
         +1,
         +1,
@@ -21,7 +22,8 @@ public class RoundIteratorOfPixels implements Iterable < Pixel > , Iterator < Pi
         -1,
         -1
     };
-    private byte[] roundHomeY = {-1,
+    private byte[] roundHomeY = {
+    	-1,
         -1,
         -1,
         0,

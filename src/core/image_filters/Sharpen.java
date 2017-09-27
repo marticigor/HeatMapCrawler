@@ -1,47 +1,26 @@
 package core.image_filters;
 
-import core.image_filters.filter_utils.ChunksNotMessedAssertion;
-import core.image_filters.filter_utils.ChunksOrWhole;
 import ifaces.IColorScheme;
 import ifaces.IImageProcesor;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
-public class Sharpen implements IImageProcesor, IColorScheme {
+public class Sharpen extends BaseFilter implements IImageProcesor, IColorScheme {
 
-    private int borderSharpenStage;
     private int devToMakeItValidRoutable;
-    private boolean wholeImage;
-    private boolean debug;
-    private int [] args;//first 4 always chunk, maybe dummy
+    private ImageResource in,out;
 
-    public Sharpen(boolean w, boolean d, int...intArgs) {
-        this.wholeImage = w;
-        this.debug = d;
-        if (intArgs.length != 6) throw new RuntimeException("Arguments length"); 
-        this.args = intArgs;
-        borderSharpenStage = intArgs[4];
+    public Sharpen(ImageResource in, ImageResource out, boolean w, boolean d, int...intArgs) {
+    	super(in.getWidth(), in.getHeight(), 2, w, d, 6, intArgs);//hardcoded border!
         devToMakeItValidRoutable = intArgs[5];
-
-        if (debug) for (int i: intArgs) System.out.println("Args in Sharpen: " + i);
+        this.in = in;
+        this.out = out;
     }
     /**
      * 
      */
     @Override
-    public void doYourThing(ImageResource in , ImageResource out) {
-
-        int [] values = ChunksOrWhole.decide(args, wholeImage, in.getWidth(), in.getHeight());
-        
-        final int xSize = in .getWidth();
-        final int ySize = in .getHeight();
-        final boolean halt = ChunksNotMessedAssertion.assertOK(xSize, ySize, values, borderSharpenStage);
-        if (halt) throw new RuntimeException("chunks messed");
-        
-        int widthFrom = values[0];
-        int widthTo = values[1];
-        int heightFrom = values[2];
-        int heightTo = values[3];    	
+    public void doYourThing() {
         
         Pixel outP;
         Pixel inP;

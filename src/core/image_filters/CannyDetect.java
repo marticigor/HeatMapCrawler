@@ -4,34 +4,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 import core.ImagePreprocesor;
-import core.image_filters.filter_utils.BorderWatch;
-import core.image_filters.filter_utils.ChunksNotMessedAssertion;
-import core.image_filters.filter_utils.ChunksOrWhole;
 import ifaces.IColorScheme;
 import ifaces.IImageProcesor;
 import lib_duke.AugmentedPixel;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
-public class CannyDetect implements IImageProcesor, IColorScheme {
+public class CannyDetect extends BaseFilter implements IImageProcesor, IColorScheme {
 
     private Map < Pixel, AugmentedPixel > toAugmented = new HashMap < Pixel, AugmentedPixel > ();
-
-    private int borderSharpenStage;
-    private boolean wholeImage;
-    private boolean debug;
-    private int [] args;//first 4 always chunk, maybe dummy
     private ImagePreprocesor ip;
-
-    public CannyDetect(ImagePreprocesor ip, boolean w, boolean d, int...intArgs) {
+    private ImageResource in;
+    
+    public CannyDetect(ImageResource in, ImagePreprocesor ip, boolean w, boolean d, int...intArgs) {
+    	super(in.getWidth(), in.getHeight(), Sobel.KERNEL_BORDER, w, d, 5, intArgs);
     	this.ip = ip;
-        this.wholeImage = w;
-        this.debug = d;
-        if (intArgs.length != 5) throw new RuntimeException("Arguments length"); 
-        this.args = intArgs;
-        borderSharpenStage = intArgs[4];
-        if(borderSharpenStage < Sobel.KERNEL_BORDER) throw new RuntimeException("kernel mess");
-        if (debug) for (int i: intArgs) System.out.println("Args in Sharpen: " + i);
+    	this.in = in;
     }
 
     static class Sobel {
@@ -57,28 +45,14 @@ public class CannyDetect implements IImageProcesor, IColorScheme {
     }
 
     @Override
-    public void doYourThing(ImageResource in , ImageResource out) {
-
-        int [] values = ChunksOrWhole.decide(args, wholeImage, in.getWidth(), in.getHeight());
+    public void doYourThing() {
     	
-        final int xSize = in .getWidth();
-        final int ySize = in .getHeight();
-        final boolean halt = ChunksNotMessedAssertion.assertOK(xSize, ySize, values, borderSharpenStage);
-        if (halt) throw new RuntimeException("chunks messed");
-        
-        BorderWatch border = new BorderWatch(values, borderSharpenStage, xSize, ySize);
-        
-        int widthFrom = border.getWidthFrom();
-        int widthTo = border.getWidthTo();
-        int heightFrom = border.getHeightFrom();
-        int heightTo = border.getHeightTo();
         int borderS = Sobel.KERNEL_BORDER;
         
         int countX, countY;
         int verGrad, horGrad;
         
         Pixel inPix = null;
-        //Pixel outPix = null;
         
         for (int absX = widthFrom; absX < widthTo; absX++) {
             for (int absY = heightFrom; absY < heightTo; absY++) {
@@ -103,16 +77,11 @@ public class CannyDetect implements IImageProcesor, IColorScheme {
                     countY = 0;
                     countX++;
                 }
-                //outPix = out.getPixel(absX, absY);
                 
                 AugmentedPixel augPix = new AugmentedPixel(verGrad,horGrad);
                 inPix = in.getPixel(absX, absY);
                 toAugmented.put(inPix, augPix);
-                
-                //outPix.setRed(inPix.getRed());
-                //outPix.setGreen(inPix.getGreen());
-                //outPix.setBlue(inPix.getBlue());
-                
+
             }
         }
         ip.addMap(toAugmented);

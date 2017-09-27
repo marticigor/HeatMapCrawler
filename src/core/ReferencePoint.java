@@ -12,11 +12,9 @@ public class ReferencePoint {
     private double lat;
 
     public ReferencePoint(int x, int y, double lon, double lat) {
-
         this.x = x;
         this.y = y;
         this.lon = lon;
         this.lat = lat;
-
     }
 }
