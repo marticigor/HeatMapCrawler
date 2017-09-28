@@ -182,7 +182,6 @@ public class NodeFinder implements IColorScheme {
 
                     }
 
-                    //TODO merge into previous cycle?
                     for (Node possiblyClosestNode: maximusNodes) {
 
                         if (possiblyClosestNode.getDstToCenter() == minDist) {

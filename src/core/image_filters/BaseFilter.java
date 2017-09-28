@@ -3,8 +3,9 @@ package core.image_filters;
 import core.image_filters.filter_utils.BorderWatch;
 import core.image_filters.filter_utils.ChunksNotMessedAssertion;
 import core.image_filters.filter_utils.ChunksOrWhole;
+import ifaces.IImageProcesor;
 
-public class BaseFilter {
+public class BaseFilter implements IImageProcesor{
 	
     protected int borderSharpenStage;
     protected boolean wholeImage;
@@ -48,4 +49,10 @@ public class BaseFilter {
         
         if(borderSharpenStage < border) throw new RuntimeException("kernel mess BaseFilter");
     }
+
+	@Override
+	public void doYourThing() {
+		// TODO Auto-generated method stub
+		
+	}
 }

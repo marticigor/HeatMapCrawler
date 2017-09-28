@@ -4,11 +4,10 @@ import core.image_filters.filter_utils.BorderWatch;
 import core.image_filters.filter_utils.ChunksNotMessedAssertion;
 import core.image_filters.filter_utils.ChunksOrWhole;
 import ifaces.IColorScheme;
-import ifaces.IImageProcesor;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
-public class GaussianBlur extends BaseFilter implements IImageProcesor, IColorScheme {
+public class GaussianBlur extends BaseFilter implements IColorScheme {
 
 	private ImageResource in, out;
 	private int borderG = Gaussian.BORDER_GAUS_3;

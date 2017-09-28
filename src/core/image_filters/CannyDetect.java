@@ -5,12 +5,11 @@ import java.util.Map;
 
 import core.ImagePreprocesor;
 import ifaces.IColorScheme;
-import ifaces.IImageProcesor;
 import lib_duke.AugmentedPixel;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
-public class CannyDetect extends BaseFilter implements IImageProcesor, IColorScheme {
+public class CannyDetect extends BaseFilter implements IColorScheme {
 
     private Map < Pixel, AugmentedPixel > toAugmented = new HashMap < Pixel, AugmentedPixel > ();
     private ImagePreprocesor ip;

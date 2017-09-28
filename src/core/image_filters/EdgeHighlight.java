@@ -3,13 +3,12 @@ package core.image_filters;
 import java.util.Map;
 
 import ifaces.IColorScheme;
-import ifaces.IImageProcesor;
 import lib_duke.AugmentedPixel;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
 //INVARIANT: create with HashMap from Canny Detect
-public class EdgeHighlight extends BaseFilter implements IImageProcesor, IColorScheme {
+public class EdgeHighlight extends BaseFilter implements IColorScheme {
 
     private final Map < Pixel, AugmentedPixel > toAugmented;
     private ImageResource in,out;
