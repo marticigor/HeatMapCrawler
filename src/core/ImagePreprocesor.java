@@ -208,7 +208,7 @@ public class ImagePreprocesor implements IColorScheme {
    	// procesedImageResourceStage2.saveAs();
    	//
    	//
-       return procesedImageResourceStage2;
+       return procesedImageResourceStage1;
    }
     /**
      *
@@ -220,7 +220,7 @@ public class ImagePreprocesor implements IColorScheme {
     	// procesedImageResourceStage2.saveAs();
     	//
     	//
-        return procesedImageResourceStage3;
+        return procesedImageResourceStage1;
     }
     private void debugPrint(String job){
     	if(debug || visual) System.out.println(this.getClass().toString() + " call " + job);

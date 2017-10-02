@@ -89,13 +89,14 @@ public class Runner implements Runnable {
 
         NodeFinder nf = new NodeFinder(procesedMap, look, surface);
         nf.findNodes();
-        nf.vizualizeNoded(); //DRAW
+        //nf.vizualizeNoded(); //DRAW
 
         final ImageResource noded = nf.getNodedImage();
         final List < Node > nodes = nf.getNodes();
 
         AdjacencyFinder af = new AdjacencyFinder(noded, nodes, visual, debug, bottleneckSize, passableSize);
         af.buildAdjacencyLists();
+        af.drawAdjacencyEdges();
 
         //TEST PRINT
         //printBuiltNodes(nodes);
@@ -118,15 +119,15 @@ public class Runner implements Runnable {
         
         TaskGaussian [] gaussianTask = new TaskGaussian[sizeDivKonq * sizeDivKonq];
         decorateFactory(gaussianTask, TaskGaussian.class, ip);
-        stages.add(gaussianTask);
+        //stages.add(gaussianTask);
         
         TaskCanny[] cannyTask = new TaskCanny[sizeDivKonq * sizeDivKonq];
         decorateFactory(cannyTask, TaskCanny.class, ip);
-        stages.add(cannyTask);
+        //stages.add(cannyTask);
         
         TaskHighlight [] highlightTask = new TaskHighlight [sizeDivKonq * sizeDivKonq];
         decorateFactory(highlightTask, TaskHighlight.class, ip);
-        stages.add(highlightTask);
+        //stages.add(highlightTask);
         
         //--------------------------------------------------
         //FILTERS QUEUE FIFO END

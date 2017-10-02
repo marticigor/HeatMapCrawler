@@ -298,13 +298,9 @@ public class NodeFinder implements IColorScheme {
         }
     }
 
-    public void drawNoded() {
-        noded.draw();
-    }
-
     public void vizualizeNoded() {
         System.out.println("Number of nodes: " + nmbOfNodes);
-        drawNoded();
+        noded.draw();
     }
     public ImageResource getNodedImage() {
         return noded;

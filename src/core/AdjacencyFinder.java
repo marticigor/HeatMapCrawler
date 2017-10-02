@@ -4,6 +4,7 @@ import java.util.*;
 
 import ifaces.IColorScheme;
 import lib_duke.ImageResource;
+import lib_duke.LineMaker;
 import lib_duke.Pixel;
 public class AdjacencyFinder implements IColorScheme {
 
@@ -168,6 +169,38 @@ public class AdjacencyFinder implements IColorScheme {
             }
         } //scope for adjacency lists builder
         noded.draw();
+
+    }
+    
+    /**
+     * 
+     */
+    public void drawAdjacencyEdges(){
+    	ImageResource edges = new ImageResource(noded.getWidth(), noded.getHeight());
+        LineMaker lm = new LineMaker(edges);
+        int x1,y1,x2,y2;
+        int r,g,b;
+        Random rndm = new Random();
+        for (Node n : nodes){
+        	Set <Node> adjacents = n.getAdjacentNodes();
+        	x1 = n.getX();
+        	y1 = n.getY();
+        	
+        	r = rndm.nextInt(256);
+        	g = rndm.nextInt(256);
+        	b = rndm.nextInt(256);
+        	
+        	if( r < 50) r = 50;
+        	if( g < 50) g = 50;
+        	if( b < 50) b = 50;
+        	
+        	for(Node a : adjacents){
+        		x2 = a.getX();
+        		y2 = a.getY();
+        		lm.drawLine(x1, y1, x2, y2, r, g, b);
+        	}
+        }
+        edges.draw();
     }
 
     /**
