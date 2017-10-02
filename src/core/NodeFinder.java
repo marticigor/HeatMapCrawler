@@ -46,7 +46,7 @@ public class NodeFinder implements IColorScheme {
     }
 
     /**
-     *  
+     *
      */
     public void findNodes() {
 
@@ -57,7 +57,10 @@ public class NodeFinder implements IColorScheme {
 
         iteratorRound.setImageResource(sharpened);
         iteratorRound.resetCount();
-
+        //
+        //finds salient pixels that probably belong to a region of
+        //interest in terms of future node.
+        //
         for (int x = lookAheadAndBack + 1; x < width - (lookAheadAndBack + 1); x++) {
             for (int y = lookAheadAndBack + 1; y < height - (lookAheadAndBack + 1); y++) {
 
@@ -107,7 +110,7 @@ public class NodeFinder implements IColorScheme {
                 allClusterAroundNode.clear();
                 rcf.resetAllCluster();
 
-                //now define recursively a node object as a small bitmap  
+                //now define recursively a node object as a small bitmap
 
                 setClustered(pOfNoded); //as this emerges from recursion we have filled allClusterAroundNode
 

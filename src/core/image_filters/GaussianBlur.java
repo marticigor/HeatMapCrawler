@@ -10,10 +10,10 @@ import lib_duke.Pixel;
 public class GaussianBlur extends BaseFilter implements IColorScheme {
 
 	private ImageResource in, out;
-	private int borderG = Gaussian.BORDER_GAUS_3;
+	private int borderG = Gaussian.BORDER_GAUS_5;
 	
     public GaussianBlur(ImageResource in, ImageResource out, boolean w, boolean d, int...intArgs) {
-    	super (in.getWidth(), in.getHeight(),Gaussian.BORDER_GAUS_3,w, d, 5, intArgs);
+    	super (in.getWidth(), in.getHeight(),Gaussian.BORDER_GAUS_5, w, d, 5, intArgs);
     	this.in = in;
     	this.out = out;
     }
@@ -88,18 +88,18 @@ public class GaussianBlur extends BaseFilter implements IColorScheme {
                         matrixY = countY;
 
                         matrixPixel = in .getPixel(absKernelX, absKernelY);
-                        cumulR += (matrixPixel.getRed() * Gaussian.GAUS_KERNEL_3[matrixX][matrixY]);
-                        cumulG += (matrixPixel.getGreen() * Gaussian.GAUS_KERNEL_3[matrixX][matrixY]);
-                        cumulB += (matrixPixel.getBlue() * Gaussian.GAUS_KERNEL_3[matrixX][matrixY]);
+                        cumulR += (matrixPixel.getRed() * Gaussian.GAUS_KERNEL_5[matrixX][matrixY]);
+                        cumulG += (matrixPixel.getGreen() * Gaussian.GAUS_KERNEL_5[matrixX][matrixY]);
+                        cumulB += (matrixPixel.getBlue() * Gaussian.GAUS_KERNEL_5[matrixX][matrixY]);
                         countY++;
                     }
                     countY = 0;
                     countX++;
                 }
 
-                r = (int)(((double) cumulR) * Gaussian.NORMALIZE_GAUS_3);
-                g = (int)(((double) cumulG) * Gaussian.NORMALIZE_GAUS_3);
-                b = (int)(((double) cumulB) * Gaussian.NORMALIZE_GAUS_3);
+                r = (int)(((double) cumulR) * Gaussian.NORMALIZE_GAUS_5);
+                g = (int)(((double) cumulG) * Gaussian.NORMALIZE_GAUS_5);
+                b = (int)(((double) cumulB) * Gaussian.NORMALIZE_GAUS_5);
 
                 if (r > MAX || g > MAX || b > MAX) {
                     System.out.println("CULPRIT R " + r);
@@ -116,9 +116,13 @@ public class GaussianBlur extends BaseFilter implements IColorScheme {
             }
         }
     }
-    
+
     static class Gaussian {
-        private static final int[][] GAUS_KERNEL_3 = new int[][] {
+    
+    //--------------------------------------------------------
+    
+    @SuppressWarnings("unused")
+	private static final int[][] GAUS_KERNEL_3 = new int[][] {
         {
             2,2,2
         }, {
@@ -127,7 +131,28 @@ public class GaussianBlur extends BaseFilter implements IColorScheme {
             2,2,2
         }
     };
-    private static final double NORMALIZE_GAUS_3 = 1 / 22d;
-    private static final byte BORDER_GAUS_3 = 1;
+    @SuppressWarnings("unused")
+	private static final double NORMALIZE_GAUS_3 = 1 / 22d;
+    @SuppressWarnings("unused")
+	private static final byte BORDER_GAUS_3 = 1;
+
+    //--------------------------------------------------------
+
+    private static final int[][] GAUS_KERNEL_5 = new int[][] {
+        {
+            2,4,5,4,2
+        }, {
+            4,9,12,9,4
+        }, {
+            5,12,15,12,5
+        }, {
+        	4,9,12,9,4
+        }, {
+        	2,4,5,4,2
+        }
+    };
+    private static final double NORMALIZE_GAUS_5 = 1 / 159d;
+    private static final byte BORDER_GAUS_5 = 2;
+    
     }
 }

@@ -30,7 +30,7 @@ public class ControlWin implements Runnable {
     //TODO DI for defaults
 
 
-    //defaults to go down the line 
+    //defaults to go down the line
     //
     //
     //
