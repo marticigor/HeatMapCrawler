@@ -162,7 +162,7 @@ public class LineMaker {
 
     public void drawLine(int x1, int y1, int x2, int y2, int r, int g, int b) {
 
-        int x, y, xT, yT, dx, dy, p, dXII, dYII;
+        int x, y, xT, yT, dx, dy, p, dxII, dyII;
 
         dx = x2 - x1;
         dy = -(y2 - y1);
@@ -188,8 +188,8 @@ public class LineMaker {
         y = y1;
         p = 2 * dy - dx;
 
-        dXII = 2 * dx;
-        dYII = 2 * dy;
+        dxII = 2 * dx;
+        dyII = 2 * dy;
 
         Pixel px;
 
@@ -206,9 +206,9 @@ public class LineMaker {
 
             if (p >= 0) {
                 y++;
-                p = p + dYII - dXII;
+                p = p + dyII - dxII;
             } else {
-                p = p + dYII;
+                p = p + dyII;
             }
         }
     }

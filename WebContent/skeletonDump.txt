@@ -1,0 +1,26 @@
+		    for (int [] elem : strElems){
+                for (int absX = widthFrom; absX < widthTo; absX++) {
+                    for (int absY = heightFrom; absY < heightTo; absY++) {
+                    
+                	    p = in.getPixel(absX, absY);
+
+            		    riop.setPixelToCheckAround(p);
+            		    riop.resetCount();
+            		    indexRoundIter = 0;
+		    
+            		    passed = true;
+            		    for(Pixel pi : riop){
+                         
+            		    	compareFromPi = (pi.getRed() == redScheme[0] ? 1 : 0 );
+            		    	compareFromElem = elem[indexRoundIter];
+            		    	
+            		    	if(compareFromElem != -1 && compareFromPi != compareFromElem) passed = false;
+            		        indexRoundIter ++;
+            		        
+            		    }
+            		    
+            		    if(passed) p.setRed(redScheme[0]);else p.setRed(0);
+            		    
+            	    }
+                }
+            }

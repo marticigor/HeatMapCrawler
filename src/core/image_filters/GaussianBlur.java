@@ -1,8 +1,5 @@
 package core.image_filters;
 
-import core.image_filters.filter_utils.BorderWatch;
-import core.image_filters.filter_utils.ChunksNotMessedAssertion;
-import core.image_filters.filter_utils.ChunksOrWhole;
 import ifaces.IColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
@@ -21,32 +18,11 @@ public class GaussianBlur extends BaseFilter implements IColorScheme {
     @Override
     public void doYourThing() {
 
-        int[] values = ChunksOrWhole.decide(args, wholeImage, in .getWidth(), in .getHeight());
-        final int xSize = in .getWidth();
-        final int ySize = in .getHeight();
-        final boolean halt = ChunksNotMessedAssertion.assertOK(xSize, ySize, values, borderSharpenStage);
-        if (halt) throw new RuntimeException("chunks messed");
-
-        BorderWatch border = new BorderWatch(values, borderG, xSize, ySize);
-        
-        int widthFrom = border.getWidthFrom();
-        int widthTo = border.getWidthTo();
-        int heightFrom = border.getHeightFrom();
-        int heightTo = border.getHeightTo();
-
-        Pixel pixelOut, matrixPixel;
-
         int r, g, b;
         int matrixX, matrixY;
         int cumulR, cumulG, cumulB;
-
-        if (borderG > borderSharpenStage) throw new RuntimeException("borders");
-
-        if (debug) {
-            System.out.println(" GaussianBlur var: xSize " + xSize);
-            System.out.println(" GaussianBlur var: ySize " + ySize);
-        }
-
+        Pixel pixelOut, matrixPixel;
+        
         //matrix counters
         int countX;
         int countY;

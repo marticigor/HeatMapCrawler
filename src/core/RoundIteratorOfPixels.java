@@ -8,7 +8,14 @@ import lib_duke.Pixel;
 
 public class RoundIteratorOfPixels implements Iterable < Pixel > , Iterator < Pixel > {
 
-    private ImageResource ir = null;
+	public RoundIteratorOfPixels (ImageResource ir){
+		this.ir = ir;
+	}
+	
+    public RoundIteratorOfPixels() {
+	}
+
+	private ImageResource ir = null;
     //private Pixel home = null;
     private int homeX,
     homeY;
@@ -33,6 +40,14 @@ public class RoundIteratorOfPixels implements Iterable < Pixel > , Iterator < Pi
         0
     };
 
+    public byte[] getRoundY(){
+    	return roundHomeY;
+    }
+    
+    public byte[] getRoundX(){
+    	return roundHomeX;
+    }
+    
     private byte count = 0;
     public boolean print = false;
 

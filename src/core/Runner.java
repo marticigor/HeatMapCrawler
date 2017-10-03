@@ -10,6 +10,7 @@ import core.tasks.TaskCanny;
 import core.tasks.TaskGaussian;
 import core.tasks.TaskHighlight;
 import core.tasks.TaskSharpen;
+import core.tasks.TaskSkeleton;
 import lib_duke.ImageResource;
 
 import java.util.concurrent.ForkJoinPool;
@@ -29,7 +30,7 @@ public class Runner implements Runnable {
     private ImageChunks chunks;
 
     //this border is necessary for kernel convolution later on, not necessary
-    //in sharpen stage though
+    //in sharpen stage
     private final int borderInSharpenStage = ((Math.max(bottleneckSize, passableSize)) - 1) / 2;
 
     /**
@@ -82,8 +83,8 @@ public class Runner implements Runnable {
         chunks = new ImageChunks(ip.getX(), ip.getY(), sizeDivKonq);
         perManyTasksProces(ip);
 
-        final ImageResource procesedMapStage = ip.getProcesedStage();
-        procesedMapStage.draw();
+        //final ImageResource procesedMapStage = ip.getProcesedStage();
+        //procesedMapStage.draw();
         final ImageResource procesedMap = ip.getProcesed();
         procesedMap.draw();
 
@@ -117,16 +118,20 @@ public class Runner implements Runnable {
         decorateFactory(sharpenTask, TaskSharpen.class, ip);
         stages.add(sharpenTask);
         
-        TaskGaussian [] gaussianTask = new TaskGaussian[sizeDivKonq * sizeDivKonq];
-        decorateFactory(gaussianTask, TaskGaussian.class, ip);
+        TaskSkeleton [] skeletonTask = new TaskSkeleton[sizeDivKonq * sizeDivKonq];
+        decorateFactory(skeletonTask, TaskSkeleton.class, ip);
+        stages.add(skeletonTask);
+        
+        //TaskGaussian [] gaussianTask = new TaskGaussian[sizeDivKonq * sizeDivKonq];
+        //decorateFactory(gaussianTask, TaskGaussian.class, ip);
         //stages.add(gaussianTask);
         
-        TaskCanny[] cannyTask = new TaskCanny[sizeDivKonq * sizeDivKonq];
-        decorateFactory(cannyTask, TaskCanny.class, ip);
+        //TaskCanny[] cannyTask = new TaskCanny[sizeDivKonq * sizeDivKonq];
+        //decorateFactory(cannyTask, TaskCanny.class, ip);
         //stages.add(cannyTask);
         
-        TaskHighlight [] highlightTask = new TaskHighlight [sizeDivKonq * sizeDivKonq];
-        decorateFactory(highlightTask, TaskHighlight.class, ip);
+        //TaskHighlight [] highlightTask = new TaskHighlight [sizeDivKonq * sizeDivKonq];
+        //decorateFactory(highlightTask, TaskHighlight.class, ip);
         //stages.add(highlightTask);
         
         //--------------------------------------------------

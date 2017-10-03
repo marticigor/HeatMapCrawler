@@ -6,8 +6,8 @@ import lib_duke.Pixel;
 
 public class Sharpen extends BaseFilter implements IColorScheme {
 
-    private int devToMakeItValidRoutable;
-    private ImageResource in,out;
+    private final int devToMakeItValidRoutable;
+    private final ImageResource in,out;
 
     public Sharpen(ImageResource in, ImageResource out, boolean w, boolean d, int...intArgs) {
     	super(in.getWidth(), in.getHeight(), 2, w, d, 6, intArgs);//hardcoded border!

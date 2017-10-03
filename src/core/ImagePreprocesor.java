@@ -8,6 +8,7 @@ import core.image_filters.CannyDetect;
 import core.image_filters.EdgeHighlight;
 import core.image_filters.GaussianBlur;
 import core.image_filters.Sharpen;
+import core.image_filters.Skeleton;
 import core.image_filters.filter_utils.MapMerge;
 import ifaces.IColorScheme;
 import ifaces.IImageProcesor;
@@ -18,12 +19,13 @@ import lib_duke.Pixel;
 public class ImagePreprocesor implements IColorScheme {
 
     private final ImageResource inputImageResource;
+    private final ImageResource procesedImageResourceStage1;
+    private final ImageResource procesedImageResourceStage2;
+    private final ImageResource procesedImageResourceStage3 = null;//once no visualization kept is needed, make a cyclic queue
     @SuppressWarnings("unused")
-	private final ImageResource procesedImageResourceStage1,
-    procesedImageResourceStage2,
-    procesedImageResourceStage3,//once no visualization kept is needed, make a cyclic queue
-    procesedImageResourceStage4,
-    procesedImageResourceStage5;
+	private final ImageResource procesedImageResourceStage4 = null;
+    @SuppressWarnings("unused")
+	private final ImageResource procesedImageResourceStage5 = null;
 
     private final int devToMakeItValidRoutable; //80;
     private final int borderAtSharpenStage;
@@ -45,9 +47,9 @@ public class ImagePreprocesor implements IColorScheme {
         int h = inputImageResource.getHeight();
         procesedImageResourceStage1 = new ImageResource(w, h);
         procesedImageResourceStage2 = new ImageResource(w, h);//once no visualization kept is needed, make a cyclic queue
-        procesedImageResourceStage3 = new ImageResource(w, h);
-        procesedImageResourceStage4 = new ImageResource(w, h);
-        procesedImageResourceStage5 = new ImageResource(w, h);
+        //procesedImageResourceStage3 = new ImageResource(w, h);
+        //procesedImageResourceStage4 = new ImageResource(w, h);
+        //procesedImageResourceStage5 = new ImageResource(w, h);
         
         this.visual = visual;
         this.debug = debug;
@@ -191,6 +193,39 @@ public class ImagePreprocesor implements IColorScheme {
 		debugPrint("procesHighlight");
 		highlight.doYourThing();
 	}
+	
+   /**
+    * 
+    * @param xFromIncl
+    * @param xToExcl
+    * @param yFromIncl
+    * @param yToExcl
+    * @param whole
+    */
+   public void procesSkeleton(
+		   int xFromIncl,
+		   int xToExcl,
+		   int yFromIncl,
+		   int yToExcl,
+		   boolean whole){
+	   
+	   IImageProcesor skeleton = new Skeleton(
+			   
+			   procesedImageResourceStage1,
+			   debug,
+			   whole,
+			   xFromIncl,
+			   xToExcl,
+			   yFromIncl,
+			   yToExcl,
+			   borderAtSharpenStage
+			   
+			   );
+	   
+	   skeleton.doYourThing();
+	   
+   }
+	
    public void addMap(Map <Pixel, AugmentedPixel> chop){
 	   chopsToAugmentedList.add(chop);
    }
@@ -208,7 +243,7 @@ public class ImagePreprocesor implements IColorScheme {
    	// procesedImageResourceStage2.saveAs();
    	//
    	//
-       return procesedImageResourceStage1;
+       return null;//procesedImageResourceStage1;
    }
     /**
      *
