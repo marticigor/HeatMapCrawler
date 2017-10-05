@@ -83,14 +83,15 @@ public class AdjacencyFinder implements IColorScheme {
             Pixel currP;
             int currX, currY;
 
-            maskAllNodes(true); //this is first run so map of pixels to recreate "green squares" gets created;
+            //this is first run so map of pixels to recreate "green squares" gets created;
+            maskAllNodes(true);
             noded.draw();
 
             //Pause.pause(9000);
 
             for (Node buildForThis: nodes) {
 
-                maskOrDemaskNode(buildForThis, false, false); //demask this node, not first run
+                maskOrDemaskNode(buildForThis, false); //demask this node, not first run
 
                 redCluster.clear();
 
@@ -139,12 +140,12 @@ public class AdjacencyFinder implements IColorScheme {
 
                     }
                 } //visual
-                maskOrDemaskNode(buildForThis, true, false); //doMask
+                maskOrDemaskNode(buildForThis, true); //doMask
             }
 
             demaskAllNodes();
             noded.draw();
-            Pause.pause(19000);
+            //Pause.pause(19000);
 
             System.out.println("actualy highlighting nodes");
 
@@ -227,8 +228,11 @@ public class AdjacencyFinder implements IColorScheme {
      * 
      */
     private void maskAllNodes(boolean firstRun) {
+    	
+    	if(firstRun) mapBackgrounds();
+    	
         for (Node node: nodes) {
-            maskOrDemaskNode(node, true, firstRun);
+            maskOrDemaskNode(node, true);
         }
     }
 
@@ -237,23 +241,52 @@ public class AdjacencyFinder implements IColorScheme {
      */
     private void demaskAllNodes() {
         for (Node node: nodes) {
-            maskOrDemaskNode(node, false, false);
+            maskOrDemaskNode(node, false);
         }
-        Pause.pause(16000);
+        //Pause.pause(16000);
     }
 
+    private void mapBackgrounds(){
+        
+    	int maskSize = 0;
+        int toSizes = 0;
+        int counter = 0;
+    	Pixel original, copy;//TODO do we really need a copy?
+        
+        for(Node n : nodes){
+    	    counter = 0;
+            maskSize = (n.getBottleneck()) ? bottleneckSize : passableSize;
+
+            toSizes = (maskSize - 1) / 2;
+            
+            for (int x = n.getX() - toSizes; x < n.getX() + toSizes + 1; x++) {
+                for (int y = n.getY() - toSizes; y < n.getY() + toSizes + 1; y++) {
+                
+                	original = noded.getPixel(x, y);
+                	copy = new Pixel(original);
+                	mapPixToNode.put(original, n);
+                	n.addPixelToMask(copy);
+                	counter ++;
+                	
+                }
+            }
+        	if(counter != (toSizes *2 + 1) * (toSizes *2 + 1))
+        		throw new RuntimeException("retrievedMaskSize.");
+    	}
+    }
+    
     /**
      *
      */
-    private void maskOrDemaskNode(Node n, boolean doMask, boolean firstRun) {
+    private void maskOrDemaskNode(Node n, boolean doMask) {
 
         int maskSize = 0;
         int toSizes = 0;
         int counter = 0;
+        Pixel original, copy;
         ArrayList < Pixel > retrievedMask = null;
 
-        if (n.getBottleneck()) maskSize = bottleneckSize;
-        else maskSize = passableSize;
+        maskSize = (n.getBottleneck()) ? bottleneckSize : passableSize;
 
         toSizes = (maskSize - 1) / 2;
 
@@ -266,24 +299,18 @@ public class AdjacencyFinder implements IColorScheme {
             for (int y = n.getY() - toSizes; y < n.getY() + toSizes + 1; y++) {
 
                 if (doMask) { //mask
-                    Pixel original = noded.getPixel(x, y);
-                    Pixel copy = new Pixel(original);
+                    original = noded.getPixel(x, y);
                     original.setRed(greenScheme[0]);
                     original.setGreen(greenScheme[1]);
                     original.setBlue(greenScheme[2]);
-                    if (firstRun) {
-                        n.addPixelToMask(copy);
-                        mapPixToNode.put(original, n);
-                    }
                 } else { //demask
                 	if(retrievedMask.size() != (toSizes *2 + 1) * (toSizes *2 + 1))
                 		throw new RuntimeException("retrievedMaskSize");
-                    Pixel original = noded.getPixel(x, y);
-                    Pixel copy = retrievedMask.get(counter);
+                    original = noded.getPixel(x, y);
+                    copy = retrievedMask.get(counter);
                     original.setRed(copy.getRed());
                     original.setGreen(copy.getGreen());
                     original.setBlue(copy.getBlue());
-                    
                     counter++;
                 }
             }
