@@ -98,7 +98,7 @@ public class NodeFinder implements IColorScheme {
         //
         //noded.draw();
         //noded.saveAs();
-        //Pause.pause(8000);
+        //Pause.pause(10000);
         //
         rcf = new RecursiveClusterFinder(noded, whiteScheme[0], whiteScheme[1], whiteScheme[2]);
         //
@@ -301,6 +301,7 @@ public class NodeFinder implements IColorScheme {
     public void vizualizeNoded() {
         System.out.println("Number of nodes: " + nmbOfNodes);
         noded.draw();
+        Pause.pause(12000);
     }
     public ImageResource getNodedImage() {
         return noded;

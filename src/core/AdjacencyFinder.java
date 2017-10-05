@@ -70,9 +70,9 @@ public class AdjacencyFinder implements IColorScheme {
             }
         }
 
-        noded.draw();
+        //noded.draw();
 
-        //Pause.pause(2000);
+        //Pause.pause(12000);
 
         Collections.sort(nodes);
 
@@ -86,7 +86,7 @@ public class AdjacencyFinder implements IColorScheme {
             maskAllNodes(true); //this is first run so map of pixels to recreate "green squares" gets created;
             noded.draw();
 
-            //Pause.pause(3000);
+            //Pause.pause(9000);
 
             for (Node buildForThis: nodes) {
 
@@ -144,6 +144,7 @@ public class AdjacencyFinder implements IColorScheme {
 
             demaskAllNodes();
             noded.draw();
+            Pause.pause(19000);
 
             System.out.println("actualy highlighting nodes");
 
@@ -238,6 +239,7 @@ public class AdjacencyFinder implements IColorScheme {
         for (Node node: nodes) {
             maskOrDemaskNode(node, false, false);
         }
+        Pause.pause(16000);
     }
 
     /**
@@ -269,17 +271,19 @@ public class AdjacencyFinder implements IColorScheme {
                     original.setRed(greenScheme[0]);
                     original.setGreen(greenScheme[1]);
                     original.setBlue(greenScheme[2]);
-
                     if (firstRun) {
-                        n.addPixelToMap(copy);
+                        n.addPixelToMask(copy);
                         mapPixToNode.put(original, n);
                     }
                 } else { //demask
+                	if(retrievedMask.size() != (toSizes *2 + 1) * (toSizes *2 + 1))
+                		throw new RuntimeException("retrievedMaskSize");
                     Pixel original = noded.getPixel(x, y);
                     Pixel copy = retrievedMask.get(counter);
                     original.setRed(copy.getRed());
                     original.setGreen(copy.getGreen());
                     original.setBlue(copy.getBlue());
+                    
                     counter++;
                 }
             }

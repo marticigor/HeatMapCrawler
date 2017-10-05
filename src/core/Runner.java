@@ -91,7 +91,7 @@ public class Runner implements Runnable {
 
         NodeFinder nf = new NodeFinder(procesedMap, look, surface);
         nf.findNodes();
-        //nf.vizualizeNoded(); //DRAW
+        //nf.vizualizeNoded(); //DRAW and PAUSE then GO ON
 
         final ImageResource noded = nf.getNodedImage();
         final List < Node > nodes = nf.getNodes();

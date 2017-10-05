@@ -69,7 +69,7 @@ public class Node implements Comparable < Node > {
         return adjacentNodes;
     }
 
-    public void addPixelToMap(Pixel pKey) {
+    public void addPixelToMask(Pixel pKey) {
         mask.add(pKey);
     }
 
