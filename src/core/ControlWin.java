@@ -3,12 +3,16 @@ package core;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+
 import java.awt.Dimension;
 import java.awt.GridLayout;
+
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.border.EmptyBorder;
 import javax.swing.SwingUtilities;
 
@@ -19,10 +23,14 @@ public class ControlWin implements Runnable {
     private JTextField textField_3;
     private JTextField textField_4;
     private JTextField textField_5;
-    private JTextField textField_6;
-    private JTextField textField_7;
-    private JTextField textField_8;
-    private JTextField textField_9;
+    @SuppressWarnings("unused")
+	private JTextField textField_6;
+    @SuppressWarnings("unused")
+	private JTextField textField_7;
+    @SuppressWarnings("unused")
+	private JTextField textField_8;
+    @SuppressWarnings("unused")
+	private JTextField textField_9;
 
     private int devi, look, surface;
 
@@ -40,10 +48,14 @@ public class ControlWin implements Runnable {
     //
     private static final String param4 = "param4";
     private static final String param5 = "param5";
-    private static final String param6 = "param6";
-    private static final String param7 = "param7";
-    private static final String param8 = "param8";
-    private static final String param9 = "param9";
+    @SuppressWarnings("unused")
+	private static final String param6 = "param6";
+    @SuppressWarnings("unused")
+	private static final String param7 = "param7";
+    @SuppressWarnings("unused")
+	private static final String param8 = "param8";
+    @SuppressWarnings("unused")
+	private static final String param9 = "param9";
     //
     //
     //

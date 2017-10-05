@@ -16,6 +16,7 @@ import lib_duke.ImageResource;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
+@SuppressWarnings("unused")
 public class Runner implements Runnable {
 
     //TODO DI for defaults
@@ -184,8 +185,7 @@ public class Runner implements Runnable {
     /**
      * 
      */
-    @SuppressWarnings("unused")
-	private void printBuiltNodes(List < Node > nodes) {
+    private void printBuiltNodes(List < Node > nodes) {
         for (Node n: nodes) {
             System.out.println("------------------------------------------------------");
             System.out.println("node " + n.toString());

@@ -8,7 +8,8 @@ import lib_duke.Pixel;
 //http://homepages.inf.ed.ac.uk/rbf/HIPR2/thin.htm
 public class Skeleton extends BaseFilter implements IColorScheme {
 	
-    private ImageResource in,out;
+    @SuppressWarnings("unused")
+	private ImageResource in,out;
 
 	public Skeleton(ImageResource in, ImageResource out, boolean w, boolean d, int...intArgs){
 		super(in.getWidth(), in.getHeight(),2, w, d, 5, intArgs);
