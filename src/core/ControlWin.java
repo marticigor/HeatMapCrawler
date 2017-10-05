@@ -34,9 +34,9 @@ public class ControlWin implements Runnable {
     //
     //
     //
-    private static final String devToMakeItValidRoutable = "56";
-    private static final String lookAheadAndBack = "3";
-    private static final String surfaceLimit = "42";
+    private static final String devToMakeItValidRoutable = "40";
+    private static final String lookAheadAndBack = "2";
+    private static final String surfaceLimit = "32";//42
     //
     private static final String param4 = "param4";
     private static final String param5 = "param5";
@@ -70,7 +70,7 @@ public class ControlWin implements Runnable {
         System.out.println("ControlWin is EDT " + SwingUtilities.isEventDispatchThread());
 
         frame = new JFrame("Controls");
-        Dimension def = new Dimension(260, 820);
+        Dimension def = new Dimension(260, 520);
         Dimension min = new Dimension(80, 160);
         frame.setSize(def);
         frame.setMinimumSize(min);
@@ -114,7 +114,7 @@ public class ControlWin implements Runnable {
         textField_5 = new JTextField();
         textField_5.setText(param5);
         decorateTF(textField_5);
-
+        /*
         JLabel label6 = new JLabel("param6");
         decorateL(label6);
 
@@ -142,7 +142,7 @@ public class ControlWin implements Runnable {
         textField_9 = new JTextField();
         textField_9.setText(param9);
         decorateTF(textField_9);
-
+        */
         JButton button1 = new JButton("OK");
         button1.setBorder(new EmptyBorder(10, 10, 10, 10));
         button1.addMouseListener(new MouseAdapter() {

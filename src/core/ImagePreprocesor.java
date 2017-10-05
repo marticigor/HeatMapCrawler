@@ -20,8 +20,8 @@ public class ImagePreprocesor implements IColorScheme {
 
     private final ImageResource inputImageResource;
     private final ImageResource procesedImageResourceStage1;
-    private final ImageResource procesedImageResourceStage2;
-    private final ImageResource procesedImageResourceStage3 = null;//once no visualization kept is needed, make a cyclic queue
+    private ImageResource procesedImageResourceStage2;
+    private ImageResource procesedImageResourceStage3;//once no visualization kept is needed, make a cyclic queue
     @SuppressWarnings("unused")
 	private final ImageResource procesedImageResourceStage4 = null;
     @SuppressWarnings("unused")
@@ -46,7 +46,7 @@ public class ImagePreprocesor implements IColorScheme {
         int w = inputImageResource.getWidth();
         int h = inputImageResource.getHeight();
         procesedImageResourceStage1 = new ImageResource(w, h);
-        procesedImageResourceStage2 = new ImageResource(w, h);//once no visualization kept is needed, make a cyclic queue
+        //procesedImageResourceStage2 = new ImageResource(w, h);//once no visualization kept is needed, make a cyclic queue
         //procesedImageResourceStage3 = new ImageResource(w, h);
         //procesedImageResourceStage4 = new ImageResource(w, h);
         //procesedImageResourceStage5 = new ImageResource(w, h);
@@ -212,6 +212,7 @@ public class ImagePreprocesor implements IColorScheme {
 	   IImageProcesor skeleton = new Skeleton(
 			   
 			   procesedImageResourceStage1,
+			   procesedImageResourceStage2,
 			   debug,
 			   whole,
 			   xFromIncl,
@@ -243,7 +244,7 @@ public class ImagePreprocesor implements IColorScheme {
    	// procesedImageResourceStage2.saveAs();
    	//
    	//
-       return null;//procesedImageResourceStage1;
+       return procesedImageResourceStage1;
    }
     /**
      *
