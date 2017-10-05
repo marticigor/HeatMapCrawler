@@ -8,7 +8,7 @@ import lib_duke.Pixel;
 //http://homepages.inf.ed.ac.uk/rbf/HIPR2/thin.htm
 public class Skeleton extends BaseFilter implements IColorScheme {
 
-    public Skeleton(ImageResource in , boolean w, boolean d, int...intArgs) {
+    public Skeleton(ImageResource in, boolean w, boolean d, int...intArgs) {
         super( in .getWidth(), in .getHeight(), 2, w, d, 5, intArgs);
         this.in = in ;
     }
@@ -16,8 +16,8 @@ public class Skeleton extends BaseFilter implements IColorScheme {
     @SuppressWarnings("unused")
     private ImageResource in , out;
 
-    public Skeleton(ImageResource in , ImageResource out, boolean w, boolean d, int...intArgs) {
-        super( in .getWidth(), in .getHeight(), 2, w, d, 5, intArgs);
+    public Skeleton(ImageResource in, ImageResource out, boolean w, boolean d, int...intArgs) {
+        super( in.getWidth(), in.getHeight(), 2, w, d, 5, intArgs);
         this.in = in ;
 
     }
@@ -41,7 +41,7 @@ public class Skeleton extends BaseFilter implements IColorScheme {
             for (int absX = widthFrom; absX < widthTo; absX++) {
                 for (int absY = heightFrom; absY < heightTo; absY++) {
 
-                    current = in .getPixel(absX, absY);
+                    current = in.getPixel(absX, absY);
                     if (utils.isApplicable(current) && utils.isRemovable(current)) {
                         current.setRed(50);
                         current.setBlue(50);
