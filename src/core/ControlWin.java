@@ -42,7 +42,7 @@ public class ControlWin implements Runnable {
     //
     //
     //
-    private static final String devToMakeItValidRoutable = "40";
+    private static final String devToMakeItValidRoutable = "30";
     private static final String lookAheadAndBack = "2";
     private static final String surfaceLimit = "32";//42
     //

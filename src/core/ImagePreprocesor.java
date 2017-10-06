@@ -92,6 +92,7 @@ public class ImagePreprocesor implements IColorScheme {
         
         debugPrint("procesSharpen");
         sharpen.doYourThing();
+        
     }
 
     /**
@@ -213,8 +214,8 @@ public class ImagePreprocesor implements IColorScheme {
 			   
 			   procesedImageResourceStage1,
 			   procesedImageResourceStage2,
-			   debug,
 			   whole,
+			   debug,
 			   xFromIncl,
 			   xToExcl,
 			   yFromIncl,
