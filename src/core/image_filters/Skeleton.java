@@ -34,15 +34,9 @@ public class Skeleton extends BaseFilter implements IColorScheme {
     public void doYourThing() {
         int threshold = redScheme[0];
         SkeletonUtils utils = new SkeletonUtils(threshold); //threshold
-        //utils.setbackLim(2);
-        //skeletonize(utils);
-        utils.setbackThresh(1);
-        utils.setForeThresh(1);
+        utils.setbackThresh(2);
+        utils.setForeThresh(3);
         skeletonize(utils);
-        //utils.setbackLim(2);
-        //skeletonize(utils);
-        //utils.setbackLim(1);
-        //skeletonize(utils);
     }
 
     private void skeletonize(SkeletonUtils utils) {
@@ -51,14 +45,16 @@ public class Skeleton extends BaseFilter implements IColorScheme {
         //at least one background neighbor). Delete any such point that has more
         //than one foreground neighbor, as long as doing so does not locally disconnect
         //(i.e. split into two) the region containing that pixel. Iterate until convergence.
-
+        
+    	if(true)System.out.println("NEW TASK");
+    	
         Pixel current;
         List < Pixel > toRemove = new ArrayList < Pixel > ();
 
         int count = 0;
         int removed = 0;
 
-        while (count < 200) {
+        while (count < 100) {//precaution
 
             for (int absX = widthFrom; absX < widthTo; absX++) {
                 for (int absY = heightFrom; absY < heightTo; absY++) {
@@ -75,14 +71,16 @@ public class Skeleton extends BaseFilter implements IColorScheme {
                     p.getRed() != 0) {
                 	
                     p.setRed(0);
-                    p.setBlue(150);
+                    p.setBlue(50);
                     p.setGreen(150);
                     removed++;
                 }
             }
 
             if (removed == 0) break;
-            else if (debug) System.out.println("not convergence this time - " + removed);
+            else if (true) System.out.println("toRemove = applicable: " + toRemove.size() +
+            		"\nremoved: " + removed + 
+            		 "\n___________________________________________");
 
             toRemove.clear();
 
@@ -148,7 +146,7 @@ public class Skeleton extends BaseFilter implements IColorScheme {
 
             applicable = (background > backThresh && foreground > foreThresh);
 
-            fullySurr = (background == 0 && foreground == 8); // mutually exclusive to applicable
+            fullySurr = (background == 0 && foreground == 8); // mutually exclusive to applicable? Possibly
 
             //printValues();
         }
