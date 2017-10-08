@@ -71,8 +71,8 @@ public class Skeleton extends BaseFilter implements IColorScheme {
                     p.getRed() != 0) {
                 	
                     p.setRed(0);
-                    p.setBlue(50);
-                    p.setGreen(150);
+                    p.setBlue(80);
+                    p.setGreen(80);
                     removed++;
                 }
             }

@@ -23,8 +23,8 @@ public class Runner implements Runnable {
 
     private final int devi, look, surface;
 
-    private final int bottleneckSize = 3;
-    private final int passableSize = 5;
+    private final int bottleneckSize = 3;//3
+    private final int passableSize = 3;//3
 
     private final int sizeDivKonq = 4;
 
@@ -32,7 +32,8 @@ public class Runner implements Runnable {
 
     //this border is necessary for kernel convolution later on, not necessary
     //in sharpen stage
-    private final int borderInSharpenStage = ((Math.max(bottleneckSize, passableSize)) - 1) / 2;
+    private final int borderInSharpenStage = 2;//((Math.max(bottleneckSize, passableSize)) - 1) / 2;
+    //private final int borderInSharpenStage = ((Math.max(bottleneckSize, passableSize)) - 1) / 2;
 
     /**
      * 
