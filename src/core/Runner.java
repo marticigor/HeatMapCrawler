@@ -99,10 +99,9 @@ public class Runner implements Runnable {
 
         AdjacencyFinder af = new AdjacencyFinder(noded, nodes, visual, debug, bottleneckSize, passableSize);
         af.buildAdjacencyLists();
+
         af.drawAdjacencyEdges();
 
-        //TEST PRINT
-        //printBuiltNodes(nodes);
     }
 
     /**

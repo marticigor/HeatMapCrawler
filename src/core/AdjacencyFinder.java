@@ -57,6 +57,7 @@ public class AdjacencyFinder implements IColorScheme {
                 nmbOfBottlenecks++;
             }
         }
+        System.out.println("Number of all nodes: " + nodes.size());
         System.out.println("Number of bottleneck nodes: " + nmbOfBottlenecks);
 
         for (Node n: nodes) {
@@ -171,7 +172,13 @@ public class AdjacencyFinder implements IColorScheme {
             }
         } //scope for adjacency lists builder
         noded.draw();
-
+        
+        List <Node> toRemove = new ArrayList<Node>();
+        for (Node n : nodes) if (n.getAdjacentNodes().size() == 0) toRemove.add(n);
+        for (Node n : toRemove) {
+        	System.out.println("REMOVING because of zero adjacency list size : " + n);
+        	nodes.remove(n);
+        }
     }
 
     /**

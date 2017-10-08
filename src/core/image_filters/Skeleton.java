@@ -46,7 +46,7 @@ public class Skeleton extends BaseFilter implements IColorScheme {
         //than one foreground neighbor, as long as doing so does not locally disconnect
         //(i.e. split into two) the region containing that pixel. Iterate until convergence.
         
-    	if(true)System.out.println("NEW TASK");
+    	if(debug)System.out.println("NEW TASK");
     	
         Pixel current;
         List < Pixel > toRemove = new ArrayList < Pixel > ();
@@ -78,7 +78,7 @@ public class Skeleton extends BaseFilter implements IColorScheme {
             }
 
             if (removed == 0) break;
-            else if (true) System.out.println("toRemove = applicable: " + toRemove.size() +
+            else if (debug) System.out.println("toRemove = applicable: " + toRemove.size() +
             		"\nremoved: " + removed + 
             		 "\n___________________________________________");
 

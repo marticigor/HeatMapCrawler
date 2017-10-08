@@ -54,6 +54,7 @@ public class Node implements Comparable < Node > {
     public int hashCode() {
         Integer Ix = new Integer(x);
         return Ix.hashCode();
+        //TODO once unique id is available, use it to avoid hashing collisions
     }
     public String toString() {
         return System.identityHashCode(this) + " X = " + x + "; Y = " + y;
