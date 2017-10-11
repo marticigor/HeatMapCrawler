@@ -7,8 +7,8 @@ var page = require('webpage').create(),
 var renderColor = 'yellow';
 var zoom = 15,
     size = 1000,
-    east, west, north, south;
-
+    east, west, north, south, bounds;
+    
 if (system.args.length != 3) {
   console.warn("Must provide lat,lon and output directory arguments");
   phantom.exit();
@@ -39,31 +39,28 @@ var kmlTemplate = _.template(fs.read('kml.template', 'utf8'));
 
 page.onConsoleMessage = function(msg) {
   console.log(msg);
-};
-
+}
 
 page.viewportSize = { width: size, height: size };
 page.open('http://labs.strava.com/heatmap/#'+zoom+'/' + lon + '/' + lat + '/'+renderColor+'/bike',
 function() {
+  bounds = page.evaluate(
+    function() {
+    $('#header, #controls, #sidebar').remove();
 
-  var bounds = page.evaluate(
-      function() {
-      $('#header, #controls, #sidebar').remove();
+    // Force redraw and recalculation of map bounds
+    $(window).trigger('resize');
+    map.invalidateSize();
 
-      // Force redraw and recalculation of map bounds
-      $(window).trigger('resize');
-      map.invalidateSize();
-      var b = map.getBounds();
-      return { east: b.getEast(),
-               west: b.getWest(),
-               north: b.getNorth(),
-               south: b.getSouth() };
-
+    var b = map.getBounds();
+    return {east: b.getEast(),
+            west: b.getWest(),
+            north: b.getNorth(),
+            south: b.getSouth()};
   });
 
   var suffix = '/home/radim/stravaGHMdata/png/'+lon+'_'+lat+'_';
   var imageFileName = suffix +'StravaHeatMap_'+renderColor+'.png';
-  var boundsFileName = suffix +'StravaHeatMap_'+renderColor+'.txt';
 
   page.render(imageFileName, {quality: 100});
   var kml = kmlTemplate(_.merge(bounds, {lat: lat, lon: lon}));
@@ -72,18 +69,13 @@ function() {
   fs.write(outputFile, zip.generate({type: 'string', compression: 'DEFLATE'}), 'wb');
 
 
-  console.log("-------------------------");
-  for(var key in bounds) {
-    var value = bounds[key];
-    console.log(key + ' >> |' + value);
-    // do something with "key" and "value" variables
-  }
-
+  console.log(typeof bounds);
 
 
   //fs.remove(imageFileName);
 
   phantom.exit();
 });
+
 
 
