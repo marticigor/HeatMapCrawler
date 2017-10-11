@@ -25,8 +25,8 @@ public class Runner implements Runnable {
 
     private final int devi, look, surface;
 
-    private final int bottleneckSize = 3;//3
-    private final int passableSize = 3;//3
+    private final int bottleneckSize = 3; //3
+    private final int passableSize = 3; //3
 
     private final int sizeDivKonq = 4;
 
@@ -34,7 +34,7 @@ public class Runner implements Runnable {
 
     //this border is necessary for kernel convolution later on, not necessary
     //in sharpen stage
-    private final int borderInSharpenStage = 2;//((Math.max(bottleneckSize, passableSize)) - 1) / 2;
+    private final int borderInSharpenStage = 2; //((Math.max(bottleneckSize, passableSize)) - 1) / 2;
     //private final int borderInSharpenStage = ((Math.max(bottleneckSize, passableSize)) - 1) / 2;
 
     /**
@@ -65,82 +65,82 @@ public class Runner implements Runnable {
          *invokeLater simply schedules the task and returns;
          *invokeAndWait waits for the task to finish before returning. 
          */
-    	
+
         System.out.println("this initial Thread is EDT " + SwingUtilities.isEventDispatchThread());
         ControlWin control = new ControlWin(); //ControlWin implements Runnable
         SwingUtilities.invokeLater(control);
-        
+
     }
-    
+
     //#################################################################################
     boolean visual = false; // also pauses execution now and then
     boolean debug = false;
     //################################################################################# 
-    
+
     /**
      *
      */
     public void run() {
-        
-    	DirectoryResource dirR = new DirectoryResource();
-    	
-    	List <File> lf = new ArrayList <File>();
-    	for (File f : dirR.selectedFiles()) lf.add(f); 
-    	
-    	for(int i = 0; i < 200; i++){ //stress test
-    	 
-    		System.out.println("---------------------------------------------------------"
-    				+ "--------- iter " + i);
-    		
-    	for(File iteratedFile : lf){
 
-    		System.out.println("PROCESING " + iteratedFile.toString());
-    		
-            ImageResource image = new ImageResource(iteratedFile);
-    		ImagePreprocesor ip = new ImagePreprocesor(devi, borderInSharpenStage, visual, debug, image);
+        DirectoryResource dirR = new DirectoryResource();
 
-            chunks = new ImageChunks(ip.getX(), ip.getY(), sizeDivKonq);
-            perManyTasksProces(ip);
-            
-            if(visual){
-            	image.draw();
-            	Pause.pause(2000);
-                final ImageResource procesedMapStage = ip.getProcesedStage();
-                procesedMapStage.draw();
-                Pause.pause(2000);
+        List < File > lf = new ArrayList < File > ();
+        for (File f: dirR.selectedFiles()) lf.add(f);
+
+        for (int i = 0; i < 200; i++) { //stress test
+
+            System.out.println("---------------------------------------------------------" +
+                "--------- iter " + i);
+
+            for (File iteratedFile: lf) {
+
+                System.out.println("PROCESING " + iteratedFile.toString());
+
+                ImageResource image = new ImageResource(iteratedFile);
+                ImagePreprocesor ip = new ImagePreprocesor(devi, borderInSharpenStage, visual, debug, image);
+
+                chunks = new ImageChunks(ip.getX(), ip.getY(), sizeDivKonq);
+                perManyTasksProces(ip);
+
+                if (visual) {
+                    image.draw();
+                    Pause.pause(2000);
+                    final ImageResource procesedMapStage = ip.getProcesedStage();
+                    procesedMapStage.draw();
+                    Pause.pause(2000);
+                }
+
+                ImageResource procesedMap = ip.getProcesed();
+                if (visual) {
+                    procesedMap.draw();
+                    Pause.pause(2000);
+                }
+
+                NodeFinder nf = new NodeFinder(procesedMap, look, surface, this);
+                nf.findNodes();
+
+                ImageResource noded = nf.getNodedImage();
+                if (visual) noded.draw();
+
+                final List < Node > nodes = nf.getNodes();
+
+                AdjacencyFinder af = new AdjacencyFinder(noded, nodes, visual, debug, bottleneckSize, passableSize);
+                af.buildAdjacencyLists();
+
+                if (visual) {
+                    af.drawAdjacencyEdges();
+                    Pause.pause(3000);
+                } else {}
             }
-            
-            ImageResource procesedMap = ip.getProcesed();
-            if(visual){
-            	procesedMap.draw();
-                Pause.pause(2000);	
-            }
 
-            NodeFinder nf = new NodeFinder(procesedMap, look, surface, this);
-            nf.findNodes();
-
-            ImageResource noded = nf.getNodedImage();
-            if(visual) noded.draw();
-            
-            final List < Node > nodes = nf.getNodes();
-
-            AdjacencyFinder af = new AdjacencyFinder(noded, nodes, visual, debug, bottleneckSize, passableSize);
-            af.buildAdjacencyLists();
-
-            if(visual) {
-            	af.drawAdjacencyEdges();
-            	Pause.pause(3000);
-            } else { }        
-    	}
-    	
-    	}
+        }
     }
-    
+
     private long id = -1;
     //no thread safe compound action
-    public long incrAndGetId(){
-    	id++;
-    	return id;    	
+    public long incrAndGetId() {
+        id++;
+        return id;
     }
 
     /**
@@ -149,77 +149,76 @@ public class Runner implements Runnable {
     private void perManyTasksProces(final ImagePreprocesor ip) {
 
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "8");
-              
-        List<RecursiveAction []> stages = new ArrayList<RecursiveAction []>();
-        
+
+        List < RecursiveAction[] > stages = new ArrayList < RecursiveAction[] > ();
+
         //FILTERS QUEUE FIFO START
-          
+
         //thresholding simple
-        TaskSharpen [] sharpenTask = new TaskSharpen[sizeDivKonq * sizeDivKonq];
+        TaskSharpen[] sharpenTask = new TaskSharpen[sizeDivKonq * sizeDivKonq];
         decorateFactory(sharpenTask, TaskSharpen.class, ip);
         stages.add(sharpenTask);
-        
+
         //TaskGaussian [] gaussianTask = new TaskGaussian[sizeDivKonq * sizeDivKonq];
         //decorateFactory(gaussianTask, TaskGaussian.class, ip);
         //stages.add(gaussianTask);
-        
-        TaskSkeleton [] skeletonTask = new TaskSkeleton[sizeDivKonq * sizeDivKonq];
+
+        TaskSkeleton[] skeletonTask = new TaskSkeleton[sizeDivKonq * sizeDivKonq];
         decorateFactory(skeletonTask, TaskSkeleton.class, ip);
         stages.add(skeletonTask);
-         
+
         //TaskCanny[] cannyTask = new TaskCanny[sizeDivKonq * sizeDivKonq];
         //decorateFactory(cannyTask, TaskCanny.class, ip);
         //stages.add(cannyTask);
-        
+
         //TaskHighlight [] highlightTask = new TaskHighlight [sizeDivKonq * sizeDivKonq];
         //decorateFactory(highlightTask, TaskHighlight.class, ip);
         //stages.add(highlightTask);
-        
+
         //--------------------------------------------------
         //FILTERS QUEUE FIFO END
-        
+
         ForkJoinPool forkJoinPool = new ForkJoinPool(8);
-        
-		for (RecursiveAction [] stage : stages){
-			for (RecursiveAction segment : stage){
-					//debug print1 at bottom
-					forkJoinPool.invoke(segment);//commonPool?
-			}
-			if (debug) System.out.println("RETURNED IN LOOP  " + System.currentTimeMillis());
-		}
-				
+
+        for (RecursiveAction[] stage: stages) {
+            for (RecursiveAction segment: stage) {
+                //debug print1 at bottom
+                forkJoinPool.invoke(segment); //commonPool?
+            }
+            if (debug) System.out.println("RETURNED IN LOOP  " + System.currentTimeMillis());
+        }
+
     }
     @SuppressWarnings("unchecked")
-	private <T extends RecursiveAction> void decorateFactory(T[] task,
-			@SuppressWarnings("rawtypes") Class ref,
-			ImagePreprocesor ip){
-    	@SuppressWarnings("rawtypes")
-		Constructor constructor = null;
-		try {
-			constructor = ref.getConstructor(
-					core.ImagePreprocesor.class,
-					java.lang.Integer.class,
-					java.lang.Integer.class,
-					java.lang.Integer.class,
-					java.lang.Integer.class
-					);
-		} catch (NoSuchMethodException | SecurityException e1) {
-			e1.printStackTrace();
-			System.exit(1);
-		}
-    	int i = 0;
-		for (int y = 0; y < sizeDivKonq; y++){
-			for (int x = 0; x < sizeDivKonq; x++){
-			    try {
-					task [i] = (T) constructor.newInstance
-					    (ip, chunks.fromX[x], chunks.toX[x], chunks.fromY[y], chunks.toY[y]);
-				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException e) {
-					e.printStackTrace();
-					System.exit(1);
-				}
+    private < T extends RecursiveAction > void decorateFactory(T[] task,
+        @SuppressWarnings("rawtypes") Class ref,
+        ImagePreprocesor ip) {
+        @SuppressWarnings("rawtypes")
+        Constructor constructor = null;
+        try {
+            constructor = ref.getConstructor(
+                core.ImagePreprocesor.class,
+                java.lang.Integer.class,
+                java.lang.Integer.class,
+                java.lang.Integer.class,
+                java.lang.Integer.class
+            );
+        } catch (NoSuchMethodException | SecurityException e1) {
+            e1.printStackTrace();
+            System.exit(1);
+        }
+        int i = 0;
+        for (int y = 0; y < sizeDivKonq; y++) {
+            for (int x = 0; x < sizeDivKonq; x++) {
+                try {
+                    task[i] = (T) constructor.newInstance(ip, chunks.fromX[x], chunks.toX[x], chunks.fromY[y], chunks.toY[y]);
+                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
+                    InvocationTargetException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
                 i++;
-			}
+            }
         }
     }
     /**
