@@ -5,20 +5,22 @@ import java.util.*;
 import lib_duke.Pixel;
 public class Node implements Comparable < Node > {
 
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
+    private final long id;
     private double distToCenter = Double.MAX_VALUE;
     private boolean isBottleneck = false;
     private HashSet < Node > adjacentNodes;
     private ArrayList < Pixel > mask; //these are copies of Pixels from noded;
 
-    public Node(int x, int y) {
+    public Node(int x, int y, long id) {
 
         this.x = x;
         this.y = y;
         this.distToCenter = 0;
         adjacentNodes = new HashSet < Node > ();
         mask = new ArrayList < Pixel > ();
+        this.id = id;
 
     }
 
@@ -39,6 +41,9 @@ public class Node implements Comparable < Node > {
     public int getY() {
         return y;
     }
+    public long getId(){
+    	return id;
+    }
     public boolean getBottleneck() {
         return isBottleneck;
     }
@@ -52,12 +57,10 @@ public class Node implements Comparable < Node > {
         distToCenter = d;
     }
     public int hashCode() {
-        Integer Ix = new Integer(x);
-        return Ix.hashCode();
-        //TODO once unique id is available, use it to avoid hashing collisions
+        return new Long(id).hashCode();
     }
     public String toString() {
-        return System.identityHashCode(this) + " X = " + x + "; Y = " + y;
+        return System.identityHashCode(this) + " id " + id + " X = " + x + "; Y = " + y;
     }
 
     //encapsulating methods for adjacentNodes

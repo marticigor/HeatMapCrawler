@@ -40,7 +40,7 @@ public class LineMaker {
         this.image = image;
     }
 
-    public LineMaker() {} //tests
+    public LineMaker() {} //tests constructor
 
     /**
      * 

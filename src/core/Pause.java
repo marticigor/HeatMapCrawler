@@ -6,7 +6,8 @@ public class Pause {
      * 
      */
     public static void pause(int pause) {
-        //System.out.println("pausa "+pause/1000+" s.");
+    	//if(true)return;
+        System.out.println("WWWW - PAUSE "+pause/1000+" s.");
         try {
             Thread.sleep(pause);
         } catch (Exception e) {}

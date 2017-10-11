@@ -151,7 +151,18 @@ public class ImageResource {
         updateImage();
         myDisplay.show(myImage);
     }
-
+    
+    /**
+     * 
+     */
+    public void blacken () {
+    	for( Pixel p : myPixels){
+    		p.setRed(0);
+    		p.setGreen(0);
+    		p.setBlue(0);
+    	}
+    }
+    
     /**
      * Returns the file name associated with this image.
      *

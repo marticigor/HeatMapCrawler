@@ -1,5 +1,6 @@
 package core;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -11,6 +12,7 @@ import core.tasks.TaskGaussian;
 import core.tasks.TaskHighlight;
 import core.tasks.TaskSharpen;
 import core.tasks.TaskSkeleton;
+import lib_duke.DirectoryResource;
 import lib_duke.ImageResource;
 
 import java.util.concurrent.ForkJoinPool;
@@ -71,7 +73,7 @@ public class Runner implements Runnable {
     }
     
     //#################################################################################
-    boolean visual = false;
+    boolean visual = false; // also pauses execution now and then
     boolean debug = false;
     //################################################################################# 
     
@@ -79,29 +81,66 @@ public class Runner implements Runnable {
      *
      */
     public void run() {
+        
+    	DirectoryResource dirR = new DirectoryResource();
+    	
+    	List <File> lf = new ArrayList <File>();
+    	for (File f : dirR.selectedFiles()) lf.add(f); 
+    	
+    	for(int i = 0; i < 200; i++){ //stress test
+    	 
+    		System.out.println("---------------------------------------------------------"
+    				+ "--------- iter " + i);
+    		
+    	for(File iteratedFile : lf){
 
-        final ImagePreprocesor ip = new ImagePreprocesor(devi, borderInSharpenStage, visual, debug);
+    		System.out.println("PROCESING " + iteratedFile.toString());
+    		
+            ImageResource image = new ImageResource(iteratedFile);
+    		ImagePreprocesor ip = new ImagePreprocesor(devi, borderInSharpenStage, visual, debug, image);
 
-        chunks = new ImageChunks(ip.getX(), ip.getY(), sizeDivKonq);
-        perManyTasksProces(ip);
+            chunks = new ImageChunks(ip.getX(), ip.getY(), sizeDivKonq);
+            perManyTasksProces(ip);
+            
+            if(visual){
+            	image.draw();
+            	Pause.pause(2000);
+                final ImageResource procesedMapStage = ip.getProcesedStage();
+                procesedMapStage.draw();
+                Pause.pause(2000);
+            }
+            
+            ImageResource procesedMap = ip.getProcesed();
+            if(visual){
+            	procesedMap.draw();
+                Pause.pause(2000);	
+            }
 
-        final ImageResource procesedMapStage = ip.getProcesedStage();
-        procesedMapStage.draw();
-        final ImageResource procesedMap = ip.getProcesed();
-        procesedMap.draw();
+            NodeFinder nf = new NodeFinder(procesedMap, look, surface, this);
+            nf.findNodes();
 
-        NodeFinder nf = new NodeFinder(procesedMap, look, surface);
-        nf.findNodes();
-        //nf.vizualizeNoded(); //DRAW and PAUSE then GO ON
+            ImageResource noded = nf.getNodedImage();
+            if(visual) noded.draw();
+            
+            final List < Node > nodes = nf.getNodes();
 
-        final ImageResource noded = nf.getNodedImage();
-        final List < Node > nodes = nf.getNodes();
+            AdjacencyFinder af = new AdjacencyFinder(noded, nodes, visual, debug, bottleneckSize, passableSize);
+            af.buildAdjacencyLists();
 
-        AdjacencyFinder af = new AdjacencyFinder(noded, nodes, visual, debug, bottleneckSize, passableSize);
-        af.buildAdjacencyLists();
-
-        af.drawAdjacencyEdges();
-
+            if(visual) {
+            	af.drawAdjacencyEdges();
+            	Pause.pause(3000);
+            } else { }        
+    	}
+    	
+    	}
+    }
+    
+    private long id = -1;
+    //no thread safe compound action
+    public long incrAndGetId(){
+    	id++;
+    	return id;    	
     }
 
     /**
@@ -115,6 +154,7 @@ public class Runner implements Runnable {
         
         //FILTERS QUEUE FIFO START
           
+        //thresholding simple
         TaskSharpen [] sharpenTask = new TaskSharpen[sizeDivKonq * sizeDivKonq];
         decorateFactory(sharpenTask, TaskSharpen.class, ip);
         stages.add(sharpenTask);
@@ -126,7 +166,7 @@ public class Runner implements Runnable {
         TaskSkeleton [] skeletonTask = new TaskSkeleton[sizeDivKonq * sizeDivKonq];
         decorateFactory(skeletonTask, TaskSkeleton.class, ip);
         stages.add(skeletonTask);
-        
+         
         //TaskCanny[] cannyTask = new TaskCanny[sizeDivKonq * sizeDivKonq];
         //decorateFactory(cannyTask, TaskCanny.class, ip);
         //stages.add(cannyTask);

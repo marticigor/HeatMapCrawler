@@ -3,8 +3,8 @@
  import java.util.*;
 
  import ifaces.IColorScheme;
- import lib_duke.ImageResource;
- import lib_duke.Pixel;
+import lib_duke.ImageResource;
+import lib_duke.Pixel;
  public class RecursiveClusterFinder {
 
      private HashSet < Pixel > allClusterAroundNode;
@@ -196,7 +196,7 @@
                  }
 
              }
-             visIr.draw();
+             //visIr.draw();
          }
 
          /**
@@ -213,7 +213,7 @@
                  pVis.setBlue(blueischScheme[2]);
 
              }
-             visIr.draw();
+             //visIr.draw();
          }
      }
  }

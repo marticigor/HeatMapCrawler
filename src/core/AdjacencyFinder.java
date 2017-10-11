@@ -39,8 +39,9 @@ public class AdjacencyFinder implements IColorScheme {
             greenScheme[0], greenScheme[1], greenScheme[2],
             this.debug); //visualize "debuger" 
 
-        if (this.visual) visualizeIR = new ImageResource(noded.getWidth(), noded.getHeight());
-
+        if (this.visual) {
+        	visualizeIR = new ImageResource(noded.getWidth(), noded.getHeight());
+        }
     }
 
     /**
@@ -70,11 +71,7 @@ public class AdjacencyFinder implements IColorScheme {
 
             }
         }
-
-        //noded.draw();
-
-        //Pause.pause(12000);
-
+        
         Collections.sort(nodes);
 
         { //scope for adjacency lists builder
@@ -86,10 +83,12 @@ public class AdjacencyFinder implements IColorScheme {
 
             //this is first run so map of pixels to recreate "green squares" gets created;
             maskAllNodes(true);
-            noded.draw();
 
-            //Pause.pause(9000);
-
+            if(visual){
+                noded.draw();
+                Pause.pause(10000);
+            }
+            
             for (Node buildForThis: nodes) {
 
                 maskOrDemaskNode(buildForThis, false); //demask this node, not first run
@@ -117,7 +116,7 @@ public class AdjacencyFinder implements IColorScheme {
                 }
                 rcf.resetToNewAdjacents();
 
-                if (visual) { //visual
+                if (visual && debug) { //visual
                     for (Pixel pDebug: redCluster) {
 
                         Pixel pIr = visualizeIR.getPixel(pDebug.getX(), pDebug.getY());
@@ -129,7 +128,7 @@ public class AdjacencyFinder implements IColorScheme {
                     }
 
                     visualizeIR.draw();
-                    //Pause.pause(1000);
+                    Pause.pause(1000);
 
                     for (Pixel pDebug: redCluster) {
 
@@ -145,9 +144,11 @@ public class AdjacencyFinder implements IColorScheme {
             }
 
             demaskAllNodes();
-            noded.draw();
-            //Pause.pause(19000);
-
+            
+            if(visual){
+                noded.draw();
+                Pause.pause(5000);
+            }
             System.out.println("actualy highlighting nodes");
 
             RoundIteratorOfPixels makeYellow = new RoundIteratorOfPixels();
@@ -170,14 +171,19 @@ public class AdjacencyFinder implements IColorScheme {
                     }
                 }
             }
+            
+            if(visual){
+                noded.draw();
+                Pause.pause(5000);
+            }
         } //scope for adjacency lists builder
-        noded.draw();
         
         List <Node> toRemove = new ArrayList<Node>();
         for (Node n : nodes) if (n.getAdjacentNodes().size() == 0) toRemove.add(n);
         for (Node n : toRemove) {
-        	System.out.println("REMOVING because of zero adjacency list size : " + n);
-        	nodes.remove(n);
+        	System.out.println("Nodes of zero adjacency list size : " + n);
+        	//nodes.remove(n);// do not remove them yet, they still may by useful in more
+                //broad context after merge of this 'drop' graph into 'ocean' graph 
         }
     }
 

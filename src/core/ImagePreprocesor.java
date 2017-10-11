@@ -33,23 +33,17 @@ public class ImagePreprocesor implements IColorScheme {
     private boolean visual, debug;
     private final List<Map<Pixel, AugmentedPixel>> chopsToAugmentedList = new ArrayList<Map<Pixel, AugmentedPixel>>();
     
-    
-    public ImagePreprocesor(int deviation, int border, boolean visual, boolean debug) {
+    public ImagePreprocesor(int deviation, int border, boolean visual, boolean debug,
+    		ImageResource im) {
+    	
         this.devToMakeItValidRoutable = deviation;
         this.borderAtSharpenStage = border;
-
-        //initMap
-        inputImageResource = new ImageResource(); //opens dialog
-        //drawMap
-        inputImageResource.draw();
-        //initSharpenedMap
+        this.inputImageResource = im;
+        
         int w = inputImageResource.getWidth();
         int h = inputImageResource.getHeight();
+        
         procesedImageResourceStage1 = new ImageResource(w, h);
-        //procesedImageResourceStage2 = new ImageResource(w, h);//once no visualization kept is needed, make a cyclic queue
-        //procesedImageResourceStage3 = new ImageResource(w, h);
-        //procesedImageResourceStage4 = new ImageResource(w, h);
-        //procesedImageResourceStage5 = new ImageResource(w, h);
         
         this.visual = visual;
         this.debug = debug;
