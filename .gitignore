@@ -17,6 +17,7 @@ local.properties
 .recommenders
 
 *.class
+build/classes/
 
 # External tool builders
 .externalToolBuilders/
