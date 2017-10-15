@@ -7,16 +7,20 @@ public class Node implements Comparable < Node > {
 
     private final int x;
     private final int y;
+    private double lon;
+    private double lat;
     private final long id;
     private double distToCenter = Double.MAX_VALUE;
     private boolean isBottleneck = false;
     private HashSet < Node > adjacentNodes;
     private ArrayList < Pixel > mask; //these are copies of Pixels from noded;
 
-    public Node(int x, int y, long id) {
+    public Node(int x, int y, double lon, double lat,  long id) {
 
         this.x = x;
         this.y = y;
+        this.lon = lon;
+        this.lat = lat;
         this.distToCenter = 0;
         adjacentNodes = new HashSet < Node > ();
         mask = new ArrayList < Pixel > ();
@@ -80,4 +84,12 @@ public class Node implements Comparable < Node > {
     public ArrayList < Pixel > getMask() {
         return mask;
     }
+
+	public double getLon() {
+		return lon;
+	}
+
+	public double getLat() {
+		return lat;
+	}
 }

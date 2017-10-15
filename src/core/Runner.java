@@ -1,6 +1,9 @@
 package core;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -17,6 +20,7 @@ import lib_duke.ImageResource;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class Runner implements Runnable {
@@ -82,20 +86,84 @@ public class Runner implements Runnable {
      */
     public void run() {
 
-        DirectoryResource dirR = new DirectoryResource();
+        DirectoryResource dirRPng = new DirectoryResource();
+        
+        DirectoryResource dirRTxt = new DirectoryResource();
 
-        List < File > lf = new ArrayList < File > ();
-        for (File f: dirR.selectedFiles()) lf.add(f);
+        List < File > lFPng = new ArrayList < File > ();
+        for (File f: dirRPng.selectedFiles()) lFPng.add(f);
+        
+        List < File > lFTxt = new ArrayList < File > ();
+        for (File f: dirRTxt.selectedFiles()) lFTxt.add(f);
 
-        for (int i = 0; i < 200; i++) { //stress test
+        for (int i = 0; i < 100; i++) { //stress tests
 
             System.out.println("---------------------------------------------------------" +
                 "--------- iter " + i);
 
-            for (File iteratedFile: lf) {
-
+            for (File iteratedFile: lFPng) {
+                
                 System.out.println("PROCESING " + iteratedFile.toString());
-
+                String fileName = iteratedFile.getName();
+                fileName = fileName.substring(0, fileName.indexOf('.'));
+                String fileNameTxt = fileName + ".txt";
+                
+                //get the description file
+                File description = null;
+                for (File f : lFTxt){
+                	String currName = f.getName();
+                	if(currName.equals(fileNameTxt)){
+                		description = f;
+                		break;
+                	}
+                }
+                if(description == null) throw new RuntimeException("Text description file not found.");
+                
+                //read description into string
+                String readLine = null;
+                try {
+                	BufferedReader br = new BufferedReader(new FileReader(description));
+                    System.out.println("Reading file " + description);
+                    while ((readLine = br.readLine()) != null) {
+                        System.out.println(readLine);
+                        break;
+                    }
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {}
+                
+                //convert string into double []
+                double [] bounds = new double [6];
+                //0 lon east
+                //1 lat north
+                //2 lat south
+                //3 lon west
+                //4 lat center
+                //5 lon center
+                
+                if(readLine == null) throw new RuntimeException("No description in file.");
+                
+                //there are 12 characters with special meanings: the backslash \,
+                //the caret ^, the dollar sign $,
+                //the period or dot ., the vertical bar or pipe symbol |,
+                //the question mark ?, the asterisk or star *, the plus sign +,
+                //the opening parenthesis (, the closing parenthesis ),
+                //and the opening square bracket [, the opening curly brace
+                //{, These special characters are often called "metacharacters".
+                
+                
+				String [] values = readLine.split(Pattern.quote("|"));
+				
+				if(values.length != 7) throw new RuntimeException("Length.");//beginning "|"
+				
+                System.out.println("___________________________________");
+				for (int j = 1; j < 7; j++){
+					System.out.println(values[j]);
+					bounds[j - 1] = Double.parseDouble(values[j]);
+				}
+                System.out.println("___________________________________");
+				
                 ImageResource image = new ImageResource(iteratedFile);
                 ImagePreprocesor ip = new ImagePreprocesor(devi, borderInSharpenStage, visual, debug, image);
 
@@ -116,7 +184,7 @@ public class Runner implements Runnable {
                     Pause.pause(2000);
                 }
 
-                NodeFinder nf = new NodeFinder(procesedMap, look, surface, this);
+                NodeFinder nf = new NodeFinder(procesedMap, look, surface, this, bounds);
                 nf.findNodes();
 
                 ImageResource noded = nf.getNodedImage();

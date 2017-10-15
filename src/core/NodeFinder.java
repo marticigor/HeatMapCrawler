@@ -23,10 +23,11 @@ public class NodeFinder implements IColorScheme {
     //represents white pixels clustered around future node
     private HashSet < Pixel > allClusterAroundNode = new HashSet < Pixel > ();
     private final Runner myHandler;
+    private double [] bounds;
     /**
      *
      */
-    public NodeFinder(ImageResource sharpened, int look, int surface, Runner myHandler) {
+    public NodeFinder(ImageResource sharpened, int look, int surface, Runner myHandler, double [] bounds) {
 
         this.lookAheadAndBack = look;
         this.surfaceLimit = surface;
@@ -35,15 +36,20 @@ public class NodeFinder implements IColorScheme {
         height = sharpened.getHeight();
         noded = new ImageResource(width, height);
         this.myHandler = myHandler;
+        this.bounds = bounds;
 
+        if(bounds.length != 6) throw new RuntimeException("Node finder bounds length.");
+        
         for (Pixel p: sharpened.pixels()) {
-
             Pixel pCopy = noded.getPixel(p.getX(), p.getY());
             pCopy.setRed(p.getRed());
             pCopy.setGreen(p.getGreen());
             pCopy.setBlue(p.getBlue());
-
         }
+        //System.out.println("NodeFinder bounds:");
+        //System.out.println("______________________________");
+        //for (double d : this.bounds) System.out.println(d);
+        //System.out.println("______________________________");
     }
 
     /**
@@ -139,7 +145,10 @@ public class NodeFinder implements IColorScheme {
 
                     if (getNumberOfSurrWhites(maybeMaximus, noded) == maxNeighbours) {
 
+                    	//TODO
                         Node node = new Node(maybeMaximus.getX(), maybeMaximus.getY(),
+                        		0.0,
+                        		0.0,
                         		myHandler.incrAndGetId());
                         maximusNodes.add(node);
                         //find average X Y for this cluster of maximuses
