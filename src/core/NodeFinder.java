@@ -24,10 +24,21 @@ public class NodeFinder implements IColorScheme {
     private HashSet < Pixel > allClusterAroundNode = new HashSet < Pixel > ();
     private final Runner myHandler;
     private double [] bounds;
+    private boolean debug;
+    
+    private static double spanLon = -1.0;
+    private static double spanLat = -1.0;
+    
     /**
      *
      */
-    public NodeFinder(ImageResource sharpened, int look, int surface, Runner myHandler, double [] bounds) {
+    public NodeFinder(
+    		ImageResource sharpened,
+    		int look,
+    		int surface,
+    		Runner myHandler,
+    		double [] bounds,
+    		boolean debug) {
 
         this.lookAheadAndBack = look;
         this.surfaceLimit = surface;
@@ -37,6 +48,33 @@ public class NodeFinder implements IColorScheme {
         noded = new ImageResource(width, height);
         this.myHandler = myHandler;
         this.bounds = bounds;
+        
+        //0 lon east
+        //1 lat north
+        //2 lat south
+        //3 lon west
+        //4 lat center
+        //5 lon center
+        
+        //TODO code duplicity
+        double spanLonNow = bounds[0] - bounds [3];
+        if(spanLon == -1.0) spanLon = spanLonNow;
+        else if(spanLon != spanLonNow){
+        	System.err.println("------------------------------span discrepancy Lon");
+        	System.err.println("spanLon " + spanLon + " now " + spanLonNow);
+        	System.err.println("dif " + (spanLon - spanLonNow));
+        	spanLon = spanLonNow;
+        }
+        double spanLatNow = bounds[1] - bounds [2];
+        if(spanLat == -1.0) spanLat = spanLatNow;
+        else if(spanLat != spanLatNow){
+        	System.err.println("------------------------------span discrepancy Lat");
+        	System.err.println("spanLat " + spanLat + " now " + spanLatNow);
+        	System.err.println("dif " + (spanLat - spanLatNow));
+        	spanLat = spanLatNow;
+        }
+        
+        this.debug = debug;
 
         if(bounds.length != 6) throw new RuntimeException("Node finder bounds length.");
         
@@ -46,10 +84,13 @@ public class NodeFinder implements IColorScheme {
             pCopy.setGreen(p.getGreen());
             pCopy.setBlue(p.getBlue());
         }
-        //System.out.println("NodeFinder bounds:");
-        //System.out.println("______________________________");
-        //for (double d : this.bounds) System.out.println(d);
-        //System.out.println("______________________________");
+        
+        if(debug){
+            System.out.println("NodeFinder");
+            System.out.println("______________________________");
+            for (double d : this.bounds) System.out.println(d);
+            System.out.println("______________________________");
+        }
     }
 
     /**
@@ -110,6 +151,22 @@ public class NodeFinder implements IColorScheme {
         rcf = new RecursiveClusterFinder(noded, whiteScheme[0], whiteScheme[1], whiteScheme[2]);
         //
 
+        int x, y;
+        double lon, lat;
+        
+        //TODO test (do) this properly around globe, not my backyards only
+        //TODO test (do) this properly around globe, not my backyards only
+        //TODO test (do) this properly around globe, not my backyards only
+        //TODO test (do) this properly around globe, not my backyards only
+        
+        double dLon = bounds [0] - bounds [3];
+        double dLat = bounds [1] - bounds [2];
+        
+        if(debug){
+        	System.out.println("dLon " + dLon);
+        	System.out.println("dLat " + dLat);
+        }
+        
         for (Pixel pOfNoded: noded.pixels()) { //1
 
             if (isSetToClusterAround(pOfNoded)) { //2 white check only
@@ -140,17 +197,37 @@ public class NodeFinder implements IColorScheme {
                     if (neighboursToFindMax > maxNeighbours) maxNeighbours = neighboursToFindMax;
 
                 }
-
+                
                 for (Pixel maybeMaximus: allClusterAroundNode) {
 
                     if (getNumberOfSurrWhites(maybeMaximus, noded) == maxNeighbours) {
-
-                    	//TODO
-                        Node node = new Node(maybeMaximus.getX(), maybeMaximus.getY(),
-                        		0.0,
-                        		0.0,
+                  	
+                    	//bounds
+                    	
+                        //0 lon east
+                        //1 lat north
+                        //2 lat south
+                        //3 lon west
+                        //4 lat center
+                        //5 lon center
+                    	
+                    	x = maybeMaximus.getX();
+                    	y = maybeMaximus.getY();
+                    	
+                    	lon = bounds [3] + (   ( (double) x / ((double) (width - 1)) ) * dLon   );
+                    	lat = bounds [1] - (   ( (double) y / ((double) (height - 1)) ) * dLat   );
+                    	
+                    	//the only instantiation of node in the project
+                        Node node = new Node(
+                        		x,
+                        		y,
+                        		lon,
+                        		lat,
                         		myHandler.incrAndGetId());
+                        
                         maximusNodes.add(node);
+                        
+                        
                         //find average X Y for this cluster of maximuses
                         sumX += node.getX();
                         sumY += node.getY();
@@ -181,7 +258,7 @@ public class NodeFinder implements IColorScheme {
                         if (maybeClosest.getX() == centerGravityX && maybeClosest.getY() == centerGravityY) {
                             nodes.add(maybeClosest);
                             nmbOfNodes++;
-
+                            if(debug) System.out.println(maybeClosest.toString());
                             break out;
                         }
 
@@ -202,6 +279,7 @@ public class NodeFinder implements IColorScheme {
                             nodes.add(possiblyClosestNode);
                             xToOut = possiblyClosestNode.getX();
                             yToOut = possiblyClosestNode.getY();
+                            if(debug) System.out.println(possiblyClosestNode.toString());
                             break;
                         }
                     }

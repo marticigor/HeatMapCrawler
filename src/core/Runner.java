@@ -78,7 +78,7 @@ public class Runner implements Runnable {
 
     //#################################################################################
     boolean visual = false; // also pauses execution now and then
-    boolean debug = false;
+    boolean debug = true;
     //################################################################################# 
 
     /**
@@ -96,14 +96,14 @@ public class Runner implements Runnable {
         List < File > lFTxt = new ArrayList < File > ();
         for (File f: dirRTxt.selectedFiles()) lFTxt.add(f);
 
-        for (int i = 0; i < 100; i++) { //stress tests
+        for (int i = 0; i < 1; i++) { //stress tests
 
             System.out.println("---------------------------------------------------------" +
                 "--------- iter " + i);
 
             for (File iteratedFile: lFPng) {
                 
-                System.out.println("PROCESING " + iteratedFile.toString());
+                System.out.println("\n\n\n\n\nPROCESING " + iteratedFile.toString());
                 String fileName = iteratedFile.getName();
                 fileName = fileName.substring(0, fileName.indexOf('.'));
                 String fileNameTxt = fileName + ".txt";
@@ -184,7 +184,7 @@ public class Runner implements Runnable {
                     Pause.pause(2000);
                 }
 
-                NodeFinder nf = new NodeFinder(procesedMap, look, surface, this, bounds);
+                NodeFinder nf = new NodeFinder(procesedMap, look, surface, this, bounds, debug);
                 nf.findNodes();
 
                 ImageResource noded = nf.getNodedImage();

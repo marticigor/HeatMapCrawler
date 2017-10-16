@@ -64,7 +64,8 @@ public class Node implements Comparable < Node > {
         return new Long(id).hashCode();
     }
     public String toString() {
-        return System.identityHashCode(this) + " id " + id + " X = " + x + "; Y = " + y;
+        return System.identityHashCode(this) + "| ID " + id + " | X = " + x +
+        		" | Y = " + y + "----- |LON " + lon + " |LAT " + lat;
     }
 
     //encapsulating methods for adjacentNodes
