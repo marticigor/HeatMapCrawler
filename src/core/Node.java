@@ -14,6 +14,7 @@ public class Node implements Comparable < Node > {
     private boolean isBottleneck = false;
     private HashSet < Node > adjacentNodes;
     private ArrayList < Pixel > mask; //these are copies of Pixels from noded;
+    private static final double EPSILON = 0.0000001;
 
     public Node(int x, int y, double lon, double lat,  long id) {
 
@@ -38,7 +39,20 @@ public class Node implements Comparable < Node > {
         //return 0;
         return ((Integer)(this.getY())).compareTo(((Integer)(another.getY())));
     }
-
+    /**
+     * 
+     * @param theOther
+     * @return
+     */
+    public boolean equalsLonLat(Node theOther){
+    	
+    	boolean lonB = (Math.abs(this.lon - theOther.getLon()) < EPSILON);
+    	boolean latB = (Math.abs(this.lat - theOther.getLat()) < EPSILON);
+    	
+    	return lonB && latB;
+    	
+    }
+    
     public int getX() {
         return x;
     }
