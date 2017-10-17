@@ -18,11 +18,11 @@ import java.util.*;
 public class OutputXml {
 
     private Document outputDocument;
-    private String filenameOutput = "stravaHeatMap.gpx";
+    private String filenameOutput = "not_defined.gpx";
     private String trackName = "heatExp";
     private static final String URI = "http://www.topografix.com/GPX/1/1";
 
-    private ArrayList <Trackpoint> track;
+    private List <Trackpoint> track;
     
     private Element mainRootElement;
     private Element nameElement;
@@ -30,8 +30,9 @@ public class OutputXml {
     private Element trackSeqElement;
     private Element trackpointElement;
 
-    public OutputXml (ArrayList <Trackpoint> track) {
+    public OutputXml (List <Trackpoint> track, String filenameOutput) {
         this.track = track;
+        this.filenameOutput = filenameOutput;
     }
 
   /**
@@ -60,7 +61,7 @@ public class OutputXml {
     nameElement = outputDocument.createElementNS(URI, "name");
     nameElement.setTextContent(trackName);
     
-    trackSeqElement = outputDocument.createElementNS(URI, "trkseq");
+    trackSeqElement = outputDocument.createElementNS(URI, "trkseg");
     
     outputDocument.appendChild(mainRootElement);
       mainRootElement.appendChild(trackElement);
@@ -93,5 +94,6 @@ public class OutputXml {
       StreamResult result = new StreamResult(new File(filenameOutput));
 
       transformer.transform(source, result);
+      
   }	
 }

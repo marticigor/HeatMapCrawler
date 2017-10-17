@@ -11,13 +11,13 @@ public class OutputTester {
 
   for (int i = 1; i < 100; i++) {
 
-   Trackpoint t = new Trackpoint(i, i, 10, 10, 10, 10);
+   Trackpoint t = new Trackpoint((double)i, (double)i);
    track.add(t);
 
   }
   
   System.out.println("track.size " + track.size());
-  OutputXml out = new OutputXml(track);
+  OutputXml out = new OutputXml(track, "filename.gpx");
 
   try {
 

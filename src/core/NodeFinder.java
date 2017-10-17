@@ -154,13 +154,8 @@ public class NodeFinder implements IColorScheme {
         int x, y;
         double lon, lat;
         
-        //TODO test (do) this properly around globe, not my backyards only
-        //TODO test (do) this properly around globe, not my backyards only
-        //TODO test (do) this properly around globe, not my backyards only
-        //TODO test (do) this properly around globe, not my backyards only
-        
-        double dLon = bounds [0] - bounds [3];
-        double dLat = bounds [1] - bounds [2];
+        double dLon = Math.abs(bounds [0] - bounds [3]);
+        double dLat = Math.abs(bounds [1] - bounds [2]);
         
         if(debug){
         	System.out.println("dLon " + dLon);

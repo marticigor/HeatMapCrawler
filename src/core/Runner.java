@@ -9,6 +9,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import javax.swing.SwingUtilities;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import core.tasks.TaskCanny;
 import core.tasks.TaskGaussian;
@@ -17,6 +19,8 @@ import core.tasks.TaskSharpen;
 import core.tasks.TaskSkeleton;
 import lib_duke.DirectoryResource;
 import lib_duke.ImageResource;
+import output.OutputXml;
+import output.Trackpoint;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
@@ -195,6 +199,42 @@ public class Runner implements Runnable {
                 AdjacencyFinder af = new AdjacencyFinder(noded, nodes, visual, debug, bottleneckSize, passableSize);
                 af.buildAdjacencyLists();
 
+                //test output gpx
+                
+                if(debug){
+                    //0 lon east
+                    //1 lat north
+                    //2 lat south
+                    //3 lon west
+                    //4 lat center
+                    //5 lon center
+                	List <Trackpoint> points = new LinkedList<Trackpoint>();
+                	Trackpoint tr = new Trackpoint(bounds[3], bounds[1]);//top left corner
+                	points.add(tr);
+                	tr = new Trackpoint(bounds[0], bounds[1]);//envelope_
+                	points.add(tr);
+                	tr = new Trackpoint(bounds[0], bounds[2]);//envelope |
+                	points.add(tr);
+                	for(Node n : nodes){
+                		tr = new Trackpoint(n.getLon(),n.getLat());
+                		points.add(tr);//inside envelope should be
+                	}
+                	OutputXml out = new OutputXml(points, fileName + ".gpx");
+                	try {
+						out.composeOutputDoc();
+						out.writeOutputFile();
+					} catch (ParserConfigurationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (TransformerException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+                	
+                }
+                
+                //
+                
                 if (visual) {
                     af.drawAdjacencyEdges();
                     Pause.pause(3000);
