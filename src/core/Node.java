@@ -10,13 +10,16 @@ public class Node implements Comparable < Node > {
     private double lon;
     private double lat;
     private final long id;
+    private final long shotId;
     private double distToCenter = Double.MAX_VALUE;
     private boolean isBottleneck = false;
     private HashSet < Node > adjacentNodes;
     private ArrayList < Pixel > mask; //these are copies of Pixels from noded;
     private static final double EPSILON = 0.0000001;
 
-    public Node(int x, int y, double lon, double lat,  long id) {
+    // finaly I will want this graph format
+    // https://www.dropbox.com/s/8et183ufeskkibi/IMG_20171019_194557.jpg?dl=0
+    public Node(int x, int y, double lon, double lat,  long id, long shotId) {
 
         this.x = x;
         this.y = y;
@@ -26,6 +29,7 @@ public class Node implements Comparable < Node > {
         adjacentNodes = new HashSet < Node > ();
         mask = new ArrayList < Pixel > ();
         this.id = id;
+        this.shotId = shotId;
 
     }
 
@@ -39,6 +43,7 @@ public class Node implements Comparable < Node > {
         //return 0;
         return ((Integer)(this.getY())).compareTo(((Integer)(another.getY())));
     }
+    
     /**
      * 
      * @param theOther
@@ -62,6 +67,15 @@ public class Node implements Comparable < Node > {
     public long getId(){
     	return id;
     }
+    public long getShotId(){
+    	return shotId;
+    }
+	public double getLon() {
+		return lon;
+	}
+	public double getLat() {
+		return lat;
+	}
     public boolean getBottleneck() {
         return isBottleneck;
     }
@@ -82,8 +96,6 @@ public class Node implements Comparable < Node > {
         		" | Y = " + y + "----- |LON " + lon + " |LAT " + lat;
     }
 
-    //encapsulating methods for adjacentNodes
-
     public void addAdjacentNode(Node n) {
         adjacentNodes.add(n);
     }
@@ -100,11 +112,4 @@ public class Node implements Comparable < Node > {
         return mask;
     }
 
-	public double getLon() {
-		return lon;
-	}
-
-	public double getLat() {
-		return lat;
-	}
 }

@@ -82,14 +82,14 @@ public class Runner implements Runnable {
 
     //#################################################################################
     boolean visual = false; // also pauses execution now and then
-    boolean debug = true;
+    boolean debug = false;
     //################################################################################# 
 
     /**
      *
      */
     public void run() {
-
+    	
         DirectoryResource dirRPng = new DirectoryResource();
         
         DirectoryResource dirRTxt = new DirectoryResource();
@@ -99,6 +99,8 @@ public class Runner implements Runnable {
         
         List < File > lFTxt = new ArrayList < File > ();
         for (File f: dirRTxt.selectedFiles()) lFTxt.add(f);
+        
+        long shotId = 0;
 
         for (int i = 0; i < 1; i++) { //stress tests
 
@@ -188,7 +190,7 @@ public class Runner implements Runnable {
                     Pause.pause(2000);
                 }
 
-                NodeFinder nf = new NodeFinder(procesedMap, look, surface, this, bounds, debug);
+                NodeFinder nf = new NodeFinder(procesedMap, look, surface, this, bounds, shotId, debug);
                 nf.findNodes();
 
                 ImageResource noded = nf.getNodedImage();
@@ -233,24 +235,39 @@ public class Runner implements Runnable {
                 	
                 }
                 
-                //
-                
                 if (visual) {
                     af.drawAdjacencyEdges();
                     Pause.pause(3000);
                 } else {}
+                
+                addNodeCount(nodes.size());
+                System.out.println("CURRENT Number of nodes: " + getNodeCount());
+                
+                shotId ++;
             }
+            
+            System.out.println("FINAL Number of nodes: " + getNodeCount());
+            // finaly I will want this format
+            // https://www.dropbox.com/s/8et183ufeskkibi/IMG_20171019_194557.jpg?dl=0
 
         }
     }
 
+    //
     private long id = -1;
     //no thread safe compound action
     public long incrAndGetId() {
         id++;
         return id;
     }
-
+    private int nodeCount = 0;
+    private void addNodeCount(int value){
+    	nodeCount += value;
+    }
+    private int getNodeCount(){
+    	return nodeCount;
+    }
+    //
     /**
      * 
      */

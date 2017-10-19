@@ -16,6 +16,7 @@ public class NodeFinder implements IColorScheme {
     private int nmbOfNodes = 0;
     private int lookAheadAndBack; //3
     private int surfaceLimit; //43
+    private final long shotId;
 
     private RoundIteratorOfPixels iteratorRound = new RoundIteratorOfPixels();
     private RecursiveClusterFinder rcf;
@@ -38,6 +39,7 @@ public class NodeFinder implements IColorScheme {
     		int surface,
     		Runner myHandler,
     		double [] bounds,
+    		long shotId,
     		boolean debug) {
 
         this.lookAheadAndBack = look;
@@ -48,6 +50,7 @@ public class NodeFinder implements IColorScheme {
         noded = new ImageResource(width, height);
         this.myHandler = myHandler;
         this.bounds = bounds;
+        this.shotId = shotId;
         
         //0 lon east
         //1 lat north
@@ -218,7 +221,9 @@ public class NodeFinder implements IColorScheme {
                         		y,
                         		lon,
                         		lat,
-                        		myHandler.incrAndGetId());
+                        		myHandler.incrAndGetId(),
+                        		shotId
+                        		);
                         
                         maximusNodes.add(node);
                         
