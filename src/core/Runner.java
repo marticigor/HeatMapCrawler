@@ -17,6 +17,8 @@ import core.tasks.TaskGaussian;
 import core.tasks.TaskHighlight;
 import core.tasks.TaskSharpen;
 import core.tasks.TaskSkeleton;
+import database.ManageNodeEntity;
+import database.NodeEntityTest;
 import lib_duke.DirectoryResource;
 import lib_duke.ImageResource;
 import output.OutputXml;
@@ -250,6 +252,7 @@ public class Runner implements Runnable {
             // finaly I will want this format
             // https://www.dropbox.com/s/8et183ufeskkibi/IMG_20171019_194557.jpg?dl=0
 
+            persist();
         }
     }
 
@@ -360,4 +363,16 @@ public class Runner implements Runnable {
             System.out.println("------------------------------------------------------");
         }
     }
+    
+    private void persist(){
+        //toy test still
+        
+        List <NodeEntityTest> testList = new LinkedList<NodeEntityTest>();
+        for (int k = 0; k < 20; k++){
+        	testList.add(new NodeEntityTest("name" + String.valueOf(k), (long) k*10));
+        }
+        ManageNodeEntity man = new ManageNodeEntity();
+        man.store(testList);
+    }
+    
 }
