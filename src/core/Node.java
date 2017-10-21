@@ -2,6 +2,7 @@ package core;
 
 import java.util.*;
 
+import database.NodeEntity;
 import lib_duke.Pixel;
 public class Node implements Comparable < Node > {
 
@@ -9,16 +10,19 @@ public class Node implements Comparable < Node > {
     private final int y;
     private double lon;
     private double lat;
-    private final long id;
+    //
+    private final long idHash;
     private final long shotId;
+    //
     private double distToCenter = Double.MAX_VALUE;
     private boolean isBottleneck = false;
-    private HashSet < Node > adjacentNodes;
-    private ArrayList < Pixel > mask; //these are copies of Pixels from noded;
-    private static final double EPSILON = 0.0000001;
+    private Set < Node > adjacentNodes;
+    private ArrayList < Pixel > mask; //these are copies of Pixels from noded ImageResource;
+    private NodeEntity entity = null;
 
     // finaly I will want this graph format
     // https://www.dropbox.com/s/8et183ufeskkibi/IMG_20171019_194557.jpg?dl=0
+    
     public Node(int x, int y, double lon, double lat,  long id, long shotId) {
 
         this.x = x;
@@ -28,8 +32,10 @@ public class Node implements Comparable < Node > {
         this.distToCenter = 0;
         adjacentNodes = new HashSet < Node > ();
         mask = new ArrayList < Pixel > ();
-        this.id = id;
+        this.idHash = id;
         this.shotId = shotId;
+        
+        this.entity = new NodeEntity(shotId, lon, lat, new HashSet<NodeEntity>());
 
     }
 
@@ -43,19 +49,16 @@ public class Node implements Comparable < Node > {
         //return 0;
         return ((Integer)(this.getY())).compareTo(((Integer)(another.getY())));
     }
-    
     /**
      * 
-     * @param theOther
-     * @return
+     * @return NodeEntity pojo
      */
-    public boolean equalsLonLat(Node theOther){
+    public NodeEntity getEntity (){
     	
-    	boolean lonB = (Math.abs(this.lon - theOther.getLon()) < EPSILON);
-    	boolean latB = (Math.abs(this.lat - theOther.getLat()) < EPSILON);
-    	
-    	return lonB && latB;
-    	
+    	if(entity == null || entity.getAdjacents() == null){
+            throw new RuntimeException("Entity not fully constructed");
+    	}
+    	return entity;
     }
     
     public int getX() {
@@ -64,8 +67,8 @@ public class Node implements Comparable < Node > {
     public int getY() {
         return y;
     }
-    public long getId(){
-    	return id;
+    public long getIdHash(){
+    	return idHash;
     }
     public long getShotId(){
     	return shotId;
@@ -82,25 +85,45 @@ public class Node implements Comparable < Node > {
     public void setBottleneck(boolean b) {
         isBottleneck = b;
     }
+    
     public double getDstToCenter() {
         return distToCenter;
     }
     public void setDstToCenter(double d) {
         distToCenter = d;
     }
+    @Override
     public int hashCode() {
-        return new Long(id).hashCode();
+        return Objects.hash(x,y);
     }
+    //OBJECT!!!
+    @Override
+    public boolean equals(Object theOther){
+        // self check
+        if (this == theOther)
+            return true;
+        // null check
+        if (theOther == null)
+            return false;
+        // type check
+        if (getClass() != theOther.getClass())
+            return false;
+        Node n = (Node) theOther;
+        if(x == n.getX() && y == n.getY()) return true; else return false;
+    	
+    }
+    @Override
     public String toString() {
-        return System.identityHashCode(this) + "| ID " + id + " | X = " + x +
+        return hashCode() + "| ID " + idHash + " | X = " + x +
         		" | Y = " + y + "----- |LON " + lon + " |LAT " + lat;
     }
 
     public void addAdjacentNode(Node n) {
         adjacentNodes.add(n);
+        entity.addToAdj(n.getEntity());
     }
 
-    public HashSet < Node > getAdjacentNodes() {
+    public Set < Node > getAdjacentNodes() {
         return adjacentNodes;
     }
 

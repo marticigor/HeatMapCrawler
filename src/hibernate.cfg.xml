@@ -19,15 +19,21 @@
       </property>
       
       <property name = "hibernate.connection.username">
-         *******
+         radim
       </property>
       
       <property name = "hibernate.connection.password">
-         *******
+         pamatuji
       </property>
       
+      <!-- Echo all executed SQL to sysout -->
+      <property name="show_sql">true</property>
+      
+      <!-- org.hibernate.HibernateException: No CurrentSessionContext configured! -->
+	  <property name="hibernate.current_session_context_class">thread</property>
+      
       <!-- List of XML mapping files -->
-      <mapping resource = "NodeEntityTest.hbm.xml"/>
+      <!-- <mapping resource = "NodeEntityTest.hbm.xml"/> -->
       
    </session-factory>
 </hibernate-configuration>

@@ -2,6 +2,8 @@ package database;
 
 import javax.persistence.Entity;
 
+//just hallo world to make hibernate connected and working
+
 @Entity
 public class NodeEntityTest {
 
@@ -10,7 +12,7 @@ public class NodeEntityTest {
 			`name` varchar(255) DEFAULT NULL,
 			`serial` bigint(10) UNSIGNED ZEROFILL DEFAULT NULL,
 			PRIMARY KEY (`id`)  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-    */
+        */
 	
 	public NodeEntityTest(){}
 	

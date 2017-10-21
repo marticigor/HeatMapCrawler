@@ -18,6 +18,7 @@ import core.tasks.TaskHighlight;
 import core.tasks.TaskSharpen;
 import core.tasks.TaskSkeleton;
 import database.ManageNodeEntity;
+import database.NodeEntity;
 import database.NodeEntityTest;
 import lib_duke.DirectoryResource;
 import lib_duke.ImageResource;
@@ -93,7 +94,6 @@ public class Runner implements Runnable {
     public void run() {
     	
         DirectoryResource dirRPng = new DirectoryResource();
-        
         DirectoryResource dirRTxt = new DirectoryResource();
 
         List < File > lFPng = new ArrayList < File > ();
@@ -104,7 +104,7 @@ public class Runner implements Runnable {
         
         long shotId = 0;
 
-        for (int i = 0; i < 1; i++) { //stress tests
+        for (int i = 0; i < 1; i++) { //stress test - out of memory, leak...
 
             System.out.println("---------------------------------------------------------" +
                 "--------- iter " + i);
@@ -198,7 +198,7 @@ public class Runner implements Runnable {
                 ImageResource noded = nf.getNodedImage();
                 if (visual) noded.draw();
 
-                final List < Node > nodes = nf.getNodes();
+                List < Node > nodes = nf.getNodes();
 
                 AdjacencyFinder af = new AdjacencyFinder(noded, nodes, visual, debug, bottleneckSize, passableSize);
                 af.buildAdjacencyLists();
@@ -234,7 +234,6 @@ public class Runner implements Runnable {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-                	
                 }
                 
                 if (visual) {
@@ -245,16 +244,23 @@ public class Runner implements Runnable {
                 addNodeCount(nodes.size());
                 System.out.println("CURRENT Number of nodes: " + getNodeCount());
                 
+                //
+                //
+                //
+                if(nodes != null) persist(nodes); else throw new RuntimeException("nodes = null");
+                //
+                //
+                //
+                
                 shotId ++;
             }
             
             System.out.println("FINAL Number of nodes: " + getNodeCount());
             // finaly I will want this format
             // https://www.dropbox.com/s/8et183ufeskkibi/IMG_20171019_194557.jpg?dl=0
-
-            persist();
-        }
-    }
+            
+        }//stress test - out of memory, leak...
+    }//run
 
     //
     private long id = -1;
@@ -356,23 +362,27 @@ public class Runner implements Runnable {
         for (Node n: nodes) {
             System.out.println("------------------------------------------------------");
             System.out.println("node " + n.toString());
-            HashSet < Node > adjacents = n.getAdjacentNodes();
+            Set < Node > adjacents = n.getAdjacentNodes();
             for (Node adjacent: adjacents) {
                 System.out.println("\t\t" + "adjacent " + adjacent.toString());
             }
             System.out.println("------------------------------------------------------");
         }
     }
-    
-    private void persist(){
-        //toy test still
-        
-        List <NodeEntityTest> testList = new LinkedList<NodeEntityTest>();
-        for (int k = 0; k < 20; k++){
-        	testList.add(new NodeEntityTest("name" + String.valueOf(k), (long) k*10));
+    /**
+     * 
+     * @param nodes
+     */
+    private void persist(List <Node> nodes){
+
+        List <NodeEntity> list = new LinkedList <NodeEntity>();
+        for (Node n : nodes){
+        	list.add(n.getEntity());
+        	int size1 = n.getAdjacentNodes().size();
+        	int size2 = n.getEntity().getAdjacents().size();
+        	if(size1 != size2) throw new RuntimeException("sizes do not match - persist in Runner");
         }
-        ManageNodeEntity man = new ManageNodeEntity();
-        man.store(testList);
+        ManageNodeEntity man = ManageNodeEntity.getInstance();
+        man.persist(list);
     }
-    
 }
