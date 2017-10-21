@@ -6,7 +6,6 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -19,10 +18,10 @@ public class NodeEntity {
 	
 	// map one to many
 
-	//CREATE TABLE `test_node_entity` (`id` bigint(10) UNSIGNED NOT NULL AUTO_INCREMENT, `shotId` bigint(10) UNSIGNED NOT NULL,`lon` double (22,18) NOT NULL,`lat` double (22,18) NOT NULL, PRIMARY KEY (`id`)  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	//CREATE TABLE `test_node_entity` (`id` bigint(10) UNSIGNED NOT NULL auto_increment, `shotId` bigint(10) UNSIGNED NOT NULL,`lon` double (22,18) NOT NULL,`lat` double (22,18) NOT NULL, PRIMARY KEY (`id`)  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	
     @Id
-    //@GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue
     @Column(name = "id")
 	private long id;
     @Column(name = "shotId")

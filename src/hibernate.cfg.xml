@@ -25,7 +25,7 @@
       <property name = "hibernate.connection.password">
          pamatuji
       </property>
-      
+  
       <!-- Echo all executed SQL to sysout -->
       <property name="show_sql">true</property>
       
