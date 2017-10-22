@@ -64,7 +64,7 @@ public class ManageNodeEntity {
 
 		}
 
-		System.err.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		System.err.println("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
 		session = sf.openSession();
 		Transaction tx = null;
@@ -86,7 +86,7 @@ public class ManageNodeEntity {
 			e.printStackTrace();
 		} finally {
 			session.close();
-			System.err.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+			System.err.println("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		}
 	}
 	

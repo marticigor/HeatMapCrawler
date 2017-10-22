@@ -121,6 +121,7 @@ public class Node implements Comparable < Node > {
     public void addAdjacentNode(Node n) {
         adjacentNodes.add(n);
         entity.addToAdj(n.getEntity());
+        n.getEntity().setParent(entity);
     }
 
     public Set < Node > getAdjacentNodes() {

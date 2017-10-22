@@ -6,7 +6,10 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -16,26 +19,28 @@ public class NodeEntity {
     // finaly I will want this graph format
     // https://www.dropbox.com/s/8et183ufeskkibi/IMG_20171019_194557.jpg?dl=0
 	
-	// map one to many
+	// map one to many same entity
+	// https://stackoverflow.com/questions/3393515/jpa-how-to-have-one-to-many-relation-of-the-same-entity-type
 
-	//CREATE TABLE `test_node_entity` (`id` bigint(10) UNSIGNED NOT NULL auto_increment, `shotId` bigint(10) UNSIGNED NOT NULL,`lon` double (22,18) NOT NULL,`lat` double (22,18) NOT NULL, PRIMARY KEY (`id`)  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	// CREATE TABLE `test_node_entity` (`id` bigint(10) UNSIGNED NOT NULL auto_increment, `parent_id` bigint(10) UNSIGNED, `shotId` bigint(10) UNSIGNED NOT NULL,`lon` double (22,18) NOT NULL,`lat` double (22,18) NOT NULL, PRIMARY KEY (`id`)  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
 	private long id;
-    @Column(name = "shotId")
+
+	@Column(name = "shotId")
 	private long shotId;
     @Column(name = "lon")
 	private double lon;
     @Column(name = "lat")
 	private double lat;
-    //@ManyToOne
-    //private NodeEntity centralNode = this;
-    //(mappedBy="centralNode")
-    //@OneToMany
+
+    @ManyToOne
+    private NodeEntity parent;
     
-	private transient Set<NodeEntity> adjacents;
+    @OneToMany(mappedBy="parent")
+	private Set<NodeEntity> adjacents;
 	
     private static final transient double EPSILON = 0.0000001;
 	
@@ -86,6 +91,12 @@ public class NodeEntity {
     public void setAdjacents(Set<NodeEntity> adj){
     	this.adjacents = adj;
     }
+    public NodeEntity getParent() {
+		return parent;
+	}
+	public void setParent(NodeEntity parent) {
+		this.parent = parent;
+	}
 	
 	@Override
 	public int hashCode(){
