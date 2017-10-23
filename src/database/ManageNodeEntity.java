@@ -35,23 +35,8 @@ public class ManageNodeEntity {
 	// https://www.tutorialspoint.com/hibernate/hibernate_batch_processing.htm
 	
 	public void persist(List<NodeEntity> nodesPojos) {
-
-		//hibernate-commons-annotations.jar
-		//ejb3-persistence.jar
-		//hibernate-annotations.jar
-		
+	
 		if ( sf == null) {
-			
-			/*
-			try {
-				//factory = new AnnotationConfiguration().configure()
-						//.buildSessionFactory();
-				factory = new Configuration().configure().buildSessionFactory();
-			} catch (Throwable ex) {
-				System.err.println("Failed to create sessionFactory object." + ex);
-				throw new ExceptionInInitializerError(ex);
-			}
-			*/
 
 	        Configuration cf = new Configuration().configure("hibernate.cfg.xml");
 	        cf.addProperties(getHibernateProperties());
@@ -73,10 +58,12 @@ public class ManageNodeEntity {
 			tx = session.beginTransaction();
 
 			System.err.println(nodesPojos.size() + "\npersisting");
+			
 			for (NodeEntity n : nodesPojos){
 				System.out.println(n);
 			    session.persist(n);
 			}
+			
 			System.err.println("commiting");
 			tx.commit();
 

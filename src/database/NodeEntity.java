@@ -3,17 +3,20 @@ package database;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "test_node_entity")
+//===========================================
+@Table(name="node_entity_test")
+//===========================================
 public class NodeEntity {
 
     // finaly I will want this graph format
@@ -21,12 +24,12 @@ public class NodeEntity {
 	
 	// map one to many same entity
 	// https://stackoverflow.com/questions/3393515/jpa-how-to-have-one-to-many-relation-of-the-same-entity-type
-
-	// CREATE TABLE `test_node_entity` (`id` bigint(10) UNSIGNED NOT NULL auto_increment, `parent_id` bigint(10) UNSIGNED, `shotId` bigint(10) UNSIGNED NOT NULL,`lon` double (22,18) NOT NULL,`lat` double (22,18) NOT NULL, PRIMARY KEY (`id`)  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	// https://stackoverflow.com/questions/21069687/hibernate-auto-create-database
+	// https://stackoverflow.com/questions/43716068/invalid-syntax-error-type-myisam-in-ddl-generated-by-hibernate/43720565
 	
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name = "id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
 	private long id;
 
 	@Column(name = "shotId")
@@ -35,11 +38,12 @@ public class NodeEntity {
 	private double lon;
     @Column(name = "lat")
 	private double lat;
-
-    @ManyToOne
-    private NodeEntity parent;
     
-    @OneToMany(mappedBy="parent")
+    @OneToMany(cascade=CascadeType.ALL)
+    
+    //===========================================
+    @JoinTable(name="node_entity_test_adjacents")
+    //===========================================
 	private Set<NodeEntity> adjacents;
 	
     private static final transient double EPSILON = 0.0000001;
@@ -91,12 +95,12 @@ public class NodeEntity {
     public void setAdjacents(Set<NodeEntity> adj){
     	this.adjacents = adj;
     }
-    public NodeEntity getParent() {
-		return parent;
-	}
-	public void setParent(NodeEntity parent) {
-		this.parent = parent;
-	}
+    //public NodeEntity getParent() {
+		//return parent;
+	//}
+	//public void setParent(NodeEntity parent) {
+		//this.parent = parent;
+	//}
 	
 	@Override
 	public int hashCode(){

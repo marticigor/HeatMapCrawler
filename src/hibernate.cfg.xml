@@ -5,7 +5,7 @@
    <session-factory>
    
       <property name = "hibernate.dialect">
-         org.hibernate.dialect.MySQLDialect
+         org.hibernate.dialect.MySQL5Dialect
       </property>
       
       <property name = "hibernate.connection.driver_class">
@@ -24,6 +24,14 @@
       
       <property name = "hibernate.connection.password">
          pamatuji
+      </property>
+      
+      <property name="connection.pool_size">
+          10
+      </property>
+      
+      <property name="hibernate.hbm2ddl.auto">
+          create
       </property>
   
       <!-- Echo all executed SQL to sysout -->
