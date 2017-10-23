@@ -8,7 +8,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-//import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
@@ -34,7 +33,7 @@ public class ManageNodeEntity {
 	// batch processing: (should not at all be needed here)
 	// https://www.tutorialspoint.com/hibernate/hibernate_batch_processing.htm
 	
-	public void persist(List<NodeEntity> nodesPojos) {
+	public void persist(List<NodeEntity> nodesPojos, boolean debug) {
 	
 		if ( sf == null) {
 
@@ -49,21 +48,18 @@ public class ManageNodeEntity {
 
 		}
 
-		System.err.println("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		System.err.println("\nDB+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 
 		session = sf.openSession();
 		Transaction tx = null;
 
 		try {
 			tx = session.beginTransaction();
-
 			System.err.println(nodesPojos.size() + "\npersisting");
-			
 			for (NodeEntity n : nodesPojos){
-				System.out.println(n);
+				if(debug)System.out.println(n);
 			    session.persist(n);
 			}
-			
 			System.err.println("commiting");
 			tx.commit();
 
@@ -73,7 +69,7 @@ public class ManageNodeEntity {
 			e.printStackTrace();
 		} finally {
 			session.close();
-			System.err.println("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+			System.err.println("\nDB+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 		}
 	}
 	
@@ -82,5 +78,4 @@ public class ManageNodeEntity {
         properties.put("hibernate.id.new_generator_mappings","false");
         return properties;
     }
-	
 }

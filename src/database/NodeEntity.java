@@ -3,14 +3,13 @@ package database;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -39,7 +38,7 @@ public class NodeEntity {
     @Column(name = "lat")
 	private double lat;
     
-    @OneToMany(cascade=CascadeType.ALL)
+    @ManyToMany
     
     //===========================================
     @JoinTable(name="node_entity_test_adjacents")
@@ -95,13 +94,7 @@ public class NodeEntity {
     public void setAdjacents(Set<NodeEntity> adj){
     	this.adjacents = adj;
     }
-    //public NodeEntity getParent() {
-		//return parent;
-	//}
-	//public void setParent(NodeEntity parent) {
-		//this.parent = parent;
-	//}
-	
+
 	@Override
 	public int hashCode(){
 		return Objects.hash(lon, lat);
