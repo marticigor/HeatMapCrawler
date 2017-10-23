@@ -13,8 +13,7 @@ import org.hibernate.service.ServiceRegistry;
 
 public class ManageNodeEntity {
 
-	private ManageNodeEntity() {
-	}
+	private ManageNodeEntity() {}
 
 	private static ManageNodeEntity myInstance = new ManageNodeEntity();
 
@@ -73,6 +72,7 @@ public class ManageNodeEntity {
 		}
 	}
 	
+	//TODO ugly
     private Properties getHibernateProperties() {
         Properties properties = new Properties();
         properties.put("hibernate.id.new_generator_mappings","false");

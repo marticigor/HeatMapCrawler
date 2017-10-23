@@ -21,12 +21,12 @@ public class NodeEntity {
     // finaly I will want this graph format
     // https://www.dropbox.com/s/8et183ufeskkibi/IMG_20171019_194557.jpg?dl=0
 	
-	// map one to many same entity
-	// https://stackoverflow.com/questions/3393515/jpa-how-to-have-one-to-many-relation-of-the-same-entity-type
 	// https://stackoverflow.com/questions/21069687/hibernate-auto-create-database
 	// https://stackoverflow.com/questions/43716068/invalid-syntax-error-type-myisam-in-ddl-generated-by-hibernate/43720565
 	
     @Id
+    // Indicates that the persistence provider
+    // must assign primary keys for the entity using a database identity column.
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
 	private long id;
@@ -39,7 +39,6 @@ public class NodeEntity {
 	private double lat;
     
     @ManyToMany
-    
     //===========================================
     @JoinTable(name="node_entity_test_adjacents")
     //===========================================
@@ -113,7 +112,6 @@ public class NodeEntity {
 	        return false;
 	    
 	    NodeEntity theOtherNe = (NodeEntity) theOther;
-	    
 	    return (this.lon == theOtherNe.getLon() && this.lat == theOtherNe.getLat());
 	}
 	
@@ -123,12 +121,9 @@ public class NodeEntity {
      * @return
      */
     public boolean equalsLonLat(NodeEntity theOther){
-    	
     	boolean lonB = (Math.abs(this.lon - theOther.getLon()) < EPSILON);
     	boolean latB = (Math.abs(this.lat - theOther.getLat()) < EPSILON);
-    	
     	return lonB && latB;
-    	
     }
 	
 	@Override
@@ -142,7 +137,6 @@ public class NodeEntity {
 	    	}
 	    	value += ("---------- some NodeEntity - stackOverflowError we do not want here\n");
 	    }
-
 		return value;
 	}
 }
