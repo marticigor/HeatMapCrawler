@@ -18,6 +18,18 @@ import javax.swing.SwingUtilities;
 
 public class ControlWin implements Runnable {
 
+	// TODO
+	private static final String NAME = "test_3";
+	
+	private static final String SHOTS = "_number_of_shots";
+	private static final String NODES = "_nodes";
+	private static final String ADJACENTS = "_adjacents_nodes";
+	
+	public static final String TABLE_NODES = NAME + NODES;
+	public static final String TABLE_ADJACENTS = NAME + ADJACENTS;
+	public static final String TABLE_SHOTS = NAME + SHOTS;
+	
+	
     private JTextField textField_1;
     private JTextField textField_2;
     private JTextField textField_3;
@@ -99,6 +111,8 @@ public class ControlWin implements Runnable {
         textField_1.setText(devToMakeItValidRoutable); //default for dev to make it valid routable
         decorateTF(textField_1);
 
+        
+        
         JLabel label2 = new JLabel("look ahead and back");
         decorateL(label2);
 
@@ -106,6 +120,8 @@ public class ControlWin implements Runnable {
         textField_2.setText(lookAheadAndBack); //default for look ahead and back
         decorateTF(textField_2);
 
+        
+        
         JLabel label3 = new JLabel("surface limit");
         decorateL(label3);
 
@@ -113,48 +129,24 @@ public class ControlWin implements Runnable {
         textField_3.setText(surfaceLimit); //default for surface limit
         decorateTF(textField_3);
 
-        JLabel label4 = new JLabel("param4");
+        
+        
+        JLabel label4 = new JLabel("name");
         decorateL(label4);
 
         textField_4 = new JTextField();
         textField_4.setText(param4);
         decorateTF(textField_4);
 
+        
+        
         JLabel label5 = new JLabel("param5");
         decorateL(label5);
 
         textField_5 = new JTextField();
         textField_5.setText(param5);
         decorateTF(textField_5);
-        /*
-        JLabel label6 = new JLabel("param6");
-        decorateL(label6);
 
-        textField_6 = new JTextField();
-        textField_6.setText(param6);
-        decorateTF(textField_6);
-
-        JLabel label7 = new JLabel("param7");
-        decorateL(label7);
-
-        textField_7 = new JTextField();
-        textField_7.setText(param7);
-        decorateTF(textField_7);
-
-        JLabel label8 = new JLabel("param8");
-        decorateL(label8);
-
-        textField_8 = new JTextField();
-        textField_8.setText(param8);
-        decorateTF(textField_8);
-
-        JLabel label9 = new JLabel("param9");
-        decorateL(label9);
-
-        textField_9 = new JTextField();
-        textField_9.setText(param9);
-        decorateTF(textField_9);
-        */
         JButton button1 = new JButton("OK");
         button1.setBorder(new EmptyBorder(10, 10, 10, 10));
         button1.addMouseListener(new MouseAdapter() {
