@@ -18,8 +18,10 @@ import javax.swing.SwingUtilities;
 
 public class ControlWin implements Runnable {
 
-	// TODO
-	private static final String NAME = "test_3";
+	// TODO but how...
+	//+++++++++++++++++++++++++++++++++++++++++++++++
+	private static final String NAME = "test_6";
+	//+++++++++++++++++++++++++++++++++++++++++++++++
 	
 	private static final String SHOTS = "_number_of_shots";
 	private static final String NODES = "_nodes";

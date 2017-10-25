@@ -32,13 +32,14 @@ public class ManageNodeEntity {
 	// batch processing: (should not at all be needed here)
 	// https://www.tutorialspoint.com/hibernate/hibernate_batch_processing.htm
 	
-	public void persist(List<NodeEntity> nodesPojos, boolean debug) {
+	public void persist(List<NodeEntity> nodesPojos, NmbShotsEntity nmb, boolean debug) {
 	
 		if ( sf == null) {
 
 	        Configuration cf = new Configuration().configure("hibernate.cfg.xml");
 	        cf.addProperties(getHibernateProperties());
 	        cf.addAnnotatedClass(database.NodeEntity.class);
+	        cf.addAnnotatedClass(database.NmbShotsEntity.class);
 
 	        StandardServiceRegistryBuilder srb = new StandardServiceRegistryBuilder();
 	        srb.applySettings(cf.getProperties());
@@ -59,6 +60,7 @@ public class ManageNodeEntity {
 				if(debug)System.out.println(n);
 			    session.persist(n);
 			}
+			session.persist(nmb);
 			System.err.println("commiting");
 			tx.commit();
 

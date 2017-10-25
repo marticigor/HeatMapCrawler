@@ -2,6 +2,7 @@ package core;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -18,8 +19,8 @@ import core.tasks.TaskHighlight;
 import core.tasks.TaskSharpen;
 import core.tasks.TaskSkeleton;
 import database.ManageNodeEntity;
+import database.NmbShotsEntity;
 import database.NodeEntity;
-import database.NodeEntityTest;
 import lib_duke.DirectoryResource;
 import lib_duke.ImageResource;
 import mockery.NodeGraphMocks;
@@ -39,15 +40,17 @@ public class Runner implements Runnable {
 
     private final int bottleneckSize = 3; //3
     private final int passableSize = 3; //3
-
     private final int sizeDivKonq = 4;
 
     private ImageChunks chunks;
+    private int nmbOfShots; //not necesearilly all shots appear in nodes (blank images)
 
+    private int nodeCount = 0;
+    private long id = -1;
+    
     //this border is necessary for kernel convolution later on, not necessary
     //in sharpen stage
     private final int borderInSharpenStage = 2; //((Math.max(bottleneckSize, passableSize)) - 1) / 2;
-    //private final int borderInSharpenStage = ((Math.max(bottleneckSize, passableSize)) - 1) / 2;
 
     /**
      * 
@@ -78,8 +81,8 @@ public class Runner implements Runnable {
          *invokeAndWait waits for the task to finish before returning. 
          */
 
-        System.out.println("this initial Thread is EDT " + SwingUtilities.isEventDispatchThread());
-        ControlWin control = new ControlWin(); //ControlWin implements Runnable
+        // System.out.println("this initial Thread is EDT " + SwingUtilities.isEventDispatchThread());
+        ControlWin control = new ControlWin(); // implements Runnable
         SwingUtilities.invokeLater(control);
 
     }
@@ -94,23 +97,24 @@ public class Runner implements Runnable {
      */
     public void run() {
     	
-        DirectoryResource dirRPng = new DirectoryResource();
+        DirectoryResource dirRPng = new DirectoryResource();//opens dialog window
         DirectoryResource dirRTxt = new DirectoryResource();
-
-        List < File > lFPng = new ArrayList < File > ();
-        for (File f: dirRPng.selectedFiles()) lFPng.add(f);
+    	
+        List < File > listFilesPng = new ArrayList < File > ();
+        for (File f: dirRPng.selectedFiles()) listFilesPng.add(f);
         
-        List < File > lFTxt = new ArrayList < File > ();
-        for (File f: dirRTxt.selectedFiles()) lFTxt.add(f);
+        List < File > listFilesTxt = new ArrayList < File > ();
+        for (File f: dirRTxt.selectedFiles()) listFilesTxt.add(f);
         
         long shotId = 0;
+        nmbOfShots = listFilesPng.size();
 
         for (int i = 0; i < 1; i++) { //stress test - out of memory, leak...
 
             System.out.println("---------------------------------------------------------" +
                 "--------- iter " + i);
 
-            for (File iteratedFile: lFPng) {
+            for (File iteratedFile: listFilesPng) {
                 
                 System.out.println("\n\n\n\n\nPROCESING " + iteratedFile.toString());
                 String fileName = iteratedFile.getName();
@@ -119,28 +123,36 @@ public class Runner implements Runnable {
                 
                 //get the description file
                 File description = null;
-                for (File f : lFTxt){
-                	String currName = f.getName();
-                	if(currName.equals(fileNameTxt)){
-                		description = f;
-                		break;
-                	}
-                }
-                if(description == null) throw new RuntimeException("Text description file not found.");
                 
+				try {
+					description = getDesriptionFile(listFilesTxt, fileNameTxt);
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+					throw new RuntimeException("Text description file not found.");
+				}
+           
                 //read description into string
                 String readLine = null;
+                BufferedReader br = null;
                 try {
-                	BufferedReader br = new BufferedReader(new FileReader(description));
+                	br = new BufferedReader(new FileReader(description));
                     System.out.println("Reading file " + description);
                     while ((readLine = br.readLine()) != null) {
                         System.out.println(readLine);
                         break;
                     }
-                    br.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {}
+                	e.printStackTrace();
+                    throw new RuntimeException("IO Runner1");
+                } finally {
+                	if(br != null)
+						try {
+							br.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+							throw new RuntimeException("IO Runner2");
+						}
+                }
                 
                 //convert string into double []
                 double [] bounds = new double [6];
@@ -265,23 +277,10 @@ public class Runner implements Runnable {
         }//stress test - out of memory, leak...
     }//run
 
-    //
-    private long id = -1;
-    //no thread safe compound action
-    public long incrAndGetId() {
-        id++;
-        return id;
-    }
-    private int nodeCount = 0;
-    private void addNodeCount(int value){
-    	nodeCount += value;
-    }
-    private int getNodeCount(){
-    	return nodeCount;
-    }
-    //
+
     /**
      * 
+     * @param ip
      */
     private void perManyTasksProces(final ImagePreprocesor ip) {
 
@@ -290,6 +289,7 @@ public class Runner implements Runnable {
         List < RecursiveAction[] > stages = new ArrayList < RecursiveAction[] > ();
 
         //FILTERS QUEUE FIFO START
+        //--------------------------------------------------
 
         //thresholding simple
         TaskSharpen[] sharpenTask = new TaskSharpen[sizeDivKonq * sizeDivKonq];
@@ -326,6 +326,13 @@ public class Runner implements Runnable {
         }
 
     }
+    
+    /**
+     * 
+     * @param task
+     * @param ref
+     * @param ip
+     */
     @SuppressWarnings("unchecked")
     private < T extends RecursiveAction > void decorateFactory(T[] task,
         @SuppressWarnings("rawtypes") Class ref,
@@ -358,8 +365,43 @@ public class Runner implements Runnable {
             }
         }
     }
+
     /**
      * 
+     * @param nodes
+     */
+    private void persist(List <Node> nodes){
+
+        List <NodeEntity> list = new LinkedList <NodeEntity>();
+        for (Node n : nodes){
+        	if(n.getEntity() != null) list.add(n.getEntity());
+        	int size1 = n.getAdjacentNodes().size();
+        	int size2 = n.getEntity().getAdjacents().size();
+        	if(size1 != size2) throw new RuntimeException("sizes do not match - persist in Runner");
+        }
+        
+        NmbShotsEntity nmb = new NmbShotsEntity(nmbOfShots);
+        
+        ManageNodeEntity man = ManageNodeEntity.getInstance();
+        man.persist(list,nmb, debug);
+    }
+    
+    /**
+     * 
+     * @return
+     * @throws FileNotFoundException 
+     */
+    private File getDesriptionFile(List<File> listFilesTxt, String fileNameTxt) throws FileNotFoundException{
+        for (File f : listFilesTxt){
+        	String currName = f.getName();
+        	if(currName.equals(fileNameTxt)) return f;
+        }
+        throw new FileNotFoundException("filename: " + fileNameTxt);
+    }
+    
+    /**
+     * 
+     * @param nodes
      */
     private void printBuiltNodes(List < Node > nodes) {
         for (Node n: nodes) {
@@ -372,20 +414,29 @@ public class Runner implements Runnable {
             System.out.println("------------------------------------------------------");
         }
     }
+
+    /**
+     * no thread safe compound action
+     * @return
+     */
+    public long incrAndGetId() {
+        id++;
+        return id;
+    }
+
     /**
      * 
-     * @param nodes
+     * @param value
      */
-    private void persist(List <Node> nodes){
-
-        List <NodeEntity> list = new LinkedList <NodeEntity>();
-        for (Node n : nodes){
-        	list.add(n.getEntity());
-        	int size1 = n.getAdjacentNodes().size();
-        	int size2 = n.getEntity().getAdjacents().size();
-        	if(size1 != size2) throw new RuntimeException("sizes do not match - persist in Runner");
-        }
-        ManageNodeEntity man = ManageNodeEntity.getInstance();
-        man.persist(list, debug);
+    private void addNodeCount(int value){
+    	nodeCount += value;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    private int getNodeCount(){
+    	return nodeCount;
     }
 }

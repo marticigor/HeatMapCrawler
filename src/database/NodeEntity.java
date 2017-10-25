@@ -53,11 +53,9 @@ public class NodeEntity {
 		
 	}
 	
-	//--------------------------------------
 	public void addToAdj(NodeEntity adj){
 		adjacents.add(adj);
 	}
-	//--------------------------------------
 	
 	public long getId() {
 		return id;

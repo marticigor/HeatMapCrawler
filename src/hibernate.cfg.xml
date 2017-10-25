@@ -41,7 +41,6 @@
 	  <property name="hibernate.current_session_context_class">thread</property>
       
       <!-- List of XML mapping files -->
-      <!-- <mapping resource = "NodeEntityTest.hbm.xml"/> -->
       
    </session-factory>
 </hibernate-configuration>
