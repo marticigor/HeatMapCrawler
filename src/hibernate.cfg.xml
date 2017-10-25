@@ -23,7 +23,7 @@
       </property>
       
       <property name = "hibernate.connection.password">
-         ********
+         pamatuji
       </property>
       
       <property name="connection.pool_size">

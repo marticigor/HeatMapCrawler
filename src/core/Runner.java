@@ -22,6 +22,7 @@ import database.NodeEntity;
 import database.NodeEntityTest;
 import lib_duke.DirectoryResource;
 import lib_duke.ImageResource;
+import mockery.NodeGraphMocks;
 import output.OutputXml;
 import output.Trackpoint;
 
@@ -246,11 +247,13 @@ public class Runner implements Runnable {
                 
                 //
                 //
-                //
                 if(nodes != null) persist(nodes); else throw new RuntimeException("nodes = null");
                 //
                 //
-                //
+                //OR inject MOCKS
+                //NodeGraphMocks mocks = new NodeGraphMocks();
+                //List <Node> mockNodes = mocks.getMocks1();
+                //persist(mockNodes);
                 
                 shotId ++;
             }

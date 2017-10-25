@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 //===========================================
-@Table(name="node_entity_test")
+@Table(name="node_entity_test1")
 //===========================================
 public class NodeEntity {
 
@@ -40,7 +40,7 @@ public class NodeEntity {
     
     @ManyToMany
     //===========================================
-    @JoinTable(name="node_entity_test_adjacents")
+    @JoinTable(name="node_entity_test_adjacents1")
     //===========================================
 	private Set<NodeEntity> adjacents;
 	

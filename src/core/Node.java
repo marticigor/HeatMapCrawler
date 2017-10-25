@@ -24,7 +24,15 @@ public class Node implements Comparable < Node > {
     // https://www.dropbox.com/s/8et183ufeskkibi/IMG_20171019_194557.jpg?dl=0
     
     // https://stackoverflow.com/questions/35958335/jpa-onetomany-on-same-entity
-    
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param lon
+     * @param lat
+     * @param id
+     * @param shotId
+     */
     public Node(int x, int y, double lon, double lat,  long id, long shotId) {
 
         this.x = x;
