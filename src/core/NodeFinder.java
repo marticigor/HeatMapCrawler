@@ -2,11 +2,11 @@ package core;
 
 import java.util.*;
 
-import ifaces.IColorScheme;
+import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
-public class NodeFinder implements IColorScheme {
+public class NodeFinder implements I_ColorScheme {
 
     private ImageResource sharpened;
     private ArrayList < Node > nodes = new ArrayList < Node > ();
@@ -15,7 +15,7 @@ public class NodeFinder implements IColorScheme {
     private ImageResource noded;
     private int nmbOfNodes = 0;
     private int lookAheadAndBack; //3
-    private int surfaceLimit; //43
+    private int surfaceMinimum; //43
     private final long shotId;
 
     private RoundIteratorOfPixels iteratorRound = new RoundIteratorOfPixels();
@@ -43,7 +43,7 @@ public class NodeFinder implements IColorScheme {
     		boolean debug) {
 
         this.lookAheadAndBack = look;
-        this.surfaceLimit = surface;
+        this.surfaceMinimum = surface;
         this.sharpened = sharpened;
         width = sharpened.getWidth();
         height = sharpened.getHeight();
@@ -130,14 +130,14 @@ public class NodeFinder implements IColorScheme {
                                 iteratorRound.resetCount();
 
                                 for (Pixel p1: iteratorRound) {
-
-                                    if (p1.getRed() != redScheme[0] || p1.getGreen() != redScheme[1] || p1.getBlue() != redScheme[2]) surfaceArea++;
-
+                                    if (p1.getRed() != redScheme[0] ||
+                                    		p1.getGreen() != redScheme[1] ||
+                                    		p1.getBlue() != redScheme[2]) surfaceArea++;
                                 }
                             }
                         }
                     }
-                    if (surfaceArea > surfaceLimit) {
+                    if (surfaceArea > surfaceMinimum) {
                         Pixel pNoded = noded.getPixel(x, y);
                         setWhite(pNoded);
                     }

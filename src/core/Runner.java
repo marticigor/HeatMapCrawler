@@ -34,13 +34,17 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class Runner implements Runnable {
 
-    //TODO DI for defaults
-
+	// config in aplicationContext.xml
     private final int devi, look, surface;
-
+    
+    // config NOT in aplicationContext.xml, I think this would be too vulnerable
     private final int bottleneckSize = 3; //3
     private final int passableSize = 3; //3
     private final int sizeDivKonq = 4;
+    
+    // config in aplicationContext.xml
+    boolean visual; // also pauses execution now and then, is purism (e.g boolean pauseVisual;) really needed here?
+    boolean debug;
 
     private ImageChunks chunks;
     private int nmbOfShots; //not necesearilly all shots appear in nodes (blank images)
@@ -55,16 +59,15 @@ public class Runner implements Runnable {
     /**
      * 
      */
-    public Runner(int v1, int v2, int v3) {
+    public Runner(int v1, int v2, int v3, boolean visual, boolean debug) {
         this.devi = v1;
         this.look = v2;
         this.surface = v3;
+        this.visual = visual;
+        this.debug = debug;
     }
 
-    /**
-     * 
-     */
-    public static void main(String[] args) {
+    //public static void main(String[] args) {
 
         /*
          *In Swing programs, the initial threads don't have a lot to do.Their most essential job
@@ -82,15 +85,10 @@ public class Runner implements Runnable {
          */
 
         // System.out.println("this initial Thread is EDT " + SwingUtilities.isEventDispatchThread());
-        ControlWin control = new ControlWin(); // implements Runnable
-        SwingUtilities.invokeLater(control);
+        //ControlWin control = new ControlWin(); // implements Runnable
+        //SwingUtilities.invokeLater(control);
 
-    }
-
-    //#################################################################################
-    boolean visual = false; // also pauses execution now and then
-    boolean debug = false;
-    //################################################################################# 
+    //}
 
     /**
      *

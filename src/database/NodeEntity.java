@@ -13,7 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name=core.ControlWin.TABLE_NODES)
+@Table(name=beans.RunnerBean.TABLE_NODES)
 public class NodeEntity {
 
     // finaly I will want this graph format
@@ -37,7 +37,7 @@ public class NodeEntity {
 	private double lat;
     
     @ManyToMany
-    @JoinTable(name=core.ControlWin.TABLE_ADJACENTS)
+    @JoinTable(name=beans.RunnerBean.TABLE_ADJACENTS)
 	private Set<NodeEntity> adjacents;
 	
     private static final transient double EPSILON = 0.0000001;

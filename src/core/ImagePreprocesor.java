@@ -10,13 +10,13 @@ import core.image_filters.GaussianBlur;
 import core.image_filters.Sharpen;
 import core.image_filters.Skeleton;
 import core.image_filters.filter_utils.MapMerge;
-import ifaces.IColorScheme;
-import ifaces.IImageProcesor;
+import ifaces.I_ColorScheme;
+import ifaces.I_ImageProcesor;
 import lib_duke.AugmentedPixel;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
-public class ImagePreprocesor implements IColorScheme {
+public class ImagePreprocesor implements I_ColorScheme {
 
     private final ImageResource inputImageResource;
     private final ImageResource procesedImageResourceStage1;
@@ -71,7 +71,7 @@ public class ImagePreprocesor implements IColorScheme {
         int heightTo,
         boolean wholePicture) {
 
-        IImageProcesor sharpen = new Sharpen(
+        I_ImageProcesor sharpen = new Sharpen(
         	inputImageResource,
         	procesedImageResourceStage1,
             wholePicture,
@@ -104,7 +104,7 @@ public class ImagePreprocesor implements IColorScheme {
             int heightTo,
             boolean wholePicture){
 
-    	IImageProcesor gaussian = new GaussianBlur(
+    	I_ImageProcesor gaussian = new GaussianBlur(
     			procesedImageResourceStage1,
     			procesedImageResourceStage2,
     			wholePicture,
@@ -173,7 +173,7 @@ public class ImagePreprocesor implements IColorScheme {
 		if(toAugmented == null) toAugmented = this.getToAugmented();
 		if(toAugmented == null || toAugmented.size() == 0) throw new RuntimeException("INVARIANT 2");
 		
-		IImageProcesor highlight = new EdgeHighlight(
+		I_ImageProcesor highlight = new EdgeHighlight(
 				procesedImageResourceStage2,
 				procesedImageResourceStage3,
 				toAugmented,
@@ -204,7 +204,7 @@ public class ImagePreprocesor implements IColorScheme {
 		   int yToExcl,
 		   boolean whole){
 	   
-	   IImageProcesor skeleton = new Skeleton(
+	   I_ImageProcesor skeleton = new Skeleton(
 			   
 			   procesedImageResourceStage1,
 			   procesedImageResourceStage2,

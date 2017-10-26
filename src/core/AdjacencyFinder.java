@@ -2,11 +2,11 @@ package core;
 
 import java.util.*;
 
-import ifaces.IColorScheme;
+import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.LineMaker;
 import lib_duke.Pixel;
-public class AdjacencyFinder implements IColorScheme {
+public class AdjacencyFinder implements I_ColorScheme {
 
     private ImageResource noded;
     private List < Node > nodes;

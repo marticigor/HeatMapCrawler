@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name=core.ControlWin.TABLE_SHOTS)
+@Table(name=beans.RunnerBean.TABLE_SHOTS)
 public class NmbShotsEntity {
 
 	public NmbShotsEntity(){}

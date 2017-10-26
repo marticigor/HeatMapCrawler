@@ -3,9 +3,9 @@ package core.image_filters;
 import core.image_filters.filter_utils.BorderWatch;
 import core.image_filters.filter_utils.ChunksNotMessedAssertion;
 import core.image_filters.filter_utils.ChunksOrWhole;
-import ifaces.IImageProcesor;
+import ifaces.I_ImageProcesor;
 
-public class BaseFilter implements IImageProcesor{
+public class BaseFilter implements I_ImageProcesor{
 	
     protected int borderSharpenStage;
     protected boolean wholeImage;

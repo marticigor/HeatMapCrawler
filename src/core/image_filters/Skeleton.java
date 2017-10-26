@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.RoundIteratorOfPixels;
-import ifaces.IColorScheme;
+import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
 //http://homepages.inf.ed.ac.uk/rbf/HIPR2/thin.htm
-public class Skeleton extends BaseFilter implements IColorScheme {
+public class Skeleton extends BaseFilter implements I_ColorScheme {
 
     public Skeleton(ImageResource in , boolean w, boolean d, int...intArgs) {
         super( in .getWidth(), in .getHeight(), 2, w, d, 5, intArgs);

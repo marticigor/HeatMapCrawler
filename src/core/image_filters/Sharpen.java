@@ -1,10 +1,10 @@
 package core.image_filters;
 
-import ifaces.IColorScheme;
+import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
-public class Sharpen extends BaseFilter implements IColorScheme {
+public class Sharpen extends BaseFilter implements I_ColorScheme {
 
     private final int devToMakeItValidRoutable;
     private final ImageResource in,out;

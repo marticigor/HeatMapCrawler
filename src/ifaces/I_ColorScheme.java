@@ -1,6 +1,6 @@
 package ifaces;
 
-public interface IColorScheme {
+public interface I_ColorScheme {
 
  public int[] redScheme = {
   255,

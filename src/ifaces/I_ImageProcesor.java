@@ -1,6 +1,6 @@
 package ifaces;
 
-public interface IImageProcesor {
+public interface I_ImageProcesor {
 
 	public void doYourThing ();
 

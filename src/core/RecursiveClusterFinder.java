@@ -2,7 +2,7 @@
 
  import java.util.*;
 
- import ifaces.IColorScheme;
+ import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
  public class RecursiveClusterFinder {
@@ -157,7 +157,7 @@ import lib_duke.Pixel;
      /**
       *  
       */
-     class Visualizer implements IColorScheme {
+     class Visualizer implements I_ColorScheme {
 
          ImageResource visIr;
          RoundIteratorOfPixels riop;

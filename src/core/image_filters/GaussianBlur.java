@@ -1,10 +1,10 @@
 package core.image_filters;
 
-import ifaces.IColorScheme;
+import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
-public class GaussianBlur extends BaseFilter implements IColorScheme {
+public class GaussianBlur extends BaseFilter implements I_ColorScheme {
 
 	private ImageResource in, out;
 	private int borderG = Gaussian.BORDER_GAUS_5;
