@@ -15,7 +15,7 @@ public class NodeFinder implements I_ColorScheme {
     private ImageResource noded;
     private int nmbOfNodes = 0;
     private int lookAheadAndBack; //3
-    private int surfaceMinimum; //43
+    private int surface; //43
     private final long shotId;
 
     private RoundIteratorOfPixels iteratorRound = new RoundIteratorOfPixels();
@@ -26,6 +26,7 @@ public class NodeFinder implements I_ColorScheme {
     private final Runner myHandler;
     private double [] bounds;
     private boolean debug;
+    private boolean visual;
     
     private static double spanLon = -1.0;
     private static double spanLat = -1.0;
@@ -40,10 +41,11 @@ public class NodeFinder implements I_ColorScheme {
     		Runner myHandler,
     		double [] bounds,
     		long shotId,
-    		boolean debug) {
+    		boolean debug,
+    		boolean visual) {
 
         this.lookAheadAndBack = look;
-        this.surfaceMinimum = surface;
+        this.surface = surface;
         this.sharpened = sharpened;
         width = sharpened.getWidth();
         height = sharpened.getHeight();
@@ -51,6 +53,8 @@ public class NodeFinder implements I_ColorScheme {
         this.myHandler = myHandler;
         this.bounds = bounds;
         this.shotId = shotId;
+        this.debug = debug;
+        this.visual = visual;
         
         //0 lon east
         //1 lat north
@@ -77,8 +81,6 @@ public class NodeFinder implements I_ColorScheme {
         	spanLat = spanLatNow;
         }
         
-        this.debug = debug;
-
         if(bounds.length != 6) throw new RuntimeException("Node finder bounds length.");
         
         for (Pixel p: sharpened.pixels()) {
@@ -105,6 +107,7 @@ public class NodeFinder implements I_ColorScheme {
         Pixel pIn = null;
 
         int surfaceArea = 0;
+        int routableNeighbours = 0;
 
         iteratorRound.setImageResource(sharpened);
         iteratorRound.resetCount();
@@ -119,37 +122,45 @@ public class NodeFinder implements I_ColorScheme {
 
                 if (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]) {
 
-                    for (int xIn = x - lookAheadAndBack; xIn < x + lookAheadAndBack; xIn++) {
-                        for (int yIn = y - lookAheadAndBack; yIn < y + lookAheadAndBack; yIn++) {
+                //System.out.println("RED PIXEL------------------------------------");
+                //System.out.println("X = " + x + " Y = " + y);
+                //System.out.println("ITERATING THIS RED PIXEL---------------------");
 
+                    for (int xIn = x - lookAheadAndBack; xIn < x + lookAheadAndBack + 1; xIn++) {
+                        for (int yIn = y - lookAheadAndBack; yIn < y + lookAheadAndBack + 1; yIn++) {
+                            
+                        	//System.out.println("xIn = " + xIn + " yIn = "+yIn);
+                        	
                             pIn = sharpened.getPixel(xIn, yIn);
 
                             if (pIn.getRed() == redScheme[0] && pIn.getGreen() == redScheme[1] && pIn.getBlue() == redScheme[2]) {
 
+                            	routableNeighbours ++;
                                 iteratorRound.setPixelToCheckAround(pIn);
                                 iteratorRound.resetCount();
 
                                 for (Pixel p1: iteratorRound) {
                                     if (p1.getRed() != redScheme[0] ||
                                     		p1.getGreen() != redScheme[1] ||
-                                    		p1.getBlue() != redScheme[2]) surfaceArea++;
+                                    		p1.getBlue() != redScheme[2]) surfaceArea ++;
                                 }
                             }
+                            //System.out.println("surfaceArea = " + surfaceArea);
                         }
                     }
-                    if (surfaceArea > surfaceMinimum) {
+                    if (surfaceArea < surface && routableNeighbours > 1) {
                         Pixel pNoded = noded.getPixel(x, y);
                         setWhite(pNoded);
                     }
                     surfaceArea = 0;
+                    routableNeighbours = 0;
                 }
             }
         }
 
-        //
-        //noded.draw();
+        if(visual) { noded.draw(); Pause.pause(5000);}
         //noded.saveAs();
-        //Pause.pause(10000);
+
         //
         rcf = new RecursiveClusterFinder(noded, whiteScheme[0], whiteScheme[1], whiteScheme[2]);
         //

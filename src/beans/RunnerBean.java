@@ -15,7 +15,7 @@ public class RunnerBean implements I_KickStart{
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	
 	private int devToMakeItValidRoutable, lookVicinity, surfaceOfSalientArea;
-	//reasonable defaults to start with: 30,2,32
+	//reasonable defaults to start with: - aplicationContext.xml
 	private boolean visual, debug;
 	
 	@Override

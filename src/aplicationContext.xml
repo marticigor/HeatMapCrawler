@@ -7,13 +7,13 @@
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <!-- reasonable defaults to start with: 30,2,32 -->
+    <!-- reasonable defaults to start with: 36,1,18 -->
     <bean id="kickStart" class="beans.RunnerBean">
     
-        <property name="devToMakeItValidRoutable" value="36" />
-        <property name="lookVicinity" value="2" />
-        <property name="surfaceOfSalientArea" value="22" />
-        <property name="visual" value="true" />
+        <property name="devToMakeItValidRoutable" value="30" />
+        <property name="lookVicinity" value="1" />
+        <property name="surfaceOfSalientArea" value="18" />
+        <property name="visual" value="false" />
         <property name="debug" value="false" />
         
     </bean>

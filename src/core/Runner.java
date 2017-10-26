@@ -38,8 +38,9 @@ public class Runner implements Runnable {
     private final int devi, look, surface;
     
     // config NOT in aplicationContext.xml, I think this would be too vulnerable
-    private final int bottleneckSize = 3; //3
+    private final int bottleneckSize = 1; //3
     private final int passableSize = 3; //3
+    
     private final int sizeDivKonq = 4;
     
     // config in aplicationContext.xml
@@ -107,7 +108,7 @@ public class Runner implements Runnable {
         long shotId = 0;
         nmbOfShots = listFilesPng.size();
 
-        for (int i = 0; i < 1; i++) { //stress test - out of memory, leak...
+        for (int i = 0; i < 100; i++) { //stress test - out of memory, leak...
 
             System.out.println("---------------------------------------------------------" +
                 "--------- iter " + i);
@@ -203,7 +204,7 @@ public class Runner implements Runnable {
                     Pause.pause(2000);
                 }
 
-                NodeFinder nf = new NodeFinder(procesedMap, look, surface, this, bounds, shotId, debug);
+                NodeFinder nf = new NodeFinder(procesedMap, look, surface, this, bounds, shotId, debug, visual);
                 nf.findNodes();
 
                 ImageResource noded = nf.getNodedImage();
@@ -378,10 +379,10 @@ public class Runner implements Runnable {
         	if(size1 != size2) throw new RuntimeException("sizes do not match - persist in Runner");
         }
         
-        NmbShotsEntity nmb = new NmbShotsEntity(nmbOfShots);
+        //NmbShotsEntity nmb = new NmbShotsEntity(nmbOfShots);
         
-        ManageNodeEntity man = ManageNodeEntity.getInstance();
-        man.persist(list,nmb, debug);
+        //ManageNodeEntity man = ManageNodeEntity.getInstance();
+        //man.persist(list,nmb, debug);
     }
     
     /**
