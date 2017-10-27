@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 public class Runner implements Runnable {
 
 	// config in aplicationContext.xml
-    private final int devi, look, surface;
+    private final int devi, look, surface1, surface2, surface3, surface4;
 
     // config NOT in aplicationContext.xml, I think this would be too vulnerable
     private final int bottleneckSize = 1; //3
@@ -60,10 +60,13 @@ public class Runner implements Runnable {
     /**
      *
      */
-    public Runner(int v1, int v2, int v3, boolean visual, boolean debug) {
+    public Runner(int v1, int v2, int v3, int v4, int v5, int v6, boolean visual, boolean debug) {
         this.devi = v1;
         this.look = v2;
-        this.surface = v3;
+        this.surface1 = v3;
+        this.surface2 = v4;
+        this.surface3 = v5;
+        this.surface4 = v6;
         this.visual = visual;
         this.debug = debug;
     }
@@ -202,7 +205,7 @@ public class Runner implements Runnable {
                     Pause.pause(2000);
                 }
 
-                NodeFinder nf = new NodeFinder(procesedMap, look, surface, this, bounds, shotId, debug, visual);
+                NodeFinder nf = new NodeFinder(procesedMap, look, surface1, surface2, surface3, surface4, this, bounds, shotId, debug, visual);
                 nf.findNodes();
 
                 ImageResource noded = nf.getNodedImage();

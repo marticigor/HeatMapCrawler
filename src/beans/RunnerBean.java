@@ -14,32 +14,60 @@ public class RunnerBean implements I_KickStart{
 	public static final String TABLE_ADJACENTS = NAME + "_adjacents";
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	
-	private int devToMakeItValidRoutable, lookVicinity, surfaceOfSalientArea;
+	private int devToMakeItValidRoutable,
+	    lookVicinity,
+	    surfaceOfSalientArea1,
+	    surfaceOfSalientArea2,
+	    surfaceOfSalientArea3,
+	    surfaceOfSalientArea4;
 	//reasonable defaults to start with: - aplicationContext.xml
 	private boolean visual, debug;
 	
 	@Override
 	public void kickStart() {
-        Runner runner = new Runner(devToMakeItValidRoutable, lookVicinity, surfaceOfSalientArea,
+        Runner runner = new Runner(devToMakeItValidRoutable, lookVicinity,
+        		surfaceOfSalientArea1, surfaceOfSalientArea2, surfaceOfSalientArea3, surfaceOfSalientArea4,
         		visual, debug);
         Thread forked = new Thread(runner);
         forked.start();
-        try {
-			Thread.currentThread().join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			throw new RuntimeException("interupted main thread");
-		}
+        //try {
+			//Thread.currentThread().join();
+		//} catch (InterruptedException e) {
+			//e.printStackTrace();
+			//throw new RuntimeException("interupted main thread");
+		//}
 	}
 
-	public int getSurfaceOfSalientArea() {
-		return surfaceOfSalientArea;
+	public int getSurfaceOfSalientAreaConstant1() {
+		return surfaceOfSalientArea1;
 	}
 
-	public void setSurfaceOfSalientArea(int surfaceOfSalientArea) {
-		this.surfaceOfSalientArea = surfaceOfSalientArea;
+	public void setSurfaceOfSalientAreaConstant1(int surface) {
+		this.surfaceOfSalientArea1 = surface;
+	}
+	
+	public int getSurfaceOfSalientAreaConstant2() {
+		return surfaceOfSalientArea2;
 	}
 
+	public void setSurfaceOfSalientAreaConstant2(int surface) {
+		this.surfaceOfSalientArea2 = surface;
+	}
+	
+	public int getSurfaceOfSalientAreaConstant3() {
+		return surfaceOfSalientArea3;
+	}
+
+	public void setSurfaceOfSalientAreaConstant3(int surface) {
+		this.surfaceOfSalientArea3 = surface;
+	}
+	public int getSurfaceOfSalientAreaConstant4() {
+		return surfaceOfSalientArea4;
+	}
+
+	public void setSurfaceOfSalientAreaConstant4(int surface) {
+		this.surfaceOfSalientArea4 = surface;
+	}
 	public int getLookVicinity() {
 		return lookVicinity;
 	}

@@ -2,6 +2,8 @@ package core;
 
 import java.util.*;
 
+import core.utils.FindColor.RGB;
+import core.utils.MapNmbToColor;
 import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
@@ -14,8 +16,11 @@ public class NodeFinder implements I_ColorScheme {
     private int height;
     private ImageResource noded;
     private int nmbOfNodes = 0;
-    private int lookAheadAndBack; //3
-    private int surfaceConstant; //43
+    private int lookAheadAndBack;
+    private int surfaceConstant1;
+    private int surfaceConstant2;
+    private int surfaceConstant3;
+    private int surfaceConstant4;
     private final long shotId;
 
     private RoundIteratorOfPixels iteratorRound = new RoundIteratorOfPixels();
@@ -37,7 +42,10 @@ public class NodeFinder implements I_ColorScheme {
     public NodeFinder(
     		ImageResource sharpened,
     		int look,
-    		int surface,
+    		int surface1,
+    		int surface2,
+    		int surface3,
+    		int surface4,
     		Runner myHandler,
     		double [] bounds,
     		long shotId,
@@ -45,7 +53,10 @@ public class NodeFinder implements I_ColorScheme {
     		boolean visual) {
 
         this.lookAheadAndBack = look;
-        this.surfaceConstant = surface;
+        this.surfaceConstant1 = surface1;
+        this.surfaceConstant2 = surface2;
+        this.surfaceConstant3 = surface3;
+        this.surfaceConstant4 = surface4;
         this.sharpened = sharpened;
         width = sharpened.getWidth();
         height = sharpened.getHeight();
@@ -105,12 +116,19 @@ public class NodeFinder implements I_ColorScheme {
 
         Pixel p = null;
         Pixel pIn = null;
-
+        
+        //SALIENT SALIENT
+        ImageResource salientArea = new ImageResource(sharpened.getWidth(),sharpened.getHeight());
+        
         int surfaceArea = 0;
         int routableNeighbours = 0;
 
         iteratorRound.setImageResource(sharpened);
         iteratorRound.resetCount();
+        int minSurface = Integer.MAX_VALUE;
+        int maxSurface = Integer.MIN_VALUE;
+        MapNmbToColor<Integer> mapColor =  new MapNmbToColor<Integer>();
+        
         //
         //finds salient pixels that probably belong to a region of
         //interest in terms of future node.
@@ -145,20 +163,47 @@ public class NodeFinder implements I_ColorScheme {
                                     		p1.getBlue() != redScheme[2]) surfaceArea ++;
                                 }
                             }
-                            //System.out.println("surfaceArea = " + surfaceArea);
                         }
                     }
-                    if (surfaceArea < surfaceConstant && routableNeighbours > 1) {
+                    
+                    //SALIENT SALIENT
+                    Pixel inSalient = salientArea.getPixel(x, y);
+                    RGB color = mapColor.getRGB(surfaceArea * 10);
+                    inSalient.setRed(color.red);
+                    inSalient.setGreen(color.green);
+                    inSalient.setBlue(color.blue);
+                    
+                    boolean firstInterval = (surfaceArea > surfaceConstant1 &&
+                  		                     surfaceArea <= surfaceConstant2);
+                    
+                    boolean secondInterval = (surfaceArea > surfaceConstant3 &&
+            		                          surfaceArea <= surfaceConstant4);
+                    boolean neighbours = routableNeighbours > 1;
+                    
+                    if ( (firstInterval || secondInterval) && neighbours ){
+                    	
                         Pixel pNoded = noded.getPixel(x, y);
                         setWhite(pNoded);
+                        
                     }
+                    
+                    if(surfaceArea > maxSurface) maxSurface = surfaceArea;
+                    if(surfaceArea < minSurface) minSurface = surfaceArea;
+                    
                     surfaceArea = 0;
                     routableNeighbours = 0;
                 }
             }
         }
-
-        if(visual) { noded.draw(); Pause.pause(15000);}
+        
+        if(visual) {
+        	noded.draw(); Pause.pause(5000);
+            //SALIENT SALIENT
+        	System.out.println("DRAWING SALIENT AREA");
+            salientArea.draw();
+        }
+        
+        if(visual || debug)System.out.println("SURFACE " + minSurface + " | " + maxSurface );
         //noded.saveAs();
 
         //
