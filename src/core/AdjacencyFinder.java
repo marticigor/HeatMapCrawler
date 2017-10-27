@@ -37,7 +37,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 
         rcf = new RecursiveClusterFinder(noded, nodes, mapPixToNode, redScheme[0], redScheme[1], redScheme[2],
             greenScheme[0], greenScheme[1], greenScheme[2],
-            this.debug); //visualize "debuger" 
+            this.debug); //visualize "debuger"
 
         if (this.visual) {
         	visualizeIR = new ImageResource(noded.getWidth(), noded.getHeight());
@@ -45,7 +45,7 @@ public class AdjacencyFinder implements I_ColorScheme {
     }
 
     /**
-     * wrap method to build all list into nodes
+     * wrap method to build all lists into nodes
      */
     public void buildAdjacencyLists() {
 
@@ -58,6 +58,7 @@ public class AdjacencyFinder implements I_ColorScheme {
                 nmbOfBottlenecks++;
             }
         }
+
         System.out.println("Number of all nodes: " + nodes.size());
         System.out.println("Number of bottleneck nodes: " + nmbOfBottlenecks);
 
@@ -68,10 +69,9 @@ public class AdjacencyFinder implements I_ColorScheme {
                 p.setRed(yellowScheme[0]);
                 p.setGreen(yellowScheme[1]);
                 p.setBlue(yellowScheme[2]);
-
             }
         }
-        
+
         Collections.sort(nodes);
 
         { //scope for adjacency lists builder
@@ -81,14 +81,14 @@ public class AdjacencyFinder implements I_ColorScheme {
             Pixel currP;
             int currX, currY;
 
-            //this is first run so map of pixels to recreate "green squares" gets created;
-            maskAllNodes(true);
+            //this is first run - map of pixels gets created, later we can demask green squares
+            maskAllNodes(true); //boolean firstRun
 
             if(visual){
                 noded.draw();
                 Pause.pause(10000);
             }
-            
+
             for (Node buildForThis: nodes) {
 
                 maskOrDemaskNode(buildForThis, false); //demask this node, not first run
@@ -103,12 +103,11 @@ public class AdjacencyFinder implements I_ColorScheme {
                 riop.setPixelToCheckAround(currP);
                 int count = 0;
 
-                //-------------------------------------------------------------------------------------------------------------------------
+                //--------------------------------------------------------------------
                 for (Pixel iterP: riop) {
                     if (count == 0 || count == 3 || count == 5) putAllSurrReds(iterP);
                     count++;
                 }
-                //-------------------------------------------------------------------------------------------------------------------------  
                 //now redCluster is build for node buildForThis
                 HashSet < Node > adjacents = rcf.getAdjacents();
                 for (Node singleAdjacent: adjacents) {
@@ -116,7 +115,7 @@ public class AdjacencyFinder implements I_ColorScheme {
                 }
                 rcf.resetToNewAdjacents();
 
-                if (visual && debug) { //visual
+                if (visual && debug) { //visual && debug
                     for (Pixel pDebug: redCluster) {
 
                         Pixel pIr = visualizeIR.getPixel(pDebug.getX(), pDebug.getY());
@@ -139,12 +138,12 @@ public class AdjacencyFinder implements I_ColorScheme {
                         pIr.setBlue(redischScheme[2]);
 
                     }
-                } //visual
+                } //visual && debug
                 maskOrDemaskNode(buildForThis, true); //doMask
             }
 
             demaskAllNodes();
-            
+
             if(visual){
                 noded.draw();
                 Pause.pause(5000);
@@ -171,24 +170,24 @@ public class AdjacencyFinder implements I_ColorScheme {
                     }
                 }
             }
-            
+
             if(visual){
                 noded.draw();
                 Pause.pause(5000);
             }
         } //scope for adjacency lists builder
-        
+
         List <Node> toRemove = new ArrayList<Node>();
         for (Node n : nodes) if (n.getAdjacentNodes().size() == 0) toRemove.add(n);
         for (Node n : toRemove) {
         	System.out.println("Nodes of zero adjacency list size : " + n);
         	//nodes.remove(n);// do not remove them yet, they still may by useful in more
-                //broad context after merge of this 'drop' graph into 'ocean' graph 
+                //broad context after merge of this 'drop' graph into 'ocean' graph
         }
     }
 
     /**
-     * 
+     *
      */
     public void drawAdjacencyEdges() {
         ImageResource edges = new ImageResource(noded.getWidth(), noded.getHeight());
@@ -219,7 +218,7 @@ public class AdjacencyFinder implements I_ColorScheme {
     }
 
     /**
-     * 
+     *
      */
     private void putAllSurrReds(Pixel currP) {
 
@@ -231,34 +230,12 @@ public class AdjacencyFinder implements I_ColorScheme {
     }
 
     /**
-     *  
+     *
      */
     private void copyBranchIntoRedCluster(HashSet < Pixel > branch) {
         for (Pixel p: branch) {
             redCluster.add(p);
         }
-    }
-
-    /**
-     * 
-     */
-    private void maskAllNodes(boolean firstRun) {
-
-        if (firstRun) mapBackgrounds();
-
-        for (Node node: nodes) {
-            maskOrDemaskNode(node, true);
-        }
-    }
-
-    /**
-     *  
-     */
-    private void demaskAllNodes() {
-        for (Node node: nodes) {
-            maskOrDemaskNode(node, false);
-        }
-        //Pause.pause(16000);
     }
 
     private void mapBackgrounds() {
@@ -333,7 +310,28 @@ public class AdjacencyFinder implements I_ColorScheme {
     }
 
     /**
-     *  
+     *
+     */
+    private void maskAllNodes(boolean firstRun) {
+
+        if (firstRun) mapBackgrounds();
+
+        for (Node node: nodes) {
+            maskOrDemaskNode(node, true);
+        }
+    }
+
+    /**
+     *
+     */
+    private void demaskAllNodes() {
+        for (Node node: nodes) {
+            maskOrDemaskNode(node, false);
+        }
+    }
+
+    /**
+     *
      */
     private boolean isBottleNeck(Node n) {
 

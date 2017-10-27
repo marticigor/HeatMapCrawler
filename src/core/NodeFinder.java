@@ -27,10 +27,10 @@ public class NodeFinder implements I_ColorScheme {
     private double [] bounds;
     private boolean debug;
     private boolean visual;
-    
+
     private static double spanLon = -1.0;
     private static double spanLat = -1.0;
-    
+
     /**
      *
      */
@@ -55,14 +55,14 @@ public class NodeFinder implements I_ColorScheme {
         this.shotId = shotId;
         this.debug = debug;
         this.visual = visual;
-        
+
         //0 lon east
         //1 lat north
         //2 lat south
         //3 lon west
         //4 lat center
         //5 lon center
-        
+
         //TODO code duplicity
         double spanLonNow = bounds[0] - bounds [3];
         if(spanLon == -1.0) spanLon = spanLonNow;
@@ -80,16 +80,16 @@ public class NodeFinder implements I_ColorScheme {
         	System.err.println("dif " + (spanLat - spanLatNow));
         	spanLat = spanLatNow;
         }
-        
+
         if(bounds.length != 6) throw new RuntimeException("Node finder bounds length.");
-        
+
         for (Pixel p: sharpened.pixels()) {
             Pixel pCopy = noded.getPixel(p.getX(), p.getY());
             pCopy.setRed(p.getRed());
             pCopy.setGreen(p.getGreen());
             pCopy.setBlue(p.getBlue());
         }
-        
+
         if(debug){
             System.out.println("NodeFinder");
             System.out.println("______________________________");
@@ -128,9 +128,9 @@ public class NodeFinder implements I_ColorScheme {
 
                     for (int xIn = x - lookAheadAndBack; xIn < x + lookAheadAndBack + 1; xIn++) {
                         for (int yIn = y - lookAheadAndBack; yIn < y + lookAheadAndBack + 1; yIn++) {
-                            
+
                         	//System.out.println("xIn = " + xIn + " yIn = "+yIn);
-                        	
+
                             pIn = sharpened.getPixel(xIn, yIn);
 
                             if (pIn.getRed() == redScheme[0] && pIn.getGreen() == redScheme[1] && pIn.getBlue() == redScheme[2]) {
@@ -167,15 +167,15 @@ public class NodeFinder implements I_ColorScheme {
 
         int x, y;
         double lon, lat;
-        
+
         double dLon = Math.abs(bounds [0] - bounds [3]);
         double dLat = Math.abs(bounds [1] - bounds [2]);
-        
+
         if(debug){
         	System.out.println("dLon " + dLon);
         	System.out.println("dLat " + dLat);
         }
-        
+
         for (Pixel pOfNoded: noded.pixels()) { //1
 
             if (isSetToClusterAround(pOfNoded)) { //2 white check only
@@ -206,26 +206,26 @@ public class NodeFinder implements I_ColorScheme {
                     if (neighboursToFindMax > maxNeighbours) maxNeighbours = neighboursToFindMax;
 
                 }
-                
+
                 for (Pixel maybeMaximus: allClusterAroundNode) {
 
                     if (getNumberOfSurrWhites(maybeMaximus, noded) == maxNeighbours) {
-                  	
+
                     	//bounds
-                    	
+
                         //0 lon east
                         //1 lat north
                         //2 lat south
                         //3 lon west
                         //4 lat center
                         //5 lon center
-                    	
+
                     	x = maybeMaximus.getX();
                     	y = maybeMaximus.getY();
-                    	
+
                     	lon = bounds [3] + (   ( (double) x / ((double) (width - 1)) ) * dLon   );
                     	lat = bounds [1] - (   ( (double) y / ((double) (height - 1)) ) * dLat   );
-                    	
+
                     	//the only instantiation of node in the project
                         Node node = new Node(
                         		x,
@@ -235,10 +235,9 @@ public class NodeFinder implements I_ColorScheme {
                         		myHandler.incrAndGetId(),
                         		shotId
                         		);
-                        
+
                         maximusNodes.add(node);
-                        
-                        
+
                         //find average X Y for this cluster of maximuses
                         sumX += node.getX();
                         sumY += node.getY();
@@ -265,7 +264,7 @@ public class NodeFinder implements I_ColorScheme {
 
                     for (Node maybeClosest: maximusNodes) {
 
-                        //we do have (among maximusNodes) a node with exactly avg x y values 
+                        //we do have (among maximusNodes) a node with exactly avg x y values
                         if (maybeClosest.getX() == centerGravityX && maybeClosest.getY() == centerGravityY) {
                             nodes.add(maybeClosest);
                             nmbOfNodes++;
@@ -332,7 +331,7 @@ public class NodeFinder implements I_ColorScheme {
     }
 
     /**
-     * 
+     *
      */
     private int getNumberOfSurrWhites(Pixel p, ImageResource ir) {
 
@@ -352,7 +351,7 @@ public class NodeFinder implements I_ColorScheme {
     }
 
     /**
-     *prints simplistic visualisation of clusters  
+     * prints simplistic visualisation of clusters
      */
     private void printAllClustered(HashSet < Pixel > cluster) {
 

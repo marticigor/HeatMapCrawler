@@ -3,8 +3,8 @@
  import java.util.*;
 
  import ifaces.I_ColorScheme;
-import lib_duke.ImageResource;
-import lib_duke.Pixel;
+ import lib_duke.ImageResource;
+ import lib_duke.Pixel;
  public class RecursiveClusterFinder {
 
      private HashSet < Pixel > allClusterAroundNode;
@@ -77,10 +77,7 @@ import lib_duke.Pixel;
       */
      public void setCluster(Pixel p) {
 
-         //currentNodeX
-         //currentNodeY
-
-         if (allClusterAroundNode.size() > 3000) {
+         if (allClusterAroundNode.size() > 15000) {
              return;
          }
 

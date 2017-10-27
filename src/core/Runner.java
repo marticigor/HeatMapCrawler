@@ -36,13 +36,13 @@ public class Runner implements Runnable {
 
 	// config in aplicationContext.xml
     private final int devi, look, surface;
-    
+
     // config NOT in aplicationContext.xml, I think this would be too vulnerable
     private final int bottleneckSize = 1; //3
     private final int passableSize = 3; //3
-    
+
     private final int sizeDivKonq = 4;
-    
+
     // config in aplicationContext.xml
     boolean visual; // also pauses execution now and then, is purism (e.g boolean pauseVisual;) really needed here?
     boolean debug;
@@ -52,13 +52,13 @@ public class Runner implements Runnable {
 
     private int nodeCount = 0;
     private long id = -1;
-    
+
     //this border is necessary for kernel convolution later on, not necessary
     //in sharpen stage
     private final int borderInSharpenStage = 2; //((Math.max(bottleneckSize, passableSize)) - 1) / 2;
 
     /**
-     * 
+     *
      */
     public Runner(int v1, int v2, int v3, boolean visual, boolean debug) {
         this.devi = v1;
@@ -95,16 +95,16 @@ public class Runner implements Runnable {
      *
      */
     public void run() {
-    	
+
         DirectoryResource dirRPng = new DirectoryResource();//opens dialog window
         DirectoryResource dirRTxt = new DirectoryResource();
-    	
+
         List < File > listFilesPng = new ArrayList < File > ();
         for (File f: dirRPng.selectedFiles()) listFilesPng.add(f);
-        
+
         List < File > listFilesTxt = new ArrayList < File > ();
         for (File f: dirRTxt.selectedFiles()) listFilesTxt.add(f);
-        
+
         long shotId = 0;
         nmbOfShots = listFilesPng.size();
 
@@ -114,22 +114,22 @@ public class Runner implements Runnable {
                 "--------- iter " + i);
 
             for (File iteratedFile: listFilesPng) {
-                
+
                 System.out.println("\n\n\n\n\nPROCESING " + iteratedFile.toString());
                 String fileName = iteratedFile.getName();
                 fileName = fileName.substring(0, fileName.indexOf('.'));
                 String fileNameTxt = fileName + ".txt";
-                
+
                 //get the description file
                 File description = null;
-                
+
 				try {
 					description = getDesriptionFile(listFilesTxt, fileNameTxt);
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 					throw new RuntimeException("Text description file not found.");
 				}
-           
+
                 //read description into string
                 String readLine = null;
                 BufferedReader br = null;
@@ -152,7 +152,7 @@ public class Runner implements Runnable {
 							throw new RuntimeException("IO Runner2");
 						}
                 }
-                
+
                 //convert string into double []
                 double [] bounds = new double [6];
                 //0 lon east
@@ -161,9 +161,9 @@ public class Runner implements Runnable {
                 //3 lon west
                 //4 lat center
                 //5 lon center
-                
+
                 if(readLine == null) throw new RuntimeException("No description in file.");
-                
+
                 //there are 12 characters with special meanings: the backslash \,
                 //the caret ^, the dollar sign $,
                 //the period or dot ., the vertical bar or pipe symbol |,
@@ -171,19 +171,17 @@ public class Runner implements Runnable {
                 //the opening parenthesis (, the closing parenthesis ),
                 //and the opening square bracket [, the opening curly brace
                 //{, These special characters are often called "metacharacters".
-                
-                
+
 				String [] values = readLine.split(Pattern.quote("|"));
-				
 				if(values.length != 7) throw new RuntimeException("Length.");//beginning "|"
-				
+
                 System.out.println("___________________________________");
 				for (int j = 1; j < 7; j++){
 					System.out.println(values[j]);
 					bounds[j - 1] = Double.parseDouble(values[j]);
 				}
                 System.out.println("___________________________________");
-				
+
                 ImageResource image = new ImageResource(iteratedFile);
                 ImagePreprocesor ip = new ImagePreprocesor(devi, borderInSharpenStage, visual, debug, image);
 
@@ -216,7 +214,7 @@ public class Runner implements Runnable {
                 af.buildAdjacencyLists();
 
                 //test output gpx
-                
+
                 if(debug){
                     //0 lon east
                     //1 lat north
@@ -246,16 +244,16 @@ public class Runner implements Runnable {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-                }
-                
+                }//debug
+
                 if (visual) {
                     af.drawAdjacencyEdges();
                     Pause.pause(3000);
                 } else {}
-                
+
                 addNodeCount(nodes.size());
                 System.out.println("CURRENT Number of nodes: " + getNodeCount());
-                
+
                 //
                 //
                 if(nodes != null) persist(nodes); else throw new RuntimeException("nodes = null");
@@ -265,20 +263,20 @@ public class Runner implements Runnable {
                 //NodeGraphMocks mocks = new NodeGraphMocks();
                 //List <Node> mockNodes = mocks.getMocks1();
                 //persist(mockNodes);
-                
+
                 shotId ++;
             }
-            
+
             System.out.println("FINAL Number of nodes: " + getNodeCount());
             // finaly I will want this format
             // https://www.dropbox.com/s/8et183ufeskkibi/IMG_20171019_194557.jpg?dl=0
-            
+
         }//stress test - out of memory, leak...
     }//run
 
 
     /**
-     * 
+     *
      * @param ip
      */
     private void perManyTasksProces(final ImagePreprocesor ip) {
@@ -325,9 +323,9 @@ public class Runner implements Runnable {
         }
 
     }
-    
+
     /**
-     * 
+     *
      * @param task
      * @param ref
      * @param ip
@@ -366,7 +364,7 @@ public class Runner implements Runnable {
     }
 
     /**
-     * 
+     *
      * @param nodes
      */
     private void persist(List <Node> nodes){
@@ -378,17 +376,17 @@ public class Runner implements Runnable {
         	int size2 = n.getEntity().getAdjacents().size();
         	if(size1 != size2) throw new RuntimeException("sizes do not match - persist in Runner");
         }
-        
+
         //NmbShotsEntity nmb = new NmbShotsEntity(nmbOfShots);
-        
+
         //ManageNodeEntity man = ManageNodeEntity.getInstance();
         //man.persist(list,nmb, debug);
     }
-    
+
     /**
-     * 
+     *
      * @return
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     private File getDesriptionFile(List<File> listFilesTxt, String fileNameTxt) throws FileNotFoundException{
         for (File f : listFilesTxt){
@@ -397,9 +395,9 @@ public class Runner implements Runnable {
         }
         throw new FileNotFoundException("filename: " + fileNameTxt);
     }
-    
+
     /**
-     * 
+     *
      * @param nodes
      */
     private void printBuiltNodes(List < Node > nodes) {
@@ -424,15 +422,15 @@ public class Runner implements Runnable {
     }
 
     /**
-     * 
+     *
      * @param value
      */
     private void addNodeCount(int value){
     	nodeCount += value;
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     private int getNodeCount(){
