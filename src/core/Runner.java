@@ -108,7 +108,7 @@ public class Runner implements Runnable {
         long shotId = 0;
         nmbOfShots = listFilesPng.size();
 
-        for (int i = 0; i < 100; i++) { //stress test - out of memory, leak...
+        for (int i = 0; i < 1; i++) { //stress test - out of memory, leak...
 
             System.out.println("---------------------------------------------------------" +
                 "--------- iter " + i);

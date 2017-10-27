@@ -13,7 +13,7 @@
         <property name="devToMakeItValidRoutable" value="30" />
         <property name="lookVicinity" value="1" />
         <property name="surfaceOfSalientArea" value="18" />
-        <property name="visual" value="false" />
+        <property name="visual" value="true" />
         <property name="debug" value="false" />
         
     </bean>

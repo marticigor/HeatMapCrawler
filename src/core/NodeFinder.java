@@ -158,7 +158,7 @@ public class NodeFinder implements I_ColorScheme {
             }
         }
 
-        if(visual) { noded.draw(); Pause.pause(5000);}
+        if(visual) { noded.draw(); Pause.pause(15000);}
         //noded.saveAs();
 
         //
