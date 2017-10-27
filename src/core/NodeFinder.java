@@ -15,7 +15,7 @@ public class NodeFinder implements I_ColorScheme {
     private ImageResource noded;
     private int nmbOfNodes = 0;
     private int lookAheadAndBack; //3
-    private int surface; //43
+    private int surfaceConstant; //43
     private final long shotId;
 
     private RoundIteratorOfPixels iteratorRound = new RoundIteratorOfPixels();
@@ -45,7 +45,7 @@ public class NodeFinder implements I_ColorScheme {
     		boolean visual) {
 
         this.lookAheadAndBack = look;
-        this.surface = surface;
+        this.surfaceConstant = surface;
         this.sharpened = sharpened;
         width = sharpened.getWidth();
         height = sharpened.getHeight();
@@ -148,7 +148,7 @@ public class NodeFinder implements I_ColorScheme {
                             //System.out.println("surfaceArea = " + surfaceArea);
                         }
                     }
-                    if (surfaceArea < surface && routableNeighbours > 1) {
+                    if (surfaceArea < surfaceConstant && routableNeighbours > 1) {
                         Pixel pNoded = noded.getPixel(x, y);
                         setWhite(pNoded);
                     }
