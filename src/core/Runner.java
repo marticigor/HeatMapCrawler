@@ -72,29 +72,6 @@ public class Runner implements Runnable {
         this.debug = debug;
     }
 
-    //public static void main(String[] args) {
-
-        /*
-         *In Swing programs, the initial threads don't have a lot to do.Their most essential job
-         *is to create a Runnable object that initializes the GUI
-         *and schedule that object for execution on the event dispatch thread.
-         *
-         *An initial thread schedules the GUI creation task by invoking
-         *javax.swing.SwingUtilities.invokeLater or
-         *javax.swing.SwingUtilities.invokeAndWait
-         *Both of these methods take a single argument:
-         *the Runnable that defines the new task.
-         *Their only difference is indicated by their names:
-         *invokeLater simply schedules the task and returns;
-         *invokeAndWait waits for the task to finish before returning. 
-         */
-
-        // System.out.println("this initial Thread is EDT " + SwingUtilities.isEventDispatchThread());
-        //ControlWin control = new ControlWin(); // implements Runnable
-        //SwingUtilities.invokeLater(control);
-
-    //}
-
     /**
      *
      */
@@ -210,7 +187,7 @@ public class Runner implements Runnable {
                     Pause.pause(2000);
                 }
 
-                NodeFinder nf = new NodeFinder(skeletonized, look, surface1, surface2, surface3, surface4, this, bounds, shotId, debug, visual);
+                NodeFinder nf = new NodeFinder(thresholded, skeletonized, look, surface1, surface2, surface3, surface4, this, bounds, shotId, debug, visual);
                 nf.findNodes();
 
                 ImageResource noded = nf.getNodedImage();
@@ -246,10 +223,8 @@ public class Runner implements Runnable {
 						out.composeOutputDoc();
 						out.writeOutputFile();
 					} catch (ParserConfigurationException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (TransformerException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
                 }//debug
@@ -276,8 +251,6 @@ public class Runner implements Runnable {
             }
 
             System.out.println("FINAL Number of nodes: " + getNodeCount());
-            // finaly I will want this format
-            // https://www.dropbox.com/s/8et183ufeskkibi/IMG_20171019_194557.jpg?dl=0
 
         }//stress test - out of memory, leak...
     }//run
@@ -300,11 +273,7 @@ public class Runner implements Runnable {
         TaskSharpen[] sharpenTask = new TaskSharpen[sizeDivKonq * sizeDivKonq];
         decorateFactory(sharpenTask, TaskSharpen.class, ip);
         stages.add(sharpenTask);
-
-        //TaskGaussian [] gaussianTask = new TaskGaussian[sizeDivKonq * sizeDivKonq];
-        //decorateFactory(gaussianTask, TaskGaussian.class, ip);
-        //stages.add(gaussianTask);
-        
+      
         TaskJustCopy[] justCopyTask = new TaskJustCopy[sizeDivKonq * sizeDivKonq];
         decorateFactory(justCopyTask, TaskJustCopy.class, ip);
         stages.add(justCopyTask);
@@ -312,14 +281,6 @@ public class Runner implements Runnable {
         TaskSkeleton[] skeletonTask = new TaskSkeleton[sizeDivKonq * sizeDivKonq];
         decorateFactory(skeletonTask, TaskSkeleton.class, ip);
         stages.add(skeletonTask);
-
-        //TaskCanny[] cannyTask = new TaskCanny[sizeDivKonq * sizeDivKonq];
-        //decorateFactory(cannyTask, TaskCanny.class, ip);
-        //stages.add(cannyTask);
-
-        //TaskHighlight [] highlightTask = new TaskHighlight [sizeDivKonq * sizeDivKonq];
-        //decorateFactory(highlightTask, TaskHighlight.class, ip);
-        //stages.add(highlightTask);
 
         //--------------------------------------------------
         //FILTERS QUEUE FIFO END
@@ -448,4 +409,8 @@ public class Runner implements Runnable {
     private int getNodeCount(){
     	return nodeCount;
     }
+
+	public int getBorderInSharpenStage() {
+		return borderInSharpenStage;
+	}
 }

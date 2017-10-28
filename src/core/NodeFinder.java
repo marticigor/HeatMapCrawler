@@ -2,13 +2,15 @@ package core;
 
 import java.util.*;
 
+import core.image_filters.JustCopy;
 import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
 public class NodeFinder implements I_ColorScheme {
 
-    private ImageResource sharpened;
+    private ImageResource thresholded;
+    private ImageResource skeletonized;
     private ArrayList < Node > nodes = new ArrayList < Node > ();
     private int width;
     private int height;
@@ -38,7 +40,8 @@ public class NodeFinder implements I_ColorScheme {
      *
      */
     public NodeFinder(
-    		ImageResource sharpened,
+    		ImageResource thresholded,
+    		ImageResource skeletonized,
     		int look,
     		int surface1,
     		int surface2,
@@ -55,9 +58,10 @@ public class NodeFinder implements I_ColorScheme {
         this.surfaceConstant2 = surface2;
         this.surfaceConstant3 = surface3;
         this.surfaceConstant4 = surface4;
-        this.sharpened = sharpened;
-        width = sharpened.getWidth();
-        height = sharpened.getHeight();
+        this.skeletonized = skeletonized;
+        this.thresholded = thresholded;
+        width = skeletonized.getWidth();
+        height = skeletonized.getHeight();
         noded = new ImageResource(width, height);
         this.myHandler = myHandler;
         this.bounds = bounds;
@@ -91,13 +95,11 @@ public class NodeFinder implements I_ColorScheme {
         }
 
         if(bounds.length != 6) throw new RuntimeException("Node finder bounds length.");
-
-        for (Pixel p: sharpened.pixels()) {
-            Pixel pCopy = noded.getPixel(p.getX(), p.getY());
-            pCopy.setRed(p.getRed());
-            pCopy.setGreen(p.getGreen());
-            pCopy.setBlue(p.getBlue());
-        }
+      
+        JustCopy copy = new JustCopy(skeletonized, noded,
+        		myHandler.getBorderInSharpenStage(),
+        		true, debug, -1,-1,-1,-1, myHandler.getBorderInSharpenStage());
+        copy.doYourThing();
 
         if(debug){
             System.out.println("NodeFinder");
@@ -121,7 +123,7 @@ public class NodeFinder implements I_ColorScheme {
         int surfaceArea = 0;
         int routableNeighbours = 0;
 
-        iteratorRound.setImageResource(sharpened);
+        iteratorRound.setImageResource(skeletonized);
         iteratorRound.resetCount();
         int minSurface = Integer.MAX_VALUE;
         int maxSurface = Integer.MIN_VALUE;
@@ -134,7 +136,7 @@ public class NodeFinder implements I_ColorScheme {
         for (int x = lookAheadAndBack + 1; x < width - (lookAheadAndBack + 1); x++) {
             for (int y = lookAheadAndBack + 1; y < height - (lookAheadAndBack + 1); y++) {
 
-                p = sharpened.getPixel(x, y);
+                p = skeletonized.getPixel(x, y);
 
                 if (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]) {
 
@@ -147,7 +149,7 @@ public class NodeFinder implements I_ColorScheme {
 
                         	//System.out.println("xIn = " + xIn + " yIn = "+yIn);
 
-                            pIn = sharpened.getPixel(xIn, yIn);
+                            pIn = skeletonized.getPixel(xIn, yIn);
 
                             if (pIn.getRed() == redScheme[0] && pIn.getGreen() == redScheme[1] && pIn.getBlue() == redScheme[2]) {
 
@@ -393,6 +395,11 @@ public class NodeFinder implements I_ColorScheme {
         return neighbours;
     }
 
+    private void detectSalientAreas(ImageResource image){
+    	
+    	
+    }
+    
     /**
      * prints simplistic visualisation of clusters
      */

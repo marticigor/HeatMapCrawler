@@ -260,24 +260,6 @@ public class ImagePreprocesor implements I_ColorScheme {
 	   return merge.getMerged();
    }
    
-   /**
-    * 
-    * @param input
-    * @return
-    */
-   @SuppressWarnings("unused")
-   private ImageResource getCopy(ImageResource input){
-	   ImageResource newImage = new ImageResource(getX(),getY());
-	   Pixel pNew;
-	   for(Pixel p : input.pixels()){
-		   pNew = newImage.getPixel(p.getX(), p.getY());
-		   pNew.setRed(p.getRed());
-		   pNew.setGreen(p.getGreen());
-		   pNew.setBlue(p.getBlue());
-	   }
-	   return newImage;
-   } 
-
     /**
     *
     */
