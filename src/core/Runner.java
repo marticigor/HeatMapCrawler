@@ -16,6 +16,7 @@ import javax.xml.transform.TransformerException;
 import core.tasks.TaskCanny;
 import core.tasks.TaskGaussian;
 import core.tasks.TaskHighlight;
+import core.tasks.TaskJustCopy;
 import core.tasks.TaskSharpen;
 import core.tasks.TaskSkeleton;
 import database.ManageNodeEntity;
@@ -199,13 +200,17 @@ public class Runner implements Runnable {
                     Pause.pause(2000);
                 }
 
-                ImageResource procesedMap = ip.getProcesed();
+                final ImageResource skeletonized = ip.getProcesed();
+                System.out.println("----" + skeletonized);
+                final ImageResource thresholded = ip.getProcesedStage();
+                System.out.println("----" + thresholded);
+                
                 if (visual) {
-                    procesedMap.draw();
+                    skeletonized.draw();
                     Pause.pause(2000);
                 }
 
-                NodeFinder nf = new NodeFinder(procesedMap, look, surface1, surface2, surface3, surface4, this, bounds, shotId, debug, visual);
+                NodeFinder nf = new NodeFinder(skeletonized, look, surface1, surface2, surface3, surface4, this, bounds, shotId, debug, visual);
                 nf.findNodes();
 
                 ImageResource noded = nf.getNodedImage();
@@ -228,7 +233,7 @@ public class Runner implements Runnable {
                 	List <Trackpoint> points = new LinkedList<Trackpoint>();
                 	Trackpoint tr = new Trackpoint(bounds[3], bounds[1]);//top left corner
                 	points.add(tr);
-                	tr = new Trackpoint(bounds[0], bounds[1]);//envelope_
+                	tr = new Trackpoint(bounds[0], bounds[1]);//envelope _
                 	points.add(tr);
                 	tr = new Trackpoint(bounds[0], bounds[2]);//envelope |
                 	points.add(tr);
@@ -299,6 +304,10 @@ public class Runner implements Runnable {
         //TaskGaussian [] gaussianTask = new TaskGaussian[sizeDivKonq * sizeDivKonq];
         //decorateFactory(gaussianTask, TaskGaussian.class, ip);
         //stages.add(gaussianTask);
+        
+        TaskJustCopy[] justCopyTask = new TaskJustCopy[sizeDivKonq * sizeDivKonq];
+        decorateFactory(justCopyTask, TaskJustCopy.class, ip);
+        stages.add(justCopyTask);
 
         TaskSkeleton[] skeletonTask = new TaskSkeleton[sizeDivKonq * sizeDivKonq];
         decorateFactory(skeletonTask, TaskSkeleton.class, ip);

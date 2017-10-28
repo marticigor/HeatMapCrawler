@@ -18,7 +18,8 @@ public class TaskCanny extends BaseTask{
         //System.out.println("COMPUTE CANNY ON THREAD " + Thread.currentThread() + this.toString());
 		ip.procesCanny(xFromIncl, xToExcl, yFromIncl, yToExcl, false);
 	}
-
+	
+	@Override
     public String toString(){
     	return super.toString() + this.hashCode() + this.getClass().getName();
     }

@@ -2,8 +2,6 @@ package core;
 
 import java.util.*;
 
-import core.utils.FindColor.RGB;
-import core.utils.MapNmbToColor;
 import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
@@ -118,7 +116,7 @@ public class NodeFinder implements I_ColorScheme {
         Pixel pIn = null;
         
         //SALIENT SALIENT
-        ImageResource salientArea = new ImageResource(sharpened.getWidth(),sharpened.getHeight());
+        //ImageResource salientArea = new ImageResource(sharpened.getWidth(),sharpened.getHeight());
         
         int surfaceArea = 0;
         int routableNeighbours = 0;
@@ -127,7 +125,7 @@ public class NodeFinder implements I_ColorScheme {
         iteratorRound.resetCount();
         int minSurface = Integer.MAX_VALUE;
         int maxSurface = Integer.MIN_VALUE;
-        MapNmbToColor<Integer> mapColor =  new MapNmbToColor<Integer>();
+        //MapNmbToColor<Integer> mapColor =  new MapNmbToColor<Integer>();
         
         //
         //finds salient pixels that probably belong to a region of
@@ -167,11 +165,11 @@ public class NodeFinder implements I_ColorScheme {
                     }
                     
                     //SALIENT SALIENT
-                    Pixel inSalient = salientArea.getPixel(x, y);
-                    RGB color = mapColor.getRGB(surfaceArea * 10);
-                    inSalient.setRed(color.red);
-                    inSalient.setGreen(color.green);
-                    inSalient.setBlue(color.blue);
+                    //Pixel inSalient = salientArea.getPixel(x, y);
+                    //RGB color = mapColor.getRGB(surfaceArea * 10);
+                    //inSalient.setRed(color.red);
+                    //inSalient.setGreen(color.green);
+                    //inSalient.setBlue(color.blue);
                     
                     boolean firstInterval = (surfaceArea > surfaceConstant1 &&
                   		                     surfaceArea <= surfaceConstant2);
@@ -199,8 +197,8 @@ public class NodeFinder implements I_ColorScheme {
         if(visual) {
         	noded.draw(); Pause.pause(5000);
             //SALIENT SALIENT
-        	System.out.println("DRAWING SALIENT AREA");
-            salientArea.draw();
+        	//System.out.println("DRAWING SALIENT AREA");
+            //salientArea.draw();
         }
         
         if(visual || debug)System.out.println("SURFACE " + minSurface + " | " + maxSurface );

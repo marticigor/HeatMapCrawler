@@ -7,6 +7,7 @@ import java.util.Map;
 import core.image_filters.CannyDetect;
 import core.image_filters.EdgeHighlight;
 import core.image_filters.GaussianBlur;
+import core.image_filters.JustCopy;
 import core.image_filters.Sharpen;
 import core.image_filters.Skeleton;
 import core.image_filters.filter_utils.MapMerge;
@@ -44,6 +45,7 @@ public class ImagePreprocesor implements I_ColorScheme {
         int h = inputImageResource.getHeight();
         
         procesedImageResourceStage1 = new ImageResource(w, h);
+        procesedImageResourceStage2 = new ImageResource(w, h);
         
         this.visual = visual;
         this.debug = debug;
@@ -197,16 +199,44 @@ public class ImagePreprocesor implements I_ColorScheme {
     * @param yToExcl
     * @param whole
     */
+   public void procesJustCopy(
+			   int xFromIncl,
+			   int xToExcl,
+			   int yFromIncl,
+			   int yToExcl,
+			   boolean whole){
+       I_ImageProcesor copy = new JustCopy(
+    		   procesedImageResourceStage1,
+           	   procesedImageResourceStage2,
+           	   2,
+               whole,
+               debug,
+               xFromIncl,
+               xToExcl,
+               yFromIncl,
+               yToExcl,
+               borderAtSharpenStage
+           );
+       copy.doYourThing();
+   }
+   
+   /**
+    * 
+    * @param xFromIncl
+    * @param xToExcl
+    * @param yFromIncl
+    * @param yToExcl
+    * @param whole
+    */
    public void procesSkeleton(
 		   int xFromIncl,
 		   int xToExcl,
 		   int yFromIncl,
 		   int yToExcl,
 		   boolean whole){
-	   
+	   	   
 	   I_ImageProcesor skeleton = new Skeleton(
 			   
-			   procesedImageResourceStage1,
 			   procesedImageResourceStage2,
 			   whole,
 			   debug,
@@ -229,6 +259,25 @@ public class ImagePreprocesor implements I_ColorScheme {
 	   MapMerge<Pixel, AugmentedPixel> merge = new MapMerge<Pixel, AugmentedPixel>(chopsToAugmentedList);
 	   return merge.getMerged();
    }
+   
+   /**
+    * 
+    * @param input
+    * @return
+    */
+   @SuppressWarnings("unused")
+   private ImageResource getCopy(ImageResource input){
+	   ImageResource newImage = new ImageResource(getX(),getY());
+	   Pixel pNew;
+	   for(Pixel p : input.pixels()){
+		   pNew = newImage.getPixel(p.getX(), p.getY());
+		   pNew.setRed(p.getRed());
+		   pNew.setGreen(p.getGreen());
+		   pNew.setBlue(p.getBlue());
+	   }
+	   return newImage;
+   } 
+
     /**
     *
     */
@@ -251,7 +300,7 @@ public class ImagePreprocesor implements I_ColorScheme {
     	// procesedImageResourceStage2.saveAs();
     	//
     	//
-        return procesedImageResourceStage1;
+        return procesedImageResourceStage2;
     }
     private void debugPrint(String job){
     	if(debug || visual) System.out.println(this.getClass().toString() + " call " + job);

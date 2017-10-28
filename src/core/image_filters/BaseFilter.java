@@ -24,7 +24,9 @@ public class BaseFilter implements I_ImageProcesor{
     protected BaseFilter(
     		
     		int x, int y, int border,
-    		boolean wholeImage, boolean debug, int expectedArgsLength, int [] args){
+    		boolean wholeImage, boolean debug, int expectedArgsLength, int [] args
+    		
+    		){
     	
         this.wholeImage = wholeImage;
         this.debug = debug;

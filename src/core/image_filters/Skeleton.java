@@ -16,19 +16,12 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
         this.in = in ;
     }
 
-    @SuppressWarnings("unused")
-    private ImageResource in , out;
+    private ImageResource in;
     private static final int REMOVAL_MARK = 21;
     @SuppressWarnings("unused")
     private static final int REMOVAL_UNMARK = 100;
     @SuppressWarnings("unused")
     private static final int BLUE_VISUAL = 255;
-
-    public Skeleton(ImageResource in , ImageResource out, boolean w, boolean d, int...intArgs) {
-        super( in .getWidth(), in .getHeight(), 2, w, d, 5, intArgs);
-        this.in = in ;
-
-    }
 
     @Override
     public void doYourThing() {
@@ -53,13 +46,14 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
         int count = 0;
         int removed = 0;
-
+        
         while (count < 100) {//precaution
 
             for (int absX = widthFrom; absX < widthTo; absX++) {
                 for (int absY = heightFrom; absY < heightTo; absY++) {
-
+                	
                     current = in .getPixel(absX, absY);
+
                     if (utils.isApplicable(current)) {
                         toRemove.add(current);
                     }
@@ -69,11 +63,10 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
             for (Pixel p: toRemove) {
                 if (utils.isRemovable(p) &&
                     p.getRed() != 0) {
-                	
-                    p.setRed(0);
-                    p.setBlue(80);
-                    p.setGreen(80);
-                    removed++;
+                        p.setRed(0);
+                        p.setBlue(80);
+                        p.setGreen(80);
+                        removed++;
                 }
             }
 
