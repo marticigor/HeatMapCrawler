@@ -16,12 +16,28 @@ public class NodeFinder implements I_ColorScheme {
     private int height;
     private ImageResource noded;
     private int nmbOfNodes = 0;
+    
+    private int thresholded_lookAheadAndBack = 2;
+    private int thresholded_surfaceConstantInterval1_MinExcl = 0;
+    private int thresholded_surfaceConstantInterval1_MaxIncl = 1000;
+    private int thresholded_surfaceConstantInterval2_MinExcl = 1000;
+    private int thresholded_surfaceConstantInterval2_MaxIncl = 1000;
+	private int thresholded_routableNeighbourghsConstant = 1;
+    
     private int lookAheadAndBack;
-    private int surfaceConstant1;
-    private int surfaceConstant2;
-    private int surfaceConstant3;
-    private int surfaceConstant4;
-    private final long shotId;
+    private int surfaceConstantInterval1_MinExcl;
+    private int surfaceConstantInterval1_MaxIncl;
+    private int surfaceConstantInterval2_MinExcl;
+    private int surfaceConstantInterval2_MaxIncl;
+	private int routableNeighbourghsConstant = 1;
+	
+	private int surfaceConstant1_1;
+	private int surfaceConstant1_2;
+	private int surfaceConstant2_1;
+	private int surfaceConstant2_2;
+	private int neighbourghsConstant;
+    
+	private final long shotId;
 
     private RoundIteratorOfPixels iteratorRound = new RoundIteratorOfPixels();
     private RecursiveClusterFinder rcf;
@@ -54,10 +70,10 @@ public class NodeFinder implements I_ColorScheme {
     		boolean visual) {
 
         this.lookAheadAndBack = look;
-        this.surfaceConstant1 = surface1;
-        this.surfaceConstant2 = surface2;
-        this.surfaceConstant3 = surface3;
-        this.surfaceConstant4 = surface4;
+        this.surfaceConstantInterval1_MinExcl = surface1;
+        this.surfaceConstantInterval1_MaxIncl = surface2;
+        this.surfaceConstantInterval2_MinExcl = surface3;
+        this.surfaceConstantInterval2_MaxIncl = surface4;
         this.skeletonized = skeletonized;
         this.thresholded = thresholded;
         width = skeletonized.getWidth();
@@ -114,97 +130,31 @@ public class NodeFinder implements I_ColorScheme {
      */
     public void findNodes() {
 
-        Pixel p = null;
-        Pixel pIn = null;
-        
-        //SALIENT SALIENT
-        //ImageResource salientArea = new ImageResource(sharpened.getWidth(),sharpened.getHeight());
-        
-        int surfaceArea = 0;
-        int routableNeighbours = 0;
-
-        iteratorRound.setImageResource(skeletonized);
-        iteratorRound.resetCount();
-        int minSurface = Integer.MAX_VALUE;
-        int maxSurface = Integer.MIN_VALUE;
-        //MapNmbToColor<Integer> mapColor =  new MapNmbToColor<Integer>();
-        
-        //
-        //finds salient pixels that probably belong to a region of
-        //interest in terms of future node.
-        //
-        for (int x = lookAheadAndBack + 1; x < width - (lookAheadAndBack + 1); x++) {
-            for (int y = lookAheadAndBack + 1; y < height - (lookAheadAndBack + 1); y++) {
-
-                p = skeletonized.getPixel(x, y);
-
-                if (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]) {
-
-                //System.out.println("RED PIXEL------------------------------------");
-                //System.out.println("X = " + x + " Y = " + y);
-                //System.out.println("ITERATING THIS RED PIXEL---------------------");
-
-                    for (int xIn = x - lookAheadAndBack; xIn < x + lookAheadAndBack + 1; xIn++) {
-                        for (int yIn = y - lookAheadAndBack; yIn < y + lookAheadAndBack + 1; yIn++) {
-
-                        	//System.out.println("xIn = " + xIn + " yIn = "+yIn);
-
-                            pIn = skeletonized.getPixel(xIn, yIn);
-
-                            if (pIn.getRed() == redScheme[0] && pIn.getGreen() == redScheme[1] && pIn.getBlue() == redScheme[2]) {
-
-                            	routableNeighbours ++;
-                                iteratorRound.setPixelToCheckAround(pIn);
-                                iteratorRound.resetCount();
-
-                                for (Pixel p1: iteratorRound) {
-                                    if (p1.getRed() != redScheme[0] ||
-                                    		p1.getGreen() != redScheme[1] ||
-                                    		p1.getBlue() != redScheme[2]) surfaceArea ++;
-                                }
-                            }
-                        }
-                    }
-                    
-                    //SALIENT SALIENT
-                    //Pixel inSalient = salientArea.getPixel(x, y);
-                    //RGB color = mapColor.getRGB(surfaceArea * 10);
-                    //inSalient.setRed(color.red);
-                    //inSalient.setGreen(color.green);
-                    //inSalient.setBlue(color.blue);
-                    
-                    boolean firstInterval = (surfaceArea > surfaceConstant1 &&
-                  		                     surfaceArea <= surfaceConstant2);
-                    
-                    boolean secondInterval = (surfaceArea > surfaceConstant3 &&
-            		                          surfaceArea <= surfaceConstant4);
-                    boolean neighbours = routableNeighbours > 1;
-                    
-                    if ( (firstInterval || secondInterval) && neighbours ){
-                    	
-                        Pixel pNoded = noded.getPixel(x, y);
-                        setWhite(pNoded);
-                        
-                    }
-                    
-                    if(surfaceArea > maxSurface) maxSurface = surfaceArea;
-                    if(surfaceArea < minSurface) minSurface = surfaceArea;
-                    
-                    surfaceArea = 0;
-                    routableNeighbours = 0;
-                }
-            }
-        }
-        
+	    surfaceConstant1_1 = thresholded_surfaceConstantInterval1_MinExcl;
+	    surfaceConstant1_2 = thresholded_surfaceConstantInterval1_MaxIncl;
+	    surfaceConstant2_1 = thresholded_surfaceConstantInterval2_MinExcl; 
+	    surfaceConstant2_2 = thresholded_surfaceConstantInterval2_MaxIncl;
+	    neighbourghsConstant = thresholded_routableNeighbourghsConstant;
+    	
+    	detectSalientAreas(thresholded, thresholded_lookAheadAndBack, false);
+	    
+	    surfaceConstant1_1 = surfaceConstantInterval1_MinExcl;
+	    surfaceConstant1_2 = surfaceConstantInterval1_MaxIncl;
+	    surfaceConstant2_1 = surfaceConstantInterval2_MinExcl; 
+	    surfaceConstant2_2 = surfaceConstantInterval2_MaxIncl;
+	    neighbourghsConstant = routableNeighbourghsConstant;
+	    
+	    detectSalientAreas(noded, lookAheadAndBack, false);
+	    
         if(visual) {
-        	noded.draw(); Pause.pause(5000);
+        	noded.draw();
+        	thresholded.draw();
+        	Pause.pause(5000);
             //SALIENT SALIENT
         	//System.out.println("DRAWING SALIENT AREA");
             //salientArea.draw();
         }
         
-        if(visual || debug)System.out.println("SURFACE " + minSurface + " | " + maxSurface );
-        //noded.saveAs();
 
         //
         rcf = new RecursiveClusterFinder(noded, whiteScheme[0], whiteScheme[1], whiteScheme[2]);
@@ -357,6 +307,118 @@ public class NodeFinder implements I_ColorScheme {
     }
 
     /**
+     * 
+     * @param image
+     * @param lookBothDir
+     */
+    private void detectSalientAreas(ImageResource image,int lookBothDir, boolean testAgainstThresholded){
+    	
+        Pixel p = null;
+        Pixel pIn = null;
+        
+        //SALIENT SALIENT
+        //ImageResource salientArea = new ImageResource(sharpened.getWidth(),sharpened.getHeight());
+        
+        int surfaceArea = 0;
+        int routableNeighbours = 0;
+
+        iteratorRound.setImageResource(skeletonized);
+        iteratorRound.resetCount();
+        int minSurface = Integer.MAX_VALUE;
+        int maxSurface = Integer.MIN_VALUE;
+        //MapNmbToColor<Integer> mapColor =  new MapNmbToColor<Integer>();
+        //
+        //finds salient pixels that probably belong to a region of
+        //interest in terms of future node.
+        //
+        for (int x = lookBothDir + 1; x < width - (lookBothDir + 1); x++) {
+            for (int y = lookBothDir + 1; y < height - (lookBothDir + 1); y++) {
+
+            	if(testAgainstThresholded && !isSalientPixInThresholded(x,y)) continue;
+            	
+                p = image.getPixel(x, y);
+
+                if (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]) {
+
+                //System.out.println("RED PIXEL------------------------------------");
+                //System.out.println("X = " + x + " Y = " + y);
+                //System.out.println("ITERATING THIS RED PIXEL---------------------");
+
+                    for (int xIn = x - lookBothDir; xIn < x + lookBothDir + 1; xIn++) {
+                        for (int yIn = y - lookBothDir; yIn < y + lookBothDir + 1; yIn++) {
+
+                        	//System.out.println("xIn = " + xIn + " yIn = "+yIn);
+
+                            pIn = image.getPixel(xIn, yIn);
+
+                            if (pIn.getRed() == redScheme[0] && pIn.getGreen() == redScheme[1] && pIn.getBlue() == redScheme[2]) {
+
+                            	routableNeighbours ++;
+                                iteratorRound.setPixelToCheckAround(pIn);
+                                iteratorRound.resetCount();
+
+                                for (Pixel p1: iteratorRound) {
+                                    if (p1.getRed() != redScheme[0] ||
+                                    		p1.getGreen() != redScheme[1] ||
+                                    		p1.getBlue() != redScheme[2]) surfaceArea ++;
+                                }
+                            }
+                        }
+                    }
+                    
+                    //SALIENT SALIENT
+                    //Pixel inSalient = salientArea.getPixel(x, y);
+                    //RGB color = mapColor.getRGB(surfaceArea * 10);
+                    //inSalient.setRed(color.red);
+                    //inSalient.setGreen(color.green);
+                    //inSalient.setBlue(color.blue);
+                    
+                    if ( evaluateAgainstConstants(surfaceArea, routableNeighbours)){
+                    	
+                        Pixel pToWhite = image.getPixel(x, y);
+                        setWhite(pToWhite);
+                        
+                    }
+                    
+                    if(surfaceArea > maxSurface) maxSurface = surfaceArea;
+                    if(surfaceArea < minSurface) minSurface = surfaceArea;
+                    
+                    surfaceArea = 0;
+                    routableNeighbours = 0;
+                }
+            }
+        }
+        if(visual || debug) System.out.println("Surface min max " + minSurface + " " + maxSurface);
+    }
+    
+    /**
+     * 
+     */
+    private boolean evaluateAgainstConstants(int surface, int routableNeighbours ){
+    	
+        boolean firstInterval = (surface > surfaceConstant1_1 &&
+                  surface <= surfaceConstant1_2);
+
+        boolean secondInterval = (surface > surfaceConstant2_1 &&
+                  surface <= surfaceConstant2_2);
+        
+        boolean neighbours = routableNeighbours > neighbourghsConstant ;
+    	
+    	return (firstInterval || secondInterval) && neighbours;
+    }
+    
+    /**
+     * 
+     * @param x
+     * @param y
+     * @return
+     */
+    private boolean isSalientPixInThresholded(int x, int y){
+    	Pixel salientInTh = thresholded.getPixel(x, y);
+    	if(isSetToClusterAround(salientInTh)) return true; else return false;
+    }
+    
+    /**
      * loads recursively set of white pixels into neighbours and then allClusterAroundNode
      */
     private void setClustered(Pixel p) {
@@ -393,11 +455,6 @@ public class NodeFinder implements I_ColorScheme {
         }
 
         return neighbours;
-    }
-
-    private void detectSalientAreas(ImageResource image){
-    	
-    	
     }
     
     /**
