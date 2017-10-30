@@ -20,13 +20,11 @@
         <property name="thresholded_neighbours" value="1" />
         
         <property name="lookVicinity" value="1" />
-        <property name="surfaceOfSalientAreaConstant1" value="15" />
+        <property name="surfaceOfSalientAreaConstant1" value="14" />
         <property name="surfaceOfSalientAreaConstant2" value="17" />
-        <property name="surfaceOfSalientAreaConstant3" value="21" />
-        <property name="surfaceOfSalientAreaConstant4" value="23" />
+        <property name="surfaceOfSalientAreaConstant3" value="21000" />
+        <property name="surfaceOfSalientAreaConstant4" value="23000" />
         <property name="neighbours" value="1" />
-        
-
         
         <property name="visual" value="true" />
         <property name="debug" value="false" />
