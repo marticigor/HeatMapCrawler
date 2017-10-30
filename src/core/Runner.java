@@ -36,9 +36,11 @@ import java.util.regex.Pattern;
 public class Runner implements Runnable {
 
 	// config in aplicationContext.xml
-    private final int devi, look, surface1, surface2, surface3, surface4;
+    private final int devi;
+    private final int look, surface1, surface2, surface3, surface4, neighbours;
+    private final int thresholded_look, thresholded_surface1, thresholded_surface2, thresholded_surface3, thresholded_surface4, thresholded_neighbours;
 
-    // config NOT in aplicationContext.xml, I think this would be too vulnerable
+    // config NOT in aplicationContext.xml
     private final int bottleneckSize = 1; //3
     private final int passableSize = 3; //3
 
@@ -56,18 +58,45 @@ public class Runner implements Runnable {
 
     //this border is necessary for kernel convolution later on, not necessary
     //in sharpen stage
-    private final int borderInSharpenStage = 2; //((Math.max(bottleneckSize, passableSize)) - 1) / 2;
+    
+    
+    private final int borderInSharpenStage; //((Math.max(bottleneckSize, passableSize)) - 1) / 2;
 
     /**
      *
      */
-    public Runner(int v1, int v2, int v3, int v4, int v5, int v6, boolean visual, boolean debug) {
-        this.devi = v1;
-        this.look = v2;
+    public Runner(
+    	int devi,
+    	
+    	int look,
+    	int v3, int v4, int v5, int v6,
+    	int nei,
+    	
+    	int thresholded_look,
+    	int thresholded_v3, int thresholded_v4, int thresholded_v5, int thresholded_v6,
+    	int thresholded_nei,
+        
+    	boolean visual, boolean debug ) {
+        
+    	this.devi = devi;
+    	
+    	
+        this.look = look;
         this.surface1 = v3;
         this.surface2 = v4;
         this.surface3 = v5;
         this.surface4 = v6;
+        this.neighbours = nei;
+
+        this.thresholded_look = thresholded_look;
+        this.thresholded_surface1 = thresholded_v3;
+        this.thresholded_surface2 = thresholded_v4;
+        this.thresholded_surface3 = thresholded_v5;
+        this.thresholded_surface4 = thresholded_v6;
+        this.thresholded_neighbours = thresholded_nei;
+        
+        this.borderInSharpenStage = Math.max(thresholded_look, look);
+        
         this.visual = visual;
         this.debug = debug;
     }
@@ -187,7 +216,30 @@ public class Runner implements Runnable {
                     Pause.pause(2000);
                 }
 
-                NodeFinder nf = new NodeFinder(thresholded, skeletonized, look, surface1, surface2, surface3, surface4, this, bounds, shotId, debug, visual);
+                NodeFinder nf = new NodeFinder(
+                		thresholded,
+                		skeletonized,
+                		
+                		look,
+                		surface1,
+                		surface2,
+                		surface3,
+                		surface4,
+                		neighbours,
+                		
+                		thresholded_look,
+                		thresholded_surface1,
+                		thresholded_surface2,
+                		thresholded_surface3,
+                		thresholded_surface4,
+                		thresholded_neighbours,
+                		
+                		this,
+                		bounds,
+                		shotId,
+                		debug,
+                		visual
+                		);
                 nf.findNodes();
 
                 ImageResource noded = nf.getNodedImage();
@@ -231,7 +283,7 @@ public class Runner implements Runnable {
 
                 if (visual) {
                     af.drawAdjacencyEdges();
-                    Pause.pause(3000);
+                    Pause.pause(2000);
                 } else {}
 
                 addNodeCount(nodes.size());

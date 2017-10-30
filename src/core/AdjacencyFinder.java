@@ -86,7 +86,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 
             if(visual){
                 noded.draw();
-                Pause.pause(10000);
+                Pause.pause(2000);
             }
 
             for (Node buildForThis: nodes) {
@@ -127,7 +127,7 @@ public class AdjacencyFinder implements I_ColorScheme {
                     }
 
                     visualizeIR.draw();
-                    Pause.pause(1000);
+                    Pause.pause(2000);
 
                     for (Pixel pDebug: redCluster) {
 
@@ -146,7 +146,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 
             if(visual){
                 noded.draw();
-                Pause.pause(5000);
+                Pause.pause(2000);
             }
             System.out.println("actualy highlighting nodes");
 
@@ -173,7 +173,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 
             if(visual){
                 noded.draw();
-                Pause.pause(5000);
+                Pause.pause(2000);
             }
         } //scope for adjacency lists builder
 

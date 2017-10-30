@@ -15,19 +15,46 @@ public class RunnerBean implements I_KickStart{
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	
 	private int devToMakeItValidRoutable,
+	    
 	    lookVicinity,
 	    surfaceOfSalientArea1,
 	    surfaceOfSalientArea2,
 	    surfaceOfSalientArea3,
-	    surfaceOfSalientArea4;
+	    surfaceOfSalientArea4,
+	    neighbours,
+	    
+	    thresholded_lookVicinity,
+	    thresholded_surfaceOfSalientArea1,
+	    thresholded_surfaceOfSalientArea2,
+	    thresholded_surfaceOfSalientArea3,
+	    thresholded_surfaceOfSalientArea4,
+	    thresholded_neighbours;
+	
 	//reasonable defaults to start with: - aplicationContext.xml
 	private boolean visual, debug;
 	
 	@Override
 	public void kickStart() {
-        Runner runner = new Runner(devToMakeItValidRoutable, lookVicinity,
-        		surfaceOfSalientArea1, surfaceOfSalientArea2, surfaceOfSalientArea3, surfaceOfSalientArea4,
-        		visual, debug);
+        Runner runner = new Runner(
+        		
+        		devToMakeItValidRoutable,
+        		
+        		lookVicinity,
+        		surfaceOfSalientArea1,
+        		surfaceOfSalientArea2,
+        		surfaceOfSalientArea3,
+        		surfaceOfSalientArea4,
+        		neighbours,
+        		
+        		thresholded_lookVicinity,
+        		thresholded_surfaceOfSalientArea1,
+        		thresholded_surfaceOfSalientArea2,
+        		thresholded_surfaceOfSalientArea3,
+        		thresholded_surfaceOfSalientArea4,
+        		thresholded_neighbours,
+        		
+        		visual, debug
+        		);
         Thread forked = new Thread(runner);
         forked.start();
         //try {
@@ -38,6 +65,56 @@ public class RunnerBean implements I_KickStart{
 		//}
 	}
 
+
+	public int getThresholded_surfaceOfSalientAreaConstant1() {
+		return thresholded_surfaceOfSalientArea1;
+	}
+
+	public void setThresholded_surfaceOfSalientAreaConstant1(int surface) {
+		this.thresholded_surfaceOfSalientArea1 = surface;
+	}
+	
+	public int getThresholded_surfaceOfSalientAreaConstant2() {
+		return thresholded_surfaceOfSalientArea2;
+	}
+
+	public void setThresholded_surfaceOfSalientAreaConstant2(int surface) {
+		this.thresholded_surfaceOfSalientArea2 = surface;
+	}
+	
+	public int getThresholded_surfaceOfSalientAreaConstant3() {
+		return thresholded_surfaceOfSalientArea3;
+	}
+
+	public void setThresholded_surfaceOfSalientAreaConstant3(int surface) {
+		this.thresholded_surfaceOfSalientArea3 = surface;
+	}
+	public int getThresholded_surfaceOfSalientAreaConstant4() {
+		return thresholded_surfaceOfSalientArea4;
+	}
+
+	public void setThresholded_surfaceOfSalientAreaConstant4(int surface) {
+		this.thresholded_surfaceOfSalientArea4 = surface;
+	}
+	
+	public int geThresholded_neighbours(){
+		return thresholded_neighbours;
+	}
+	
+	public void setThresholded_neighbours(int neighbours){
+		this.thresholded_neighbours = neighbours;
+	}
+	
+	public int getThresholded_lookVicinity() {
+		return thresholded_lookVicinity;
+	}
+
+	public void setThresholded_lookVicinity(int lookVicinity) {
+		this.thresholded_lookVicinity = lookVicinity;
+	}
+	
+	//--------------------------------------------------------------------
+	
 	public int getSurfaceOfSalientAreaConstant1() {
 		return surfaceOfSalientArea1;
 	}
@@ -68,6 +145,15 @@ public class RunnerBean implements I_KickStart{
 	public void setSurfaceOfSalientAreaConstant4(int surface) {
 		this.surfaceOfSalientArea4 = surface;
 	}
+	
+	public int getNeighbours(){
+		return neighbours;
+	}
+	
+	public void setNeighbours(int neighbours){
+		this.neighbours = neighbours;
+	}
+	
 	public int getLookVicinity() {
 		return lookVicinity;
 	}
@@ -75,7 +161,7 @@ public class RunnerBean implements I_KickStart{
 	public void setLookVicinity(int lookVicinity) {
 		this.lookVicinity = lookVicinity;
 	}
-
+	
 	public int getDevToMakeItValidRoutable() {
 		return devToMakeItValidRoutable;
 	}

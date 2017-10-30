@@ -193,7 +193,7 @@ public class Pixel {
      * @return a string containing the RGB values
      */
     public String toString () {
-        return "Pixel R: " + red + " G: " + green + " B: " + blue;
+        return "Pixel X = " + myX + " Y = " + myY + " R: " + red + " G: " + green + " B: " + blue;
     }
 
     // returns the integer value of the pixel.

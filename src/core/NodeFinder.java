@@ -17,20 +17,26 @@ public class NodeFinder implements I_ColorScheme {
     private ImageResource noded;
     private int nmbOfNodes = 0;
     
-    private int thresholded_lookAheadAndBack = 2;
-    private int thresholded_surfaceConstantInterval1_MinExcl = 0;
-    private int thresholded_surfaceConstantInterval1_MaxIncl = 1000;
-    private int thresholded_surfaceConstantInterval2_MinExcl = 1000;
-    private int thresholded_surfaceConstantInterval2_MaxIncl = 1000;
-	private int thresholded_routableNeighbourghsConstant = 1;
-    
     private int lookAheadAndBack;
     private int surfaceConstantInterval1_MinExcl;
     private int surfaceConstantInterval1_MaxIncl;
     private int surfaceConstantInterval2_MinExcl;
     private int surfaceConstantInterval2_MaxIncl;
-	private int routableNeighbourghsConstant = 1;
-	
+	private int routableNeighbourghsConstant;
+    
+    @SuppressWarnings("unused")
+	private int thresholded_lookAheadAndBack;
+    @SuppressWarnings("unused")
+	private int thresholded_surfaceConstantInterval1_MinExcl;
+    @SuppressWarnings("unused")
+	private int thresholded_surfaceConstantInterval1_MaxIncl;
+    @SuppressWarnings("unused")
+	private int thresholded_surfaceConstantInterval2_MinExcl;
+    @SuppressWarnings("unused")
+	private int thresholded_surfaceConstantInterval2_MaxIncl;
+	@SuppressWarnings("unused")
+	private int thresholded_routableNeighbourghsConstant;
+    
 	private int surfaceConstant1_1;
 	private int surfaceConstant1_2;
 	private int surfaceConstant2_1;
@@ -58,11 +64,21 @@ public class NodeFinder implements I_ColorScheme {
     public NodeFinder(
     		ImageResource thresholded,
     		ImageResource skeletonized,
+    		
     		int look,
     		int surface1,
     		int surface2,
     		int surface3,
     		int surface4,
+    		int neighbours,
+    		
+    		int thresholded_look,
+    		int thresholded_surface1,
+    		int thresholded_surface2,
+    		int thresholded_surface3,
+    		int thresholded_surface4,
+    		int thresholded_neighbours,
+    		
     		Runner myHandler,
     		double [] bounds,
     		long shotId,
@@ -74,6 +90,15 @@ public class NodeFinder implements I_ColorScheme {
         this.surfaceConstantInterval1_MaxIncl = surface2;
         this.surfaceConstantInterval2_MinExcl = surface3;
         this.surfaceConstantInterval2_MaxIncl = surface4;
+        this.routableNeighbourghsConstant = neighbours;
+        
+        this.thresholded_lookAheadAndBack = thresholded_look;
+        this.thresholded_surfaceConstantInterval1_MinExcl = thresholded_surface1;
+        this.thresholded_surfaceConstantInterval1_MaxIncl = thresholded_surface2;
+        this.thresholded_surfaceConstantInterval2_MinExcl = thresholded_surface3;
+        this.thresholded_surfaceConstantInterval2_MaxIncl = thresholded_surface4;
+        this.thresholded_routableNeighbourghsConstant = thresholded_neighbours;
+        
         this.skeletonized = skeletonized;
         this.thresholded = thresholded;
         width = skeletonized.getWidth();
@@ -112,6 +137,7 @@ public class NodeFinder implements I_ColorScheme {
 
         if(bounds.length != 6) throw new RuntimeException("Node finder bounds length.");
       
+        //TODO is it necessary?
         JustCopy copy = new JustCopy(skeletonized, noded,
         		myHandler.getBorderInSharpenStage(),
         		true, debug, -1,-1,-1,-1, myHandler.getBorderInSharpenStage());
@@ -130,26 +156,40 @@ public class NodeFinder implements I_ColorScheme {
      */
     public void findNodes() {
 
+    	/*
 	    surfaceConstant1_1 = thresholded_surfaceConstantInterval1_MinExcl;
 	    surfaceConstant1_2 = thresholded_surfaceConstantInterval1_MaxIncl;
 	    surfaceConstant2_1 = thresholded_surfaceConstantInterval2_MinExcl; 
 	    surfaceConstant2_2 = thresholded_surfaceConstantInterval2_MaxIncl;
 	    neighbourghsConstant = thresholded_routableNeighbourghsConstant;
+	    
+    	System.out.println("surfaceConstant1_1 " + surfaceConstant1_1);
+    	System.out.println("surfaceConstant1_2 " + surfaceConstant1_2);
+    	System.out.println("surfaceConstant2_1 " + surfaceConstant2_1);
+    	System.out.println("surfaceConstant2_2 " + surfaceConstant2_2);
+    	System.out.println("thresholded_lookAheadAndBack " + thresholded_lookAheadAndBack);
     	
     	detectSalientAreas(thresholded, thresholded_lookAheadAndBack, false);
-	    
+    	*/
+    	
 	    surfaceConstant1_1 = surfaceConstantInterval1_MinExcl;
 	    surfaceConstant1_2 = surfaceConstantInterval1_MaxIncl;
 	    surfaceConstant2_1 = surfaceConstantInterval2_MinExcl; 
 	    surfaceConstant2_2 = surfaceConstantInterval2_MaxIncl;
 	    neighbourghsConstant = routableNeighbourghsConstant;
 	    
-	    detectSalientAreas(noded, lookAheadAndBack, false);
+    	System.out.println("surfaceConstant1_1 " + surfaceConstant1_1);
+    	System.out.println("surfaceConstant1_2 " + surfaceConstant1_2);
+    	System.out.println("surfaceConstant2_1 " + surfaceConstant2_1);
+    	System.out.println("surfaceConstant2_2 " + surfaceConstant2_2);
+    	System.out.println("lookAheadAndBack " + lookAheadAndBack);
+	    
+	    detectSalientAreas(noded, lookAheadAndBack, false);// boolean compare against thresholded?
 	    
         if(visual) {
         	noded.draw();
-        	thresholded.draw();
-        	Pause.pause(5000);
+        	//thresholded.draw();
+        	Pause.pause(2000);
             //SALIENT SALIENT
         	//System.out.println("DRAWING SALIENT AREA");
             //salientArea.draw();
