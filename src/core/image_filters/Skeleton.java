@@ -49,7 +49,7 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
         int count = 0;
         int removed = 0;
         
-        while (count < 100) {//precaution
+        while (count < 200) {//precaution
 
             for (int absX = widthFrom; absX < widthTo; absX++) {
                 for (int absY = heightFrom; absY < heightTo; absY++) {
@@ -75,7 +75,7 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
             if (removed == 0) break;
             else if (debug) System.out.println("toRemove = applicable: " + toRemove.size() +
             		"\nremoved: " + removed + 
-            		 "\n___________________________________________");
+            		"\n___________________________________________");
 
             toRemove.clear();
 
@@ -194,7 +194,6 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
         private boolean isBackground(Pixel p) {
             return (p.getRed() < foregroundColorThreshold);
         }
-
         /**
          * 
          * @param pivot
@@ -263,5 +262,4 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
             }
         };
     }
-
 }
