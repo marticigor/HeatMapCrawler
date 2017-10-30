@@ -1,8 +1,12 @@
 package core.image_filters;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import core.RoundIteratorOfPixels;
 import ifaces.I_ColorScheme;
@@ -92,16 +96,16 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
         private boolean applicable;
         private boolean fullySurr;
         private Pixel pivot = null;
-        List <Pixel> foregroundPixels;
+        Map <Pixel,Set<Pixel>> pixelToDisjointSet;
+        Set <Pixel> disjointSet;
+        List <Pixel> foregroundPixels; 
 
         public SkeletonUtils(int foregroundColor) {
             riop = new RoundIteratorOfPixels( in );
             this.foregroundColorThreshold = foregroundColor;
         }
-
-        private void countValues() {
-
-            // tests Pixel pivot = im.getPixel(1,1);
+        
+		private void countValues() {
 
             riop.setPixelToCheckAround(pivot);
             riop.resetCount();
@@ -110,37 +114,54 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
             up = 0;
             down = 0;
             
-            boolean eachPHasNei = true;
             removable = false;
             applicable = false;
             fullySurr = false;
 
+            pixelToDisjointSet = new HashMap<Pixel,Set<Pixel>>();
             foregroundPixels = new LinkedList<Pixel>();
             
-            for (Pixel p: riop) {
-                //foreground included, background excluded
-                if (isForeground(p)) {foreground++; foregroundPixels.add(p);}
-                else if (isBackground(p)) background++;
+            for (Pixel aroundPivot : riop) {
+                if (isForeground(aroundPivot)) {
+                	foreground++;
+                    disjointSet = new HashSet<Pixel>();
+                    disjointSet.add(aroundPivot);
+                    pixelToDisjointSet.put(aroundPivot, disjointSet);
+                    foregroundPixels.add(aroundPivot);//keep order
+                }
+                else if (isBackground(aroundPivot)) background++;
             }
-            
-            int countFore = 0;
-            
+                        
             for (Pixel p : foregroundPixels){
             	
             	riop.setPixelToCheckAround(p);
             	riop.resetCount();
             	
-            	countFore = 0;
+            	Set<Pixel> pSet = pixelToDisjointSet.get(p);
+            	
             	for (Pixel pIn : riop){
             		if( !isWithinEnvelope(pIn, pivot) ) continue;
             		
             		if( isForeground(pIn ) &&
             			pIn != pivot
-            		  ) countFore ++;
+            		  ) {
+            			//join disjoint sets (all pInSet members into pSet)
+            			Set<Pixel> pInSet = pixelToDisjointSet.get(pIn);
+            			for (Object iter : pInSet) pSet.add((Pixel)iter);
+            		}
             	}
-            	if(countFore == 0){ eachPHasNei = false; }// break;
             }
 
+            int maxSize = 0;
+            //System.out.println("_______________________________________________________________");
+            //System.out.println("foregroundPixels size: " + foregroundPixels.size());
+            for(Pixel p : pixelToDisjointSet.keySet()){
+            	Set<Pixel> s = pixelToDisjointSet.get(p);
+            	if(s.size() > maxSize)maxSize = s.size();
+            	//System.out.println("size set: " + s.size());
+            }
+            
+            removable = (foreground == maxSize);
             applicable = (background > backThresh && foreground > foreThresh);
             fullySurr = (background == 0 && foreground == 8); // mutually exclusive to applicable? Possibly
             //printValues();
