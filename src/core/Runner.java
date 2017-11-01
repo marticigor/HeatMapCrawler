@@ -55,10 +55,6 @@ public class Runner implements Runnable {
 
     private int nodeCount = 0;
     private long id = -1;
-
-    //this border is necessary for kernel convolution later on, not necessary
-    //in sharpen stage
-    
     
     private final int borderInSharpenStage; //((Math.max(bottleneckSize, passableSize)) - 1) / 2;
 

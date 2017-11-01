@@ -8,7 +8,7 @@ import core.image_filters.CannyDetect;
 import core.image_filters.EdgeHighlight;
 import core.image_filters.GaussianBlur;
 import core.image_filters.JustCopy;
-import core.image_filters.Sharpen;
+import core.image_filters.Threshold;
 import core.image_filters.Skeleton;
 import core.image_filters.filter_utils.MapMerge;
 import ifaces.I_ColorScheme;
@@ -73,9 +73,10 @@ public class ImagePreprocesor implements I_ColorScheme {
         int heightTo,
         boolean wholePicture) {
 
-        I_ImageProcesor sharpen = new Sharpen(
+        I_ImageProcesor sharpen = new Threshold(
         	inputImageResource,
         	procesedImageResourceStage1,
+        	borderAtSharpenStage,
             wholePicture,
             debug,
             widthFrom,
@@ -178,6 +179,7 @@ public class ImagePreprocesor implements I_ColorScheme {
 		I_ImageProcesor highlight = new EdgeHighlight(
 				procesedImageResourceStage2,
 				procesedImageResourceStage3,
+				borderAtSharpenStage,
 				toAugmented,
 				wholePicture,
 				debug, 
@@ -208,7 +210,7 @@ public class ImagePreprocesor implements I_ColorScheme {
        I_ImageProcesor copy = new JustCopy(
     		   procesedImageResourceStage1,
            	   procesedImageResourceStage2,
-           	   2,
+           	   borderAtSharpenStage,
                whole,
                debug,
                xFromIncl,
@@ -238,6 +240,7 @@ public class ImagePreprocesor implements I_ColorScheme {
 	   I_ImageProcesor skeleton = new Skeleton(
 			   
 			   procesedImageResourceStage2,
+			   borderAtSharpenStage,
 			   whole,
 			   debug,
 			   xFromIncl,

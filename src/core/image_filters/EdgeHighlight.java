@@ -13,9 +13,9 @@ public class EdgeHighlight extends BaseFilter implements I_ColorScheme {
     private final Map < Pixel, AugmentedPixel > toAugmented;
     private ImageResource in,out;
 
-    public EdgeHighlight(ImageResource in, ImageResource out,
+    public EdgeHighlight(ImageResource in, ImageResource out,int border,
     		Map < Pixel, AugmentedPixel > toAugmented, boolean w, boolean d, int...intArgs) {
-    	super(in.getWidth(), in.getHeight(),2 ,w ,d ,5 ,intArgs);//hardcoded mock border
+    	super(in.getWidth(), in.getHeight(), border, w, d, 5, intArgs);//hardcoded mock border
         this.toAugmented = toAugmented;
         this.in = in;
         this.out = out;

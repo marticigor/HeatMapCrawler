@@ -18,8 +18,8 @@ import lib_duke.Pixel;
 
 public class Skeleton extends BaseFilter implements I_ColorScheme {
 
-    public Skeleton(ImageResource in , boolean w, boolean d, int...intArgs) {
-        super( in .getWidth(), in .getHeight(), 2, w, d, 5, intArgs);
+    public Skeleton(ImageResource in ,int border, boolean w, boolean d, int...intArgs) {
+        super( in .getWidth(), in .getHeight(), border, w, d, 5, intArgs);
         this.in = in ;
     }
 

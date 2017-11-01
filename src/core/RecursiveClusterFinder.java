@@ -79,7 +79,7 @@ import ifaces.I_ColorScheme;
      public void setCluster(Pixel p) {
 
          if (allClusterAroundNode.size() > 15000) {
-             return;
+             throw new RuntimeException("RecursiveClusterFinder, setCluster() size");
          }
 
          if (!redClusterSearch) allClusterAroundNode.add(p);

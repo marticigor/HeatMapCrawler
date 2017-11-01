@@ -4,13 +4,13 @@ import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
-public class Sharpen extends BaseFilter implements I_ColorScheme {
+public class Threshold extends BaseFilter implements I_ColorScheme {
 
     private final int devToMakeItValidRoutable;
     private final ImageResource in,out;
 
-    public Sharpen(ImageResource in, ImageResource out, boolean w, boolean d, int...intArgs) {
-    	super(in.getWidth(), in.getHeight(), 2, w, d, 6, intArgs);//hardcoded border!
+    public Threshold(ImageResource in, ImageResource out, int border, boolean w, boolean d, int...intArgs) {
+    	super(in.getWidth(), in.getHeight(), border, w, d, 6, intArgs);//hardcoded border!
         devToMakeItValidRoutable = intArgs[5];
         this.in = in;
         this.out = out;
@@ -26,7 +26,7 @@ public class Sharpen extends BaseFilter implements I_ColorScheme {
         for (int y = heightFrom; y < heightTo; y++) {
             for (int x = widthFrom; x < widthTo; x++) {
 
-                inP = in .getPixel(x, y);
+                inP = in.getPixel(x, y);
                 outP = out.getPixel(inP.getX(), inP.getY());
 
                 if (inP.getRed() == inP.getGreen() && inP.getGreen() == inP.getBlue()) {
@@ -41,9 +41,9 @@ public class Sharpen extends BaseFilter implements I_ColorScheme {
                 	outP.setBlue(0);
                 	
 
-                } else if (isRoutable(inP) && (inP.getX() > borderSharpenStage &&
+                } else if (isRoutable(inP) && (inP.getX() >= borderSharpenStage &&
                         inP.getX() < in .getWidth() - borderSharpenStage) &&
-                    (inP.getY() > borderSharpenStage && inP.getY() < in .getHeight() - borderSharpenStage)) {
+                    (inP.getY() >= borderSharpenStage && inP.getY() < in .getHeight() - borderSharpenStage)) {
                     outP.setRed(redScheme[0]);
                     outP.setGreen(redScheme[1]);
                     outP.setBlue(redScheme[2]);
