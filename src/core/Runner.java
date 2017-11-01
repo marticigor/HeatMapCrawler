@@ -398,10 +398,10 @@ public class Runner implements Runnable {
         	if(size1 != size2) throw new RuntimeException("sizes do not match - persist in Runner");
         }
 
-        //NmbShotsEntity nmb = new NmbShotsEntity(nmbOfShots);
+        NmbShotsEntity nmb = new NmbShotsEntity(nmbOfShots);
 
-        //ManageNodeEntity man = ManageNodeEntity.getInstance();
-        //man.persist(list,nmb, debug);
+        ManageNodeEntity man = ManageNodeEntity.getInstance();
+        man.persist(list,nmb, debug);
     }
 
     /**

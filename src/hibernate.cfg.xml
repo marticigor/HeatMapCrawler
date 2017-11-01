@@ -19,11 +19,11 @@
       </property>
       
       <property name = "hibernate.connection.username">
-         cc
+         radim
       </property>
       
       <property name = "hibernate.connection.password">
-         cc
+         pamatuji
       </property>
       
       <property name="connection.pool_size">
