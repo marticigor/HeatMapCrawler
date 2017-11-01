@@ -2,7 +2,8 @@
 
  import java.util.*;
 
- import ifaces.I_ColorScheme;
+import core.utils.RoundIteratorOfPixels;
+import ifaces.I_ColorScheme;
  import lib_duke.ImageResource;
  import lib_duke.Pixel;
  public class RecursiveClusterFinder {
@@ -89,7 +90,6 @@
          if (visualize && allClusterAroundNode.size() == 1) vis.displayInitial();
          if (visualize && allClusterAroundNode.size() % 50 == 0) vis.displayProgres();
 
-         iteratorRound.resetCount();
          iteratorRound.setPixelToCheckAround(p);
 
          if (redClusterSearch) {
@@ -181,7 +181,6 @@
 
                  Pixel pVis = visIr.getPixel(p.getX(), p.getY());
 
-                 riop.resetCount();
                  riop.setPixelToCheckAround(pVis);
 
                  for (Pixel pHighlight: riop) {

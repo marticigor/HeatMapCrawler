@@ -3,6 +3,7 @@ package core;
 import java.util.*;
 
 import core.image_filters.JustCopy;
+import core.utils.RoundIteratorOfPixels;
 import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
@@ -184,7 +185,7 @@ public class NodeFinder implements I_ColorScheme {
     	System.out.println("surfaceConstant2_2 " + surfaceConstant2_2);
     	System.out.println("lookAheadAndBack " + lookAheadAndBack);
 	    
-	    detectSalientAreas(noded, lookAheadAndBack, false);// boolean compare against thresholded?
+	    detectSalientAreas(lookAheadAndBack, false);// boolean compare against thresholded?
 	    
         if(visual) {
         	noded.draw();
@@ -261,7 +262,7 @@ public class NodeFinder implements I_ColorScheme {
                     	lon = bounds [3] + (   ( (double) x / ((double) (width - 1)) ) * dLon   );
                     	lat = bounds [1] - (   ( (double) y / ((double) (height - 1)) ) * dLat   );
 
-                    	//the only instantiation of node in the project
+                    	//the only instantiation of Node in the project
                         Node node = new Node(
                         		x,
                         		y,
@@ -300,6 +301,7 @@ public class NodeFinder implements I_ColorScheme {
                     for (Node maybeClosest: maximusNodes) {
 
                         //we do have (among maximusNodes) a node with exactly avg x y values
+                    	
                         if (maybeClosest.getX() == centerGravityX && maybeClosest.getY() == centerGravityY) {
                             nodes.add(maybeClosest);
                             nmbOfNodes++;
@@ -351,7 +353,29 @@ public class NodeFinder implements I_ColorScheme {
      * @param image
      * @param lookBothDir
      */
-    private void detectSalientAreas(ImageResource image,int lookBothDir, boolean testAgainstThresholded){
+    private void detectSalientAreas(int lookBothDir, boolean testAgainstThresholded){
+        
+    	RoundIteratorOfPixels riop = new RoundIteratorOfPixels();
+        riop.setImageResource(skeletonized);
+        
+    	for (int x = lookBothDir; x < width - lookBothDir; x++) {
+            for (int y = lookBothDir; y < height - lookBothDir; y++) {
+            	
+            	Pixel p = skeletonized.getPixel(x, y);
+            	if( !isForeground(p) ) continue;
+            	
+            	riop.setPixelToCheckAround(p);
+            	
+            	int count = 0;
+            	for (Pixel pIt : riop){
+            		if(isForeground(pIt))count ++;
+            	}
+            	
+            	if(count > 2) setWhite(noded.getPixel(x, y));
+            }
+        }
+    	
+    	/*
     	
         Pixel p = null;
         Pixel pIn = null;
@@ -362,7 +386,7 @@ public class NodeFinder implements I_ColorScheme {
         int surfaceArea = 0;
         int routableNeighbours = 0;
 
-        iteratorRound.setImageResource(skeletonized);
+        iteratorRound.setImageResource(skeletonized);//TODO confusing compared to image param
         iteratorRound.resetCount();
         int minSurface = Integer.MAX_VALUE;
         int maxSurface = Integer.MIN_VALUE;
@@ -376,7 +400,7 @@ public class NodeFinder implements I_ColorScheme {
 
             	if(testAgainstThresholded && !isSalientPixInThresholded(x,y)) continue;
             	
-                p = image.getPixel(x, y);
+                p = noded.getPixel(x, y);
 
                 if (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]) {
 
@@ -389,13 +413,12 @@ public class NodeFinder implements I_ColorScheme {
 
                         	//System.out.println("xIn = " + xIn + " yIn = "+yIn);
 
-                            pIn = image.getPixel(xIn, yIn);
+                            pIn = noded.getPixel(xIn, yIn);
 
                             if (pIn.getRed() == redScheme[0] && pIn.getGreen() == redScheme[1] && pIn.getBlue() == redScheme[2]) {
 
                             	routableNeighbours ++;
                                 iteratorRound.setPixelToCheckAround(pIn);
-                                iteratorRound.resetCount();
 
                                 for (Pixel p1: iteratorRound) {
                                     if (p1.getRed() != redScheme[0] ||
@@ -415,7 +438,7 @@ public class NodeFinder implements I_ColorScheme {
                     
                     if ( evaluateAgainstConstants(surfaceArea, routableNeighbours)){
                     	
-                        Pixel pToWhite = image.getPixel(x, y);
+                        Pixel pToWhite = noded.getPixel(x, y);
                         setWhite(pToWhite);
                         
                     }
@@ -429,12 +452,15 @@ public class NodeFinder implements I_ColorScheme {
             }
         }
         if(visual || debug) System.out.println("Surface min max " + minSurface + " " + maxSurface);
+        
+    	*/
     }
-    
+
     /**
      * 
      */
-    private boolean evaluateAgainstConstants(int surface, int routableNeighbours ){
+    @SuppressWarnings("unused")
+	private boolean evaluateAgainstConstants(int surface, int routableNeighbours ){
     	
         boolean firstInterval = (surface > surfaceConstant1_1 &&
                   surface <= surfaceConstant1_2);
@@ -453,7 +479,8 @@ public class NodeFinder implements I_ColorScheme {
      * @param y
      * @return
      */
-    private boolean isSalientPixInThresholded(int x, int y){
+    @SuppressWarnings("unused")
+	private boolean isSalientPixInThresholded(int x, int y){
     	Pixel salientInTh = thresholded.getPixel(x, y);
     	if(isSetToClusterAround(salientInTh)) return true; else return false;
     }
@@ -484,7 +511,6 @@ public class NodeFinder implements I_ColorScheme {
 
         int neighbours = 0;
 
-        iteratorRound.resetCount();
         iteratorRound.setImageResource(ir);
         iteratorRound.setPixelToCheckAround(p);
 
@@ -549,6 +575,9 @@ public class NodeFinder implements I_ColorScheme {
     }
     public ArrayList < Node > getNodes() {
         return nodes;
+    }
+    private boolean isForeground(Pixel pIn){
+    	return pIn.getRed() == redScheme[0] && pIn.getGreen() == redScheme[1] && pIn.getBlue() == redScheme[2];
     }
     private void setRed(Pixel p) {
         p.setRed(redScheme[0]);

@@ -24,7 +24,7 @@ public interface I_ColorScheme {
  };
  public int[] lightGreenScheme = {
   0,
-  60,
+  80,
   0
  };
  public int[] blueischScheme = {

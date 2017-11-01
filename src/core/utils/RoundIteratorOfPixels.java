@@ -1,4 +1,4 @@
-package core;
+package core.utils;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -66,6 +66,7 @@ public class RoundIteratorOfPixels implements Iterable < Pixel > , Iterator < Pi
         //this.home = home;
         this.homeX = home.getX();
         this.homeY = home.getY();
+        resetCount();
     }
 
     /**

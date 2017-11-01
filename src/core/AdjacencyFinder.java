@@ -2,6 +2,7 @@ package core;
 
 import java.util.*;
 
+import core.utils.RoundIteratorOfPixels;
 import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.LineMaker;
@@ -99,7 +100,6 @@ public class AdjacencyFinder implements I_ColorScheme {
                 currY = buildForThis.getY();
                 currP = noded.getPixel(currX, currY);
 
-                riop.resetCount();
                 riop.setPixelToCheckAround(currP);
                 int count = 0;
 
@@ -155,7 +155,6 @@ public class AdjacencyFinder implements I_ColorScheme {
 
             for (Node n: nodes) {
                 boolean bottleneck = n.getBottleneck();
-                makeYellow.resetCount();
                 Pixel pY = noded.getPixel(n.getX(), n.getY());
                 makeYellow.setPixelToCheckAround(pY);
                 for (Pixel pix: makeYellow) {
@@ -338,7 +337,6 @@ public class AdjacencyFinder implements I_ColorScheme {
         byte counter = 0;
         boolean[] takenSeat = new boolean[8];
         Pixel p;
-        riop.resetCount();
 
         p = noded.getPixel(n.getX(), n.getY());
 

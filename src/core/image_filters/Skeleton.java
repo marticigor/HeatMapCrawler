@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import core.RoundIteratorOfPixels;
+import core.utils.RoundIteratorOfPixels;
 import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
@@ -29,8 +29,6 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
     public void doYourThing() {
         int threshold = redScheme[0];
         SkeletonUtils utils = new SkeletonUtils(threshold); //threshold
-        utils.setbackThresh(2);
-        utils.setForeThresh(3);
         skeletonize(utils);
     }
 
@@ -49,39 +47,49 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
         int count = 0;
         int removed = 0;
         
-        while (count < 200) {//precaution
+        int[] fore = new int []{3};//3
+        int[] back = new int []{1};//2
 
-            for (int absX = widthFrom; absX < widthTo; absX++) {
-                for (int absY = heightFrom; absY < heightTo; absY++) {
-                	
-                    current = in .getPixel(absX, absY);
+		for (int i = 0; i < 1; i++) {
 
-                    if (utils.isApplicable(current)) {
-                        toRemove.add(current);
-                    }
-                }
-            }
+			utils.setForeThresh(fore[i]);
+			utils.setBackThresh(back[i]);
+			
+			while (count < 200) {// precaution
 
-            for (Pixel p: toRemove) {
-                if (utils.isRemovable(p) &&
-                    p.getRed() != 0) {
-                        p.setRed(lightGreenScheme[0]);
-                        p.setBlue(lightGreenScheme[1]);
-                        p.setGreen(lightGreenScheme[2]);
-                        removed++;
-                }
-            }
+				for (int absX = widthFrom; absX < widthTo; absX++) {
+					for (int absY = heightFrom; absY < heightTo; absY++) {
 
-            if (removed == 0) break;
-            else if (debug) System.out.println("toRemove = applicable: " + toRemove.size() +
-            		"\nremoved: " + removed + 
-            		"\n___________________________________________");
+						current = in.getPixel(absX, absY);
 
-            toRemove.clear();
+						if (utils.isApplicable(current)) {
+							toRemove.add(current);
+						}
+					}
+				}
 
-            removed = 0;
-            count++;
-        }
+				for (Pixel p : toRemove) {
+					if (utils.isRemovable(p) && p.getRed() != 0) {
+						p.setRed(lightGreenScheme[0]);
+						p.setGreen(lightGreenScheme[1]);
+						p.setBlue(lightGreenScheme[2]);
+						removed++;
+					}
+				}
+
+				if (removed == 0)
+					break;
+				else if (debug)
+					System.out.println("toRemove = applicable: " + toRemove.size() + "\nremoved: " + removed
+							+ "\n___________________________________________");
+
+				toRemove.clear();
+
+				removed = 0;
+				count++;
+			} // while
+
+		}
     }
 
     /**
@@ -98,7 +106,10 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
         private Pixel pivot = null;
         Map <Pixel,Set<Pixel>> pixelToDisjointSet;
         Set <Pixel> disjointSet;
-        List <Pixel> foregroundPixels; 
+        List <Pixel> foregroundPixels;
+        
+        private int backThresh = 100;//0,2
+        private int foreThresh = 100;//1,3
 
         public SkeletonUtils(int foregroundColor) {
             riop = new RoundIteratorOfPixels( in );
@@ -108,7 +119,6 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 		private void countValues() {
 
             riop.setPixelToCheckAround(pivot);
-            riop.resetCount();
             foreground = 0;
             background = 0;
             up = 0;
@@ -135,12 +145,15 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
             for (Pixel p : foregroundPixels){
             	
             	riop.setPixelToCheckAround(p);
-            	riop.resetCount();
             	
             	Set<Pixel> pSet = pixelToDisjointSet.get(p);
             	
+            	//System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
             	for (Pixel pIn : riop){
-            		if( !isWithinEnvelope(pIn, pivot) ) continue;
+            		if( !isWithinEnvelope(pIn, pivot) ) {
+            			//System.out.println("NOT WITHIN ENVELOPE");
+            			continue;
+            			}
             		
             		if( isForeground(pIn ) &&
             			pIn != pivot
@@ -155,9 +168,9 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
             int maxSize = 0;
             //System.out.println("_______________________________________________________________");
             //System.out.println("foregroundPixels size: " + foregroundPixels.size());
-            for(Pixel p : pixelToDisjointSet.keySet()){
+            for(Pixel p : foregroundPixels){
             	Set<Pixel> s = pixelToDisjointSet.get(p);
-            	if(s.size() > maxSize)maxSize = s.size();
+            	if(s.size() > maxSize) maxSize = s.size();
             	//System.out.println("size set: " + s.size());
             }
             
@@ -179,15 +192,6 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
         	return x && y;
         }
         
-        private int backThresh = 0;//0
-        private int foreThresh = 1;//1
-
-        public void setForeThresh(int i) {
-            this.foreThresh = i;
-        }
-		public void setbackThresh(int i) {
-            this.backThresh = i;
-        }
         private boolean isForeground(Pixel p) {
             return (p.getRed() >= foregroundColorThreshold);
         }
@@ -244,7 +248,15 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
             System.out.println("will be connected " + removable);
         }
 
-        //tests
+		private void setBackThresh(int backThresh) {
+			this.backThresh = backThresh;
+		}
+
+		private void setForeThresh(int foreThresh) {
+			this.foreThresh = foreThresh;
+		}
+
+		//tests
         @SuppressWarnings("unused")
         private final byte[][] pattern = new byte[][] {
             {
