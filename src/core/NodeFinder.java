@@ -3,8 +3,10 @@ package core;
 import java.util.*;
 
 import core.image_filters.JustCopy;
+import core.salient_areas_detectors.ForegroundCountingSalientDetector;
 import core.utils.RoundIteratorOfPixels;
 import ifaces.I_ColorScheme;
+import ifaces.I_SalientDetector;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
@@ -187,8 +189,42 @@ public class NodeFinder implements I_ColorScheme {
     	System.out.println("surfaceConstant2_2 " + surfaceConstant2_2);
     	System.out.println("lookAheadAndBack " + lookAheadAndBack);
 	    
-	    detectSalientAreas(false);// boolean compare against thresholded?
-	    
+	    //detectSalientAreas
+    	
+    	/**
+    	public ForegroundCountingSalientDetector(
+    			ImageResource workBench,
+    			ImageResource noded,
+    			ImageResource testAgainst,
+    			int borderInSharpenStage,
+    			int lookAheadAndBack,
+    			int surfaceConstant1_1,
+    			int surfaceConstant1_2,
+    			int surfaceConstant2_1,
+    			int surfaceConstant2_2,
+    			int neighbourghsConstant,
+    			boolean visual,
+    			boolean debug
+    			)
+	    **/
+    	
+    	I_SalientDetector detector = new ForegroundCountingSalientDetector(
+    			skeletonized,
+    			noded,
+    			thresholded,
+    			borderSharpenStage,
+    			lookAheadAndBack,
+    			surfaceConstant1_1,
+    			surfaceConstant1_2,
+    			surfaceConstant2_1,
+    			surfaceConstant2_2,
+    			neighbourghsConstant,
+    			visual,
+    			debug
+    			);
+    	
+    	detector.detectSalientAreas(false);
+    	
         if(visual) {
         	noded.draw();
         	//thresholded.draw();
@@ -349,140 +385,6 @@ public class NodeFinder implements I_ColorScheme {
             setWhite(px);
         }
     }
-
-    /**
-     * 
-     * @param image
-     * @param lookBothDir
-     */
-    private void detectSalientAreas(boolean testAgainstThresholded){
-        
-    	System.out.println("border sharpen stage " + myHandler.getBorderInSharpenStage());
-        iteratorRound.setImageResource(skeletonized);
-        Set <Pixel> toBeWhite = new HashSet<Pixel>();
-        
-    	for (int x = lookAheadAndBack; x < width - lookAheadAndBack; x++) {
-            for (int y = lookAheadAndBack; y < height - lookAheadAndBack; y++) {
-            	
-            	Pixel p = skeletonized.getPixel(x, y);
-            	if( !isForeground(p) ) continue;
-            	
-            	iteratorRound.setPixelToCheckAround(p);
-            	
-            	int count = 0;
-            	for (Pixel pIt : iteratorRound){
-            		if(isForeground(pIt))count ++;
-            	}
-            	
-                //do nothing based on heuristics affected by borders
-            	
-            	if(count == 1 && isOkBorders(x,y))
-            		toBeWhite.add(noded.getPixel(x, y));
-            }
-        }
-    	
-        Pixel p = null;
-        Pixel pIn = null;
-        
-        int surfaceArea = 0;
-        int routableNeighbours = 0;
-
-        int minSurface = Integer.MAX_VALUE;
-        int maxSurface = Integer.MIN_VALUE;
-        //
-        //finds salient pixels that probably belong to a region of
-        //interest in terms of future node.
-        //
-        for (int x = lookAheadAndBack; x < width - lookAheadAndBack; x++) {
-            for (int y = lookAheadAndBack; y < height - lookAheadAndBack; y++) {
-
-            	if(testAgainstThresholded && !isSalientPixInThresholded(x,y)) continue;
-            	
-                p = noded.getPixel(x, y);
-
-                if (isForeground(p)) {
-
-                    for (int xIn = x - lookAheadAndBack; xIn < x + lookAheadAndBack + 1; xIn++) {
-                        for (int yIn = y - lookAheadAndBack; yIn < y + lookAheadAndBack + 1; yIn++) {
-
-                            pIn = noded.getPixel(xIn, yIn);
-
-                            if (isForeground(pIn)) {
-
-                            	routableNeighbours ++;
-                                iteratorRound.setPixelToCheckAround(pIn);
-
-                                for (Pixel p1: iteratorRound) {
-                                    if (isBackground(p1)) surfaceArea ++;
-                                }
-                            }
-                        }
-                    }
-                 
-                    if ( evaluateAgainstConstants(surfaceArea, routableNeighbours)){
-                    	
-                        //do nothing based on heuristics affected by borders
-                        
-                        if(isOkBorders(x,y)){
-                        	toBeWhite.add(noded.getPixel(x, y));
-                        }
-                        
-                    }
-                    
-                    if(surfaceArea > maxSurface) maxSurface = surfaceArea;
-                    if(surfaceArea < minSurface) minSurface = surfaceArea;
-                    
-                    surfaceArea = 0;
-                    routableNeighbours = 0;
-                }
-            }
-        }
-        
-        for(Pixel px : toBeWhite){
-        	setWhite(px);
-        }
-        
-        if(visual || debug) System.out.println("Surface min max " + minSurface + " " + maxSurface);
-    }
-
-    /**
-     * 
-     */
-	private boolean evaluateAgainstConstants(int surface, int routableNeighbours ){
-    	
-        boolean firstInterval = (surface > surfaceConstant1_1 &&
-                  surface <= surfaceConstant1_2);
-        boolean secondInterval = (surface > surfaceConstant2_1 &&
-                  surface <= surfaceConstant2_2);
-        boolean neighbours = routableNeighbours > neighbourghsConstant ;
-    	
-    	return (firstInterval || secondInterval) && neighbours;
-    }
-	
-	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @return
-	 */
-	private boolean isOkBorders(int x, int y){
-		boolean okX = (x >= borderSharpenStage + lookAheadAndBack) && 
-				(x < width - borderSharpenStage - lookAheadAndBack);
-		boolean okY = (y >= borderSharpenStage + lookAheadAndBack) && 
-				(y < height - borderSharpenStage - lookAheadAndBack);
-		return okX && okY;
-	}
-    
-    /**
-     * 
-     * @param x
-     * @param y
-     * @return
-     */
-	private boolean isSalientPixInThresholded(int x, int y){
-    	Pixel salientInTh = thresholded.getPixel(x, y);
-    	if(isSetToClusterAround(salientInTh)) return true; else return false;
-    }
     
     /**
      * loads recursively set of white pixels into neighbours and then allClusterAroundNode
@@ -574,12 +476,6 @@ public class NodeFinder implements I_ColorScheme {
     }
     public ArrayList < Node > getNodes() {
         return nodes;
-    }
-    private boolean isForeground(Pixel pIn){
-    	return pIn.getRed() == redScheme[0] && pIn.getGreen() == redScheme[1] && pIn.getBlue() == redScheme[2];
-    }
-    private boolean isBackground(Pixel pIn){
-    	return !isForeground(pIn);
     }
     private void setRed(Pixel p) {
         p.setRed(redScheme[0]);
