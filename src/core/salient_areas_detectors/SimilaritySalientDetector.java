@@ -6,12 +6,17 @@ import ifaces.I_SalientDetector;
 
 public class SimilaritySalientDetector implements I_SalientDetector, I_ColorScheme {
 
-	public SimilaritySalientDetector(ImageResource workBench,
-			ImageResource noded, ImageResource testAgainst,
-			int borderInSharpenStage, int lookAheadAndBack,
+	public SimilaritySalientDetector(
+			ImageResource workBench,
+			ImageResource noded,
+			ImageResource testAgainst,
+			int borderInSharpenStage, 
+			int lookAheadAndBack,
 			int surfaceConstant1_1, int surfaceConstant1_2,
 			int surfaceConstant2_1, int surfaceConstant2_2,
-			int neighbourghsConstant, boolean visual, boolean debug) {
+			int neighbourghsConstant,
+			boolean visual, boolean debug
+			) {
 
 		this.workBench = workBench;
 		this.noded = noded;
@@ -39,7 +44,7 @@ public class SimilaritySalientDetector implements I_SalientDetector, I_ColorSche
 	
 	@Override
 	public void detectSalientAreas(boolean testAgainstAnotherImageResource) {
-		// TODO Auto-generated method stub
+		
 
 	}
 	
