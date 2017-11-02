@@ -142,7 +142,6 @@ public class NodeFinder implements I_ColorScheme {
 
         if(bounds.length != 6) throw new RuntimeException("Node finder bounds length.");
       
-        //TODO is it necessary?
         JustCopy copy = new JustCopy(skeletonized, noded,
         		myHandler.getBorderInSharpenStage(),
         		true, debug, -1,-1,-1,-1, myHandler.getBorderInSharpenStage());
@@ -234,7 +233,6 @@ public class NodeFinder implements I_ColorScheme {
             //salientArea.draw();
         }
         
-
         //
         rcf = new RecursiveClusterFinder(noded, whiteScheme[0], whiteScheme[1], whiteScheme[2]);
         //
@@ -320,14 +318,6 @@ public class NodeFinder implements I_ColorScheme {
                 }
 
                 out: {
-                    @SuppressWarnings("unused")
-                    int closestXsoFar = Integer.MAX_VALUE;
-                    @SuppressWarnings("unused")
-                    int closestYsoFar = Integer.MAX_VALUE;
-                    @SuppressWarnings("unused")
-                    int xToOut = 0;
-                    @SuppressWarnings("unused")
-                    int yToOut = 0;
 
                     centerGravityX = sumX / maximusNodes.size();
                     centerGravityY = sumY / maximusNodes.size();
@@ -355,15 +345,12 @@ public class NodeFinder implements I_ColorScheme {
 
                         maybeClosest.setDstToCenter(dist);
                         if (dist < minDist) minDist = dist;
-
                     }
 
                     for (Node possiblyClosestNode: maximusNodes) {
 
                         if (possiblyClosestNode.getDstToCenter() == minDist) {
                             nodes.add(possiblyClosestNode);
-                            xToOut = possiblyClosestNode.getX();
-                            yToOut = possiblyClosestNode.getY();
                             if(debug) System.out.println(possiblyClosestNode.toString());
                             break;
                         }
@@ -435,8 +422,8 @@ public class NodeFinder implements I_ColorScheme {
 
         StringBuilder sb = new StringBuilder();
 
-        int minX = 100000;
-        int minY = 100000;
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
 
         for (Pixel p: cluster) {
 
