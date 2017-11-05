@@ -48,7 +48,8 @@ public class SimilaritySalientDetector implements I_SalientDetector, I_ColorSche
 
 	}
 	
-	private static final int KERNEL_BORDERS = 2;
+    //private static final int KERNEL_BORDERS = 2;
+    /*
     private static final int[][] KERNEL_VER = new int[][] {
         {
             0,0,1,0,0
@@ -62,6 +63,7 @@ public class SimilaritySalientDetector implements I_SalientDetector, I_ColorSche
         	0,0,1,0,0
         }
     };
+    */
     private static final int[][] KERNEL_HOR = new int[][] {
         {
             0,0,0,0,0
@@ -75,6 +77,7 @@ public class SimilaritySalientDetector implements I_SalientDetector, I_ColorSche
         	0,0,0,0,0
         }
     };
+    /*
     private static final int[][] KERNEL_DIAG_FORWARD = new int[][] {
         {
             0,0,0,0,1
@@ -101,5 +104,6 @@ public class SimilaritySalientDetector implements I_SalientDetector, I_ColorSche
         	0,0,0,0,1
         }
     };
+    */
 }
 
