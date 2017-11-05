@@ -4,6 +4,7 @@ import java.util.*;
 
 import core.image_filters.JustCopy;
 import core.salient_areas_detectors.ForegroundCountingSalientDetector;
+import core.salient_areas_detectors.SimilaritySalientDetector;
 import core.utils.RoundIteratorOfPixels;
 import ifaces.I_ColorScheme;
 import ifaces.I_SalientDetector;
@@ -207,7 +208,7 @@ public class NodeFinder implements I_ColorScheme {
     			)
 	    **/
     	
-    	I_SalientDetector detector = new ForegroundCountingSalientDetector(
+    	I_SalientDetector detector = new SimilaritySalientDetector(//ForegroundCountingSalientDetector(
     			skeletonized,
     			noded,
     			thresholded,
@@ -227,7 +228,7 @@ public class NodeFinder implements I_ColorScheme {
         if(visual) {
         	noded.draw();
         	//thresholded.draw();
-        	Pause.pause(2000);
+        	Pause.pause(9000);
             //SALIENT SALIENT
         	//System.out.println("DRAWING SALIENT AREA");
             //salientArea.draw();

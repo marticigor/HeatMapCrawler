@@ -121,4 +121,14 @@ public class UtilMethods implements I_ColorScheme {
 		p.setGreen(whiteScheme[1]);
 		p.setBlue(whiteScheme[2]);
 	}
+	
+	/**
+	 * 
+	 * @param p
+	 */
+	public void setRed(Pixel p) {
+		p.setRed(redScheme[0]);
+		p.setGreen(redScheme[1]);
+		p.setBlue(redScheme[2]);
+	}
 }
