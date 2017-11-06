@@ -103,8 +103,11 @@ public class SimilaritySalientDetector implements I_SalientDetector, I_ColorSche
                                         else match --;
                                 }
                             }
-                        if (debug) System.out.println("SIMILARITY_SALIENT_DETECTOR match " + match);
-                        if( match > MATCH_THRESHOLD ) utils.setRed(noded.getPixel(x,y));
+                            if (debug) System.out.println("SIMILARITY_SALIENT_DETECTOR match " + match);
+                            if( match > MATCH_THRESHOLD ) {
+                        	    utils.setRed(noded.getPixel(x,y));
+                        	    break;
+                            }
                         }// iterate kernels
                     } else {
                         // do not take any action based on incomplete kernel convolution
@@ -113,7 +116,50 @@ public class SimilaritySalientDetector implements I_SalientDetector, I_ColorSche
                 }
             }
 	}
-/*
+
+    private static final int MATCH_THRESHOLD = 5;
+    private static final int KERNEL_BORDERS = 1;
+
+    private static final int[][] KERNEL_VER = new int[][] {
+        {
+            0,1,0
+        }, {
+            0,1,0
+        }, {
+            0,1,0
+        }
+    };
+    
+    private static final int[][] KERNEL_HOR = new int[][] {
+        {
+            0,0,0
+        }, {
+            1,1,1
+        }, {
+            0,0,0     
+        }
+    };
+    
+    private static final int[][] KERNEL_DIAG_FORWARD = new int[][] {
+        {
+            0,0,1
+        }, {
+            0,1,0
+        }, {
+            1,0,0     
+        }
+    };
+    private static final int[][] KERNEL_DIAG_BACKWARD = new int[][] {
+        {
+            1,0,0
+        }, {
+            0,1,0
+        }, {
+            0,0,1     
+        }
+    };
+    
+    /*
     private static final int MATCH_THRESHOLD = 17;
     private static final int KERNEL_BORDERS = 2;
 
@@ -172,45 +218,4 @@ public class SimilaritySalientDetector implements I_SalientDetector, I_ColorSche
         }
     };
     */
-    private static final int MATCH_THRESHOLD = 5;
-    private static final int KERNEL_BORDERS = 1;
-
-    private static final int[][] KERNEL_VER = new int[][] {
-        {
-            0,1,0
-        }, {
-            0,1,0
-        }, {
-            0,1,0
-        }
-    };
-    
-    private static final int[][] KERNEL_HOR = new int[][] {
-        {
-            0,0,0
-        }, {
-            1,1,1
-        }, {
-            0,0,0     
-        }
-    };
-    
-    private static final int[][] KERNEL_DIAG_FORWARD = new int[][] {
-        {
-            0,0,1
-        }, {
-            0,1,0
-        }, {
-            1,0,0     
-        }
-    };
-    private static final int[][] KERNEL_DIAG_BACKWARD = new int[][] {
-        {
-            1,0,0
-        }, {
-            0,1,0
-        }, {
-            0,0,1     
-        }
-    };
 }
