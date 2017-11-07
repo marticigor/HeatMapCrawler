@@ -3,7 +3,6 @@ package core;
 import java.util.*;
 
 import core.image_filters.JustCopy;
-import core.salient_areas_detectors.ForegroundCountingSalientDetector;
 import core.salient_areas_detectors.SimilaritySalientDetector;
 import core.utils.RoundIteratorOfPixels;
 import ifaces.I_ColorScheme;

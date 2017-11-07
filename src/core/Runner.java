@@ -236,6 +236,7 @@ public class Runner implements Runnable {
                 		debug,
                 		visual
                 		);
+                
                 nf.findNodes();
 
                 ImageResource noded = nf.getNodedImage();
