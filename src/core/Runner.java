@@ -354,7 +354,7 @@ public class Runner implements Runnable {
      */
     @SuppressWarnings("unchecked")
     private < T extends RecursiveAction > void decorateFactory(T[] task,
-        @SuppressWarnings("rawtypes") Class ref,
+        Class <T> ref,
         ImagePreprocesor ip) {
         @SuppressWarnings("rawtypes")
         Constructor constructor = null;
