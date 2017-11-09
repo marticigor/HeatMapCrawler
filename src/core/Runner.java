@@ -76,7 +76,6 @@ public class Runner implements Runnable {
         
     	this.devi = devi;
     	
-    	
         this.look = look;
         this.surface1 = v3;
         this.surface2 = v4;
@@ -248,7 +247,6 @@ public class Runner implements Runnable {
                 af.buildAdjacencyLists();
 
                 //test output gpx
-
                 if(debug){
                     //0 lon east
                     //1 lat north
@@ -352,12 +350,11 @@ public class Runner implements Runnable {
      * @param ref
      * @param ip
      */
-    @SuppressWarnings("unchecked")
     private < T extends RecursiveAction > void decorateFactory(T[] task,
         Class <T> ref,
         ImagePreprocesor ip) {
-        @SuppressWarnings("rawtypes")
-        Constructor constructor = null;
+
+        Constructor<T> constructor = null;
         try {
             constructor = ref.getConstructor(
                 core.ImagePreprocesor.class,
@@ -374,7 +371,7 @@ public class Runner implements Runnable {
         for (int y = 0; y < sizeDivKonq; y++) {
             for (int x = 0; x < sizeDivKonq; x++) {
                 try {
-                    task[i] = (T) constructor.newInstance(ip, chunks.fromX[x], chunks.toX[x], chunks.fromY[y], chunks.toY[y]);
+                    task[i] = constructor.newInstance(ip, chunks.fromX[x], chunks.toX[x], chunks.fromY[y], chunks.toY[y]);
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
                     InvocationTargetException e) {
                     e.printStackTrace();

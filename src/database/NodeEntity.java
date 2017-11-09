@@ -40,7 +40,7 @@ public class NodeEntity {
     @JoinTable(name=beans.RunnerBean.TABLE_ADJACENTS)
 	private Set<NodeEntity> adjacents;
 	
-    private static final transient double EPSILON = 0.0000001;
+    private static final transient double EPSILON = 0.000000001;
 	
 	public NodeEntity (){}
 	
@@ -90,7 +90,9 @@ public class NodeEntity {
 
 	@Override
 	public int hashCode(){
-		return Objects.hash(lon, lat);
+		double lonFloored = Math.floor(lon * 100000.0);
+		double latFloored = Math.floor(lat * 100000.0);
+		return Objects.hash(lonFloored, latFloored);
 	}
 	//OBJECT!!!
 	@Override
@@ -100,13 +102,15 @@ public class NodeEntity {
 	        return true;
 	    // null check
 	    if (theOther == null)
-	        return false;
+	    	throw new RuntimeException("equalsMess 1");
+	        //return false;
 	    // type check
 	    if (getClass() != theOther.getClass())
-	        return false;
+	    	throw new RuntimeException("equalsMess 2");
+	        //return false;
 	    
 	    NodeEntity theOtherNe = (NodeEntity) theOther;
-	    return (this.lon == theOtherNe.getLon() && this.lat == theOtherNe.getLat());
+	    return equalsLonLat(theOtherNe);
 	}
 	
     /**
