@@ -207,7 +207,7 @@ public class NodeFinder implements I_ColorScheme {
     			)
 	    **/
     	
-    	I_SalientDetector detector = new SimilaritySalientDetector(//ForegroundCountingSalientDetector(//SimilaritySalientDetector(
+    	I_SalientDetector detector = new SimilaritySalientDetector(//ForegroundCountingSalientDetector(
     			skeletonized,
     			noded,
     			thresholded,
