@@ -35,7 +35,14 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class Runner implements Runnable {
 
-	// config in aplicationContext.xml
+	static {
+  		boolean assertsEnabled = false;
+  		assert assertsEnabled = true; // Intentional side effect!!!
+  		if (!assertsEnabled)
+		System.err.println("Asserts not enabled!!!");
+ 	}
+
+    // config in aplicationContext.xml
     private final int devi;
     private final int look, surface1, surface2, surface3, surface4, neighbours;
     private final int thresholded_look, thresholded_surface1, thresholded_surface2, thresholded_surface3, thresholded_surface4, thresholded_neighbours;
