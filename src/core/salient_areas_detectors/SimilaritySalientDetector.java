@@ -117,7 +117,7 @@ public class SimilaritySalientDetector implements I_SalientDetector, I_ColorSche
             }
 	}
 
-    private static final int MATCH_THRESHOLD = 3;//5
+    private static final int MATCH_THRESHOLD = 5;//3-5
     private static final int KERNEL_BORDERS = 1;
 
     private static final int[][] KERNEL_VER = new int[][] {

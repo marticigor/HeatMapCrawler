@@ -47,13 +47,17 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
         int count = 0;
         int removed = 0;
         
-        int[] fore = new int []{3};//3
-        int[] back = new int []{1};//2
+        int[] fore = new int []{3};//3//3
+        int[] back = new int []{1};//2//1
+        int[] foreMax = new int []{8,100};
+        int[] backMax = new int []{100,100};
 
 		for (int i = 0; i < 1; i++) {
 
 			utils.setForeThresh(fore[i]);
 			utils.setBackThresh(back[i]);
+			utils.setForeMax(foreMax[i]);
+			utils.setBackMax(backMax[i]);
 			
 			while (count < 200) {// precaution
 
@@ -110,6 +114,8 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
         
         private int backThresh = 100;//0,2
         private int foreThresh = 100;//1,3
+        private int backMax = 100;
+        private int foreMax = 100;
 
         public SkeletonUtils(int foregroundColor) {
             riop = new RoundIteratorOfPixels( in );
@@ -175,7 +181,8 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
             }
             
             removable = (foreground == maxSize);
-            applicable = (background > backThresh && foreground > foreThresh);
+            applicable = (background > backThresh && foreground > foreThresh &&
+            		background < backMax && foreground < foreMax);
             fullySurr = (background == 0 && foreground == 8); // mutually exclusive to applicable? Possibly
             //printValues();
         }
@@ -254,6 +261,13 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 		private void setForeThresh(int foreThresh) {
 			this.foreThresh = foreThresh;
+		}
+		private void setBackMax(int backMax) {
+			this.backMax = backMax;
+		}
+
+		private void setForeMax(int foreMax) {
+			this.foreMax = foreMax;
 		}
 
 		//tests

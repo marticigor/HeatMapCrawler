@@ -40,7 +40,7 @@ public class NodeEntity {
     @JoinTable(name=beans.RunnerBean.TABLE_ADJACENTS)
 	private Set<NodeEntity> adjacents;
 	
-    private static final transient double EPSILON = 0.000000001;
+    private static final transient double EPSILON = 0.00000001d;
 	
 	public NodeEntity (){}
 	

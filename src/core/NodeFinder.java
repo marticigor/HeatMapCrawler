@@ -240,12 +240,19 @@ public class NodeFinder implements I_ColorScheme {
         int x, y;
         double lon, lat;
 
-        double dLon = Math.abs(bounds [0] - bounds [3]);
-        double dLat = Math.abs(bounds [1] - bounds [2]);
+        final double dLon = Math.abs(bounds [0] - bounds [3]);
+        final double lonShiftToPixCenter = (dLon / width) / 2;
+        final double dLat = Math.abs(bounds [1] - bounds [2]);
+        final double latShiftToPixCenter = (dLat / height) / 2;
+        
 
-        if(debug){
+        if(debug || visual){
+        	System.out.println("______________________________________");
         	System.out.println("dLon " + dLon);
         	System.out.println("dLat " + dLat);
+        	System.out.println("lonShiftToPixCenter " + lonShiftToPixCenter);
+        	System.out.println("latShiftToPixCenter " + latShiftToPixCenter);
+        	System.out.println("______________________________________");
         }
 
         for (Pixel pOfNoded: noded.pixels()) { //1
@@ -295,8 +302,8 @@ public class NodeFinder implements I_ColorScheme {
                     	x = maybeMaximus.getX();
                     	y = maybeMaximus.getY();
 
-                    	lon = bounds [3] + (   ( (double) x / ((double) (width - 1)) ) * dLon   );
-                    	lat = bounds [1] - (   ( (double) y / ((double) (height - 1)) ) * dLat   );
+                    	lon = bounds [3] + (   (( (double) x / ((double) (width)) ) * dLon) + lonShiftToPixCenter  );
+                    	lat = bounds [1] - (   (( (double) y / ((double) (height)) ) * dLat) + latShiftToPixCenter );
 
                     	//the only instantiation of Node in the project
                         Node node = new Node(
