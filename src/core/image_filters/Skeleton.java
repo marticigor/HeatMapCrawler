@@ -63,15 +63,15 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			utils.setForeMax(foreMax[i]);
 			utils.setBackMax(backMax[i]);
 
-			while (count < 20) {// precaution 400
+			while (count < 1) {// precaution 400
 				for (int absX = widthFrom; absX < widthTo; absX++) {
 					for (int absY = heightFrom; absY < heightTo; absY++) {
 
 						current = in.getPixel(absX, absY);
 
-						//&& utils.isRemovable(current))
-						if (current.getRed() == redScheme[0] &&
-								utils.isApplicable(current))  {
+						//&& utils.isRemovable(current)) && utils.isApplicable(current))
+						//current.getRed() == redScheme[0] && utils.isApplicable(current) 
+						if (current.getRed() == redScheme[0] && utils.isApplicable(current)){
 							toRemove.add(current);
 						}
 					}
