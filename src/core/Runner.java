@@ -198,7 +198,9 @@ public class Runner implements Runnable {
                 ImagePreprocesor ip = new ImagePreprocesor(devi, borderInSharpenStage, visual, debug, image);
 
                 chunks = new ImageChunks(ip.getX(), ip.getY(), sizeDivKonq);
+                
                 perManyTasksProces(ip);
+                ip.invokeSequencialQueue();
 
                 if (visual) {
                     image.draw();
@@ -331,10 +333,6 @@ public class Runner implements Runnable {
         TaskJustCopy[] justCopyTask = new TaskJustCopy[sizeDivKonq * sizeDivKonq];
         decorateFactory(justCopyTask, TaskJustCopy.class, ip);
         stages.add(justCopyTask);
-
-        TaskSkeleton[] skeletonTask = new TaskSkeleton[sizeDivKonq * sizeDivKonq];
-        decorateFactory(skeletonTask, TaskSkeleton.class, ip);
-        stages.add(skeletonTask);
 
         //--------------------------------------------------
         //FILTERS QUEUE FIFO END

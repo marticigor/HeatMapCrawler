@@ -254,7 +254,14 @@ public class ImagePreprocesor implements I_ColorScheme {
 	   skeleton.doYourThing();
 	   
    }
-	
+   
+   /**
+    * 
+    */
+   public void invokeSequencialQueue(){
+	   procesSkeleton(-1,-1,-1,-1,true);
+   }
+   
    public void addMap(Map <Pixel, AugmentedPixel> chop){
 	   chopsToAugmentedList.add(chop);
    }

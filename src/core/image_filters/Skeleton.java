@@ -32,6 +32,10 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 		skeletonize(utils);
 	}
 
+	/**
+	 * 
+	 * @param utils
+	 */
 	private void skeletonize(SkeletonUtils utils) {
 
 		// Consider all pixels on the boundaries of foreground regions (i.e. foreground points that have
@@ -69,9 +73,8 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 						current = in.getPixel(absX, absY);
 
-						//&& utils.isRemovable(current)) && utils.isApplicable(current))
-						//current.getRed() == redScheme[0] && utils.isApplicable(current) 
-						if (current.getRed() == redScheme[0] && utils.isApplicable(current)){
+						if (current.getRed() == redScheme[0] &&
+							utils.isApplicable(current)){
 							toRemove.add(current);
 						}
 					}
@@ -79,10 +82,16 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 				for (Pixel p : toRemove) {
 
+					if(utils.isRemovable(p)){
 						p.setRed(lightGreenScheme[0]);
 						p.setGreen(lightGreenScheme[1]);
 						p.setBlue(lightGreenScheme[2]);
 						removed++;
+					} else {
+						p.setRed(whiteScheme[0]);
+						p.setGreen(whiteScheme[1]);
+						p.setBlue(whiteScheme[2]);
+					} 
 					
 					//test
 					//Pixel testP = test.getPixel(p.getX(), p.getY());
@@ -124,9 +133,8 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 		private final RoundIteratorOfPixels riop;
 		private int foregroundColorThreshold; // value of red channel
-		private byte foreground, background, up, down;
+		private byte fGround,bGround;
 		private boolean removable;
-		private boolean applicable;
 		private boolean fullySurr;
 		private Pixel pivot = null;
 		Map<Pixel, Set<Pixel>> pixelToDisjointSet;
@@ -190,8 +198,16 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 		 * @return
 		 */
 		public boolean isApplicable(Pixel pivot) {
-			checkMyPivot(pivot);
-			return applicable;
+			byte background = 0,foreground = 0;
+			riop.setPixelToCheckAround(pivot);
+			for (Pixel aroundPivot : riop) {
+				if (isForeground(aroundPivot)) {
+					foreground++;
+				} else if (isBackground(aroundPivot))
+					background++;
+			}
+			return (background > backThresh && foreground > foreThresh && background < backMax
+					&& foreground < foreMax);
 		}
 
 		/**
@@ -211,27 +227,26 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 		private void countValues() {
 
 			riop.setPixelToCheckAround(pivot);
-			foreground = 0;
-			background = 0;
-			up = 0;
-			down = 0;
 
 			removable = false;
-			applicable = false;
 			fullySurr = false;
 
 			pixelToDisjointSet = new HashMap<Pixel, Set<Pixel>>();
 			foregroundPixels = new LinkedList<Pixel>();
 
+			fGround = 0;
+			bGround = 0;
+			
 			for (Pixel aroundPivot : riop) {
 				if (isForeground(aroundPivot)) {
-					foreground++;
+					fGround ++;
 					disjointSet = new HashSet<Pixel>();
 					disjointSet.add(aroundPivot);
 					pixelToDisjointSet.put(aroundPivot, disjointSet);
 					foregroundPixels.add(aroundPivot);// keep order
-				} else if (isBackground(aroundPivot))
-					background++;
+				}else if(isBackground(aroundPivot)){
+					bGround++;
+				}
 			}
 
 			for (Pixel p : foregroundPixels) {
@@ -265,10 +280,9 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 				// System.out.println("size set: " + s.size());
 			}
 
-			removable = (foreground == maxSize);
-			applicable = (background > backThresh && foreground > foreThresh && background < backMax
-					&& foreground < foreMax);
-			fullySurr = (background == 0 && foreground == 8); 	// mutually
+			removable = (fGround == maxSize);
+
+			fullySurr = (bGround == 0 && fGround == 8); 	// mutually
 																// exclusive to
 																// applicable?
 																// Possibly
@@ -280,11 +294,8 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 		 */
 		@SuppressWarnings("unused")
 		private void printValues() {
-			System.out.println("foreground " + foreground);
-			System.out.println("background " + background);
-			System.out.println("up " + up);
-			System.out.println("down " + down);
-			System.out.println("removable " + removable);
+			System.out.println("foreground " + fGround);
+			System.out.println("background " + bGround);
 		}
 
 		private void setBackThresh(int backThresh) {
