@@ -2,10 +2,12 @@ package ifaces;
 
 public interface I_ColorScheme {
 
+//TODO check all calls and test all members of scheme, not just one 
+	
  public int[] redScheme = {
   255,
-  0,
-  0
+  3,
+  3
  };
  public int[] whiteScheme = {
   250,
@@ -15,17 +17,17 @@ public interface I_ColorScheme {
  public int[] yellowScheme = {
   250,
   250,
-  0
+  4
  };
  public int[] greenScheme = {
-  0,
+  5,
   250,
   100
  };
  public int[] lightGreenScheme = {
-  0,
+  6,
   80,
-  0
+  6
  };
  public int[] blueischScheme = {
   50,
@@ -34,7 +36,7 @@ public interface I_ColorScheme {
  };
  public int[] redischScheme = {
   200,
-  50,
+  57,
   50
  };
 }
