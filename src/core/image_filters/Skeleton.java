@@ -47,13 +47,13 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			System.out.println("NEW TASK");
 
 		Pixel current;
-		List<Pixel> toRemove = new ArrayList<Pixel>();
-
-		int count = 0;
+		List<Pixel> applicants = new ArrayList<Pixel>();
 		int removed = 0;
 
+		int count = 0;
+
 		int[] fore = new int[] { 1 };// 3//3//0//1
-		int[] back = new int[] { 0 };// 2//1//2//0
+		int[] back = new int[] { 1 };// 2//1//2//0
 		int[] foreMax = new int[] { 100 };
 		int[] backMax = new int[] { 100 };
 
@@ -67,7 +67,7 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			utils.setForeMax(foreMax[i]);
 			utils.setBackMax(backMax[i]);
 
-			while (count < 1) {// precaution 400
+			while (count < 20) {// precaution 400
 				for (int absX = widthFrom; absX < widthTo; absX++) {
 					for (int absY = heightFrom; absY < heightTo; absY++) {
 
@@ -75,22 +75,28 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 						if (current.getRed() == redScheme[0] &&
 							utils.isApplicable(current)){
-							toRemove.add(current);
+							applicants.add(current);
 						}
 					}
 				}
-
-				for (Pixel p : toRemove) {
+				
+				for (Pixel p : applicants) {
 
 					if(utils.isRemovable(p)){
+						
 						p.setRed(lightGreenScheme[0]);
 						p.setGreen(lightGreenScheme[1]);
 						p.setBlue(lightGreenScheme[2]);
 						removed++;
+						
 					} else {
-						p.setRed(whiteScheme[0]);
-						p.setGreen(whiteScheme[1]);
-						p.setBlue(whiteScheme[2]);
+						
+						//p.setRed(whiteScheme[0]);
+						//p.setGreen(whiteScheme[1]);
+						//p.setBlue(whiteScheme[2]);
+						
+						//utils.printValues();
+						
 					} 
 					
 					//test
@@ -101,19 +107,18 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 					//test
 
 				}
-
+				
 				//test
 				//test.draw();
 
 				if (removed == 0)
 					break;
 				else if (debug)
-					System.out.println("toRemove = applicable: " + toRemove.size() + "\nremoved: " + removed
+					System.out.println("toRemove = applicable: " + applicants.size() + "\nremoved: " + removed
 							+ "\n___________________________________________");
 
-				toRemove.clear();
+				applicants.clear();
 
-				removed = 0;
 				count++;
 
 			} // while
@@ -180,7 +185,16 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			checkMyPivot(pivot);
 			return removable;
 		}
-
+		/**
+		 * 
+		 * @param pivot
+		 */
+		private void checkMyPivot(Pixel pivot) {
+			if (this.pivot != pivot) {
+				this.pivot = pivot;
+				countValues();
+			}
+		}
 		/**
 		 * 
 		 * @param pivot
@@ -206,19 +220,8 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 				} else if (isBackground(aroundPivot))
 					background++;
 			}
-			return (background > backThresh && foreground > foreThresh && background < backMax
-					&& foreground < foreMax);
-		}
-
-		/**
-		 * 
-		 * @param pivot
-		 */
-		private void checkMyPivot(Pixel pivot) {
-			if (this.pivot != pivot) {
-				this.pivot = pivot;
-				countValues();
-			}
+			return ((int) background > backThresh && (int) foreground > foreThresh && (int) background < backMax
+					&& (int) foreground < foreMax);
 		}
 
 		/**
@@ -240,12 +243,14 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			for (Pixel aroundPivot : riop) {
 				if (isForeground(aroundPivot)) {
 					fGround ++;
+					
 					disjointSet = new HashSet<Pixel>();
 					disjointSet.add(aroundPivot);
 					pixelToDisjointSet.put(aroundPivot, disjointSet);
 					foregroundPixels.add(aroundPivot);// keep order
+				
 				}else if(isBackground(aroundPivot)){
-					bGround++;
+					bGround ++;
 				}
 			}
 
@@ -280,22 +285,23 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 				// System.out.println("size set: " + s.size());
 			}
 
-			removable = (fGround == maxSize);
+			removable = ((int) fGround == maxSize);
 
-			fullySurr = (bGround == 0 && fGround == 8); 	// mutually
-																// exclusive to
-																// applicable?
-																// Possibly
-			// printValues();
+			fullySurr = ((int) bGround == 0 && (int) fGround == 8); 	// mutually
+																		// exclusive to
+																		// applicable?
+																		// Possibly
+
 		}
 
 		/**
 		 * 
 		 */
-		@SuppressWarnings("unused")
 		private void printValues() {
-			System.out.println("foreground " + fGround);
-			System.out.println("background " + bGround);
+			System.out.println("________________________");
+			System.out.println("fGround " + fGround);
+			System.out.println("bGround " + bGround);
+			System.out.println("________________________");
 		}
 
 		private void setBackThresh(int backThresh) {
