@@ -134,6 +134,12 @@ public class Node implements Comparable < Node > {
         //.getEntity().setParent(entity);
     }
 
+    //TODO debug and remove
+    public void removeAdjacentNode(Node n){
+    	adjacentNodes.remove(n);
+    	entity.removeFromAdj(n.getEntity());
+    }
+    
     public Set < Node > getAdjacentNodes() {
         return adjacentNodes;
     }

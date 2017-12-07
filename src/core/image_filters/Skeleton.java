@@ -90,6 +90,7 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 							+ "\n___________________________________________");
 				applicants.clear();
 				count++;
+				removed = 0;
 			} // while
 		}
 	}

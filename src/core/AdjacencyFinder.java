@@ -93,6 +93,11 @@ public class AdjacencyFinder implements I_ColorScheme {
             for (Node buildForThis: nodes) {
 
                 maskOrDemaskNode(buildForThis, false); //demask this node, not first run
+                
+                if(visual & debug){
+                    noded.draw();
+                    Pause.pause(1000);
+                }
 
                 redCluster.clear();
 
@@ -115,7 +120,7 @@ public class AdjacencyFinder implements I_ColorScheme {
                 }
                 rcf.resetToNewAdjacents();
 
-                if (visual && debug) { //visual && debug
+                if (visual && debug) {
                     for (Pixel pDebug: redCluster) {
 
                         Pixel pIr = visualizeIR.getPixel(pDebug.getX(), pDebug.getY());
@@ -139,14 +144,20 @@ public class AdjacencyFinder implements I_ColorScheme {
 
                     }
                 } //visual && debug
+                
                 maskOrDemaskNode(buildForThis, true); //doMask
-            }
+                
+                if(visual & debug){
+                    noded.draw();
+                    Pause.pause(1000);
+                }
+            }//for buildForThis
 
             demaskAllNodes();
 
             if(visual){
                 noded.draw();
-                Pause.pause(2000);
+                Pause.pause(1000);
             }
             System.out.println("actualy highlighting nodes");
 
@@ -175,14 +186,6 @@ public class AdjacencyFinder implements I_ColorScheme {
                 Pause.pause(2000);
             }
         } //scope for adjacency lists builder
-
-        List <Node> toRemove = new ArrayList<Node>();
-        for (Node n : nodes) if (n.getAdjacentNodes().size() == 0) toRemove.add(n);
-        for (Node n : toRemove) {
-        	System.out.println("Nodes of zero adjacency list size : " + n);
-        	//nodes.remove(n);// do not remove them yet, they still may by useful in more
-                //broad context after merge of this 'drop' graph into 'ocean' graph
-        }
     }
 
     /**

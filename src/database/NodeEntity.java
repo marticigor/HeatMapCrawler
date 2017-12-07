@@ -57,6 +57,10 @@ public class NodeEntity {
 		adjacents.add(adj);
 	}
 	
+	public void removeFromAdj(NodeEntity n){
+		adjacents.remove(n);
+	}
+	
 	public long getId() {
 		return id;
 	}
@@ -133,7 +137,7 @@ public class NodeEntity {
 	    		System.err.println("reference to this in adjacents in NodeEntity.toString()");
 	    		continue;
 	    	}
-	    	value += ("---------- some NodeEntity - stackOverflowError we do not want here\n");
+	    	value += (n.getId() + "---------- some NodeEntity\n");
 	    }
 		return value;
 	}
