@@ -294,6 +294,10 @@ public class Runner implements Runnable {
 				List<Node> filtered = filter.procesChunk(nodes);
 				System.out.println("FILTERED OUT NODES (zero adjacents): " + (nodes.size() - filtered.size()));
 
+				
+				
+				
+				
 				System.out.println("Do we have reference TO zero adjacency list nodes?");
 
 				ImageResource test = new ImageResource(noded.getWidth(), noded.getHeight());
