@@ -197,13 +197,13 @@ public class AdjacencyFinder implements I_ColorScheme {
     /**
      *
      */
-    public void drawAdjacencyEdges() {
+    public void drawAdjacencyEdges(List<Node> nodesToDraw) {
         ImageResource edges = new ImageResource(noded.getWidth(), noded.getHeight());
         LineMaker lm = new LineMaker(edges);
         int x1, y1, x2, y2;
         int r, g, b;
         Random rndm = new Random();
-        for (Node n: nodes) {
+        for (Node n: nodesToDraw) {
             Set < Node > adjacents = n.getAdjacentNodes();
             x1 = n.getX();
             y1 = n.getY();

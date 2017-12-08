@@ -14,6 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import core.nodes_decorators.CorrectMutualVisibility;
+import core.nodes_filters.ZeroAdjacencyNodesFilter;
 import core.tasks.TaskCanny;
 import core.tasks.TaskGaussian;
 import core.tasks.TaskHighlight;
@@ -286,20 +287,21 @@ public class Runner implements Runnable {
 
 				//Do we have reference TO zero adjacency list nodes?"
 				
-				//TODO not a very good style...
+				//TODO not a very good style?
 				CorrectMutualVisibility cmv = new CorrectMutualVisibility();
-				int newEdges = cmv.proces(nodes);
-				System.out.println("NEW EDGES (CorrectMutualVisibility): " + newEdges);
+				int newEdgesNmb = cmv.proces(nodes);
+				System.out.println("NEW EDGES (CorrectMutualVisibility): " + newEdgesNmb);
+				ZeroAdjacencyNodesFilter zanf = new ZeroAdjacencyNodesFilter();
+				List <Node> noZeroAdjacents = zanf.procesChunk(nodes);
+				System.out.println("ZERO ADJACENCY NODES FILTERED OUT: " + (nodes.size() - noZeroAdjacents.size()));
 				
 				if (visual) {
-					af.drawAdjacencyEdges();
+					af.drawAdjacencyEdges(noZeroAdjacents);
 					Pause.pause(2000);
 				}
 				
-				if (nodes != null)
-					persist(nodes);
-				else
-					throw new RuntimeException("nodes = null");
+				if(noZeroAdjacents.size() == 0) System.err.println("ZERO NODES TO PERSIST!");
+				else persist(noZeroAdjacents);
 
 				// OR inject MOCKS
 				// NodeGraphMocks mocks = new NodeGraphMocks();
