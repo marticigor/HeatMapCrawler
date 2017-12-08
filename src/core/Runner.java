@@ -13,7 +13,7 @@ import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import core.nodes_filters.ZeroAdjacentsFilter;
+import core.nodes_decorators.CorrectMutualVisibility;
 import core.tasks.TaskCanny;
 import core.tasks.TaskGaussian;
 import core.tasks.TaskHighlight;
@@ -52,8 +52,8 @@ public class Runner implements Runnable {
 			thresholded_surface4, thresholded_neighbours;
 
 	// config NOT in aplicationContext.xml
-	private final int bottleneckSize = 3; // 3
-	private final int passableSize = 3; // 3
+	private final int bottleneckSize = 1; // 3
+	private final int passableSize = 1; // 3
 
 	private final int sizeDivKonq = 4;
 
@@ -281,97 +281,26 @@ public class Runner implements Runnable {
 					}
 				} // debug
 
-				if (visual) {
-					af.drawAdjacencyEdges();
-					Pause.pause(2000);
-				} else {
-				}
-
 				addNodeCount(nodes.size());
 				System.out.println("CURRENT Number of nodes: " + getNodeCount());
 
-				I_NodeFilter filter = new ZeroAdjacentsFilter();
-				List<Node> filtered = filter.procesChunk(nodes);
-				System.out.println("FILTERED OUT NODES (zero adjacents): " + (nodes.size() - filtered.size()));
-
+				//Do we have reference TO zero adjacency list nodes?"
 				
+				//TODO not a very good style...
+				CorrectMutualVisibility cmv = new CorrectMutualVisibility();
+				int newEdges = cmv.proces(nodes);
+				System.out.println("NEW EDGES (CorrectMutualVisibility): " + newEdges);
 				
-				
-				
-				System.out.println("Do we have reference TO zero adjacency list nodes?");
-
-				ImageResource test = new ImageResource(noded.getWidth(), noded.getHeight());
-				Set<Node> adj = null;
-				for (Node zeroAdj : filter.getFilteredOut()) {
-					for (Node noZeroAdjNode : filtered) {
-						adj = noZeroAdjNode.getAdjacentNodes();
-						if (adj.contains(zeroAdj)) {
-							
-							noZeroAdjNode.removeAdjacentNode(zeroAdj);
-							
-							
-							System.err.println("PROBLEM: " + noZeroAdjNode + "\n POINTS to zeroAdj:\n" + zeroAdj);
-							Pixel zero = noded.getPixel(zeroAdj.getX(), zeroAdj.getY());
-							Pixel pointingToZero = noded.getPixel(noZeroAdjNode.getX(), noZeroAdjNode.getY());
-
-							Pixel zeroTest = test.getPixel(zeroAdj.getX(), zeroAdj.getY());
-							Pixel pointingToZeroTest = test.getPixel(noZeroAdjNode.getX(), noZeroAdjNode.getY());
-
-							pointingToZero.setRed(255);
-							pointingToZero.setGreen(255);
-							pointingToZero.setBlue(255);
-
-							pointingToZeroTest.setRed(255);
-							pointingToZeroTest.setGreen(255);
-							pointingToZeroTest.setBlue(255);
-
-							zero.setRed(255);
-							zero.setBlue(255);
-							zero.setGreen(0);
-
-							zeroTest.setRed(255);
-							zeroTest.setBlue(255);
-							zeroTest.setGreen(0);
-						}
-					}
+				if (visual) {
+					af.drawAdjacencyEdges();
+					Pause.pause(2000);
 				}
-
-				noded.draw();
-				test.draw();
-
-				Set<Node> rightSet = null;
-				Set<Node> rightAdj = null;
 				
-				for (Node left : filtered){
-					rightSet  = left.getAdjacentNodes();
-					for(Node right : rightSet){
-						rightAdj = right.getAdjacentNodes();
-						if( ! rightAdj.contains(left)){
-							//System.out.println("----PROBLEM, left " + left );
-							Pixel problem = test.getPixel(left.getX(), left.getY());
-							problem.setGreen(255);
-						}
-					}
-				}
-				test.draw();
-
-					
-					
-					
-					
-					
-					
-					
-					
-				//if (true)
-					//throw new RuntimeException("HALT");
-
-				if (filtered != null)
-					persist(filtered);
+				if (nodes != null)
+					persist(nodes);
 				else
 					throw new RuntimeException("nodes = null");
-				//
-				//
+
 				// OR inject MOCKS
 				// NodeGraphMocks mocks = new NodeGraphMocks();
 				// List <Node> mockNodes = mocks.getMocks1();

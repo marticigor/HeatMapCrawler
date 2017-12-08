@@ -57,10 +57,6 @@ public class NodeEntity {
 		adjacents.add(adj);
 	}
 	
-	public void removeFromAdj(NodeEntity n){
-		adjacents.remove(n);
-	}
-	
 	public long getId() {
 		return id;
 	}
