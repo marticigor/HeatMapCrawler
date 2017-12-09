@@ -41,7 +41,7 @@ import ifaces.I_ColorScheme;
      }
 
      /**
-      *  
+      *  called by AdjacencyFinder
       */
      public RecursiveClusterFinder(ImageResource ir, List < Node > nodes, HashMap < Pixel, Node > mapPixToNode,
          int red, int green, int blue, int redAllBottleneck,
@@ -78,7 +78,7 @@ import ifaces.I_ColorScheme;
       */
      public void setCluster(Pixel p) {
 
-         if (allClusterAroundNode.size() > 15000) {
+         if (allClusterAroundNode.size() > 7000) {
              throw new RuntimeException("RecursiveClusterFinder, setCluster() size");
          }
 
@@ -101,7 +101,7 @@ import ifaces.I_ColorScheme;
                      Node mappedToThisPix = mapPixToNode.get(pixelStoper);
                      adjacents.add(mappedToThisPix);
 
-                     return;
+                     return;//my base condition
                  }
              }
              iteratorRound.resetCount();
