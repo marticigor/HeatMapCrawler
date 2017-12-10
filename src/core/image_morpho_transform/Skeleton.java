@@ -1,13 +1,9 @@
-package core.image_filters;
+package core.image_morpho_transform;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
+import core.image_filters.BaseFilter;
 import core.utils.RoundIteratorOfPixels;
 import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
@@ -27,10 +23,10 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 	}
 
 	private ImageResource in;
-
+	private int threshold = redScheme[0];
+	
 	@Override
 	public void doYourThing() {
-		int threshold = redScheme[0];
 		SkeletonUtils utils = new SkeletonUtils(threshold); // threshold
 		skeletonize(utils);
 	}
@@ -94,21 +90,19 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			} // while
 		}
 	}
+	
+	public int getThresholdForeBack(){return threshold;}
 
 	/**
 	 * 
 	 */
-	private class SkeletonUtils {
+	public class SkeletonUtils {
 
 		private final RoundIteratorOfPixels riop;
 		private int foregroundColorThreshold; // value of red channel
 		private byte fGround,bGround;
 		private boolean removable;
-		private boolean fullySurr;
 		private Pixel pivot = null;
-		Map<Pixel, Set<Pixel>> pixelToDisjointSet;
-		Set<Pixel> disjointSet;
-		List<Pixel> foregroundPixels;
 
 		private int backThresh = 100;// 0,2
 		private int foreThresh = 100;// 1,3
@@ -117,14 +111,14 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 		public SkeletonUtils(int foregroundColor) {
 			riop = new RoundIteratorOfPixels(in);
-			this.foregroundColorThreshold = foregroundColor;
+			foregroundColorThreshold = foregroundColor;
 		}
 
-		private boolean isForeground(Pixel p) {
+		boolean isForeground(Pixel p) {
 			return (p.getRed() >= foregroundColorThreshold);
 		}
 
-		private boolean isBackground(Pixel p) {
+		boolean isBackground(Pixel p) {
 			return (p.getRed() < foregroundColorThreshold);
 		}
 
@@ -141,35 +135,12 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 		/**
 		 * 
 		 * @param pivot
-		 * @return
-		 */
-		@SuppressWarnings("unused")
-		public boolean isFullySurrounded(Pixel pivot) {
-			checkMyPivot(pivot);
-			return fullySurr;
-		}
-
-		/**
-		 * 
-		 * @param pivot
 		 */
 		private void checkMyPivot(Pixel pivot) {
 			if (this.pivot != pivot) {
 				this.pivot = pivot;
-				compute();
+				computeRemovable();
 			}
-		}
-
-		/**
-		 * 
-		 * @param pIn
-		 * @param pivot
-		 * @return
-		 */
-		private boolean isWithinEnvelope(Pixel pIn, Pixel pivot) {
-			boolean x = (pIn.getX() > pivot.getX() - 2 && pIn.getX() < pivot.getX() + 2);
-			boolean y = (pIn.getY() > pivot.getY() - 2 && pIn.getY() < pivot.getY() + 2);
-			return x && y;
 		}
 
 		/**
@@ -209,74 +180,36 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			
 			return neighbors && vert && hori;
 		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		ImageResource getImageResource(){
+			return in;
+		}
 
+		LocalyDisconnectTest ldt = new LocalyDisconnectTest(this);
+		
 		/**
 		 * 
 		 */
-		private void compute() {
+		private void computeRemovable() {
+			removable = (false == ldt.locallyDisconnects(pivot));
+		}
 
-			riop.setPixelToCheckAround(pivot);
-
-			removable = false;
-			fullySurr = false;
-
-			pixelToDisjointSet = new HashMap<Pixel, Set<Pixel>>();
-			foregroundPixels = new LinkedList<Pixel>();
-
-			fGround = 0;
-			bGround = 0;
-			
-			for (Pixel aroundPivot : riop) {
-				if (isForeground(aroundPivot)) {
-					fGround ++;
-					// why is all this so complicated here? If I recall I have found some edge case when simpler 0 to 1
-					// count approach failed but cannot remember which case it was.
-					disjointSet = new HashSet<Pixel>();
-					disjointSet.add(aroundPivot);
-					pixelToDisjointSet.put(aroundPivot, disjointSet);
-					foregroundPixels.add(aroundPivot);// keep order
-				
-				}else if(isBackground(aroundPivot)){
-					bGround ++;
-				}
-			}
-
-			for (Pixel p : foregroundPixels) {
-
-				riop.setPixelToCheckAround(p);
-
-				Set<Pixel> pSet = pixelToDisjointSet.get(p);
-
-				for (Pixel pIn : riop) {
-					if (!isWithinEnvelope(pIn, pivot)) {
-						//NOT WITHIN ENVELOPE
-						continue;
-					}
-
-					if (isForeground(pIn) && pIn != pivot) {
-						// join disjoint sets (all pInSet members into pSet)
-						Set<Pixel> pInSet = pixelToDisjointSet.get(pIn);
-						for (Object iter : pInSet)
-							pSet.add((Pixel) iter);
-					}
-				}
-			}
-
-			int maxSize = 0;
-			// System.out.println("_______________________________________________________________");
-			// System.out.println("foregroundPixels size: " + foregroundPixels.size());
-			for (Pixel p : foregroundPixels) {
-				Set<Pixel> s = pixelToDisjointSet.get(p);
-				if (s.size() > maxSize)
-					maxSize = s.size();
-			}
-
-			removable = ((int) fGround == maxSize);
-
-			fullySurr = ((int) bGround == 0 && (int) fGround == 8);
-
-		}//compute
-
+		/**
+		 * 
+		 * @param pIn
+		 * @param pivot
+		 * @return
+		 */
+		boolean isWithinEnvelope(Pixel pIn, Pixel pivot) {
+			boolean x = (pIn.getX() > pivot.getX() - 2 && pIn.getX() < pivot.getX() + 2);
+			boolean y = (pIn.getY() > pivot.getY() - 2 && pIn.getY() < pivot.getY() + 2);
+			return x && y;
+		}
+		
 		/**
 		 * 
 		 */

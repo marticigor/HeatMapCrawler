@@ -247,7 +247,7 @@ public class Runner implements Runnable {
 
 				List<Node> nodes = nf.getNodes();
 
-				AdjacencyFinder af = new AdjacencyFinder(noded, nodes, visual, debug, bottleneckSize, passableSize);
+				AdjacencyFinder af = new AdjacencyFinder(borderInSharpenStage, noded, nodes, visual, debug, bottleneckSize, passableSize);
 				af.buildAdjacencyLists();
 
 				// test output gpx

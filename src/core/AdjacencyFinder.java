@@ -2,6 +2,8 @@ package core;
 
 import java.util.*;
 
+import core.image_morpho_transform.LocalyDisconnectTest;
+import core.image_morpho_transform.Skeleton;
 import core.utils.RoundIteratorOfPixels;
 import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
@@ -21,8 +23,9 @@ public class AdjacencyFinder implements I_ColorScheme {
     private HashMap < Pixel, Node > mapPixToNode;
 
     private int bottleneckSize, passableSize;
+    LocalyDisconnectTest ldt;
 
-    public AdjacencyFinder(ImageResource noded, List < Node > nodes, boolean visual, boolean debug, int bottleneckSize, int passableSize) {
+    public AdjacencyFinder(int borderInSharpenStage, ImageResource noded, List < Node > nodes, boolean visual, boolean debug, int bottleneckSize, int passableSize) {
 
         this.noded = noded;
         this.nodes = nodes;
@@ -43,6 +46,25 @@ public class AdjacencyFinder implements I_ColorScheme {
         if (this.visual) {
         	visualizeIR = new ImageResource(noded.getWidth(), noded.getHeight());
         }
+        
+ 	   Skeleton skeletonMock = new Skeleton(
+ 			   
+ 			   noded,
+ 			   borderInSharpenStage,
+ 			   true,
+ 			   false,
+ 			   -1,
+ 			   -1,
+ 			   -1,
+ 			   -1,
+ 			   borderInSharpenStage
+ 			   
+ 			   );
+ 	   
+ 	   //OuterClass.InnerClass innerObject = outerObject.new InnerClass();
+ 	   Skeleton.SkeletonUtils utils = skeletonMock.new SkeletonUtils(skeletonMock.getThresholdForeBack());
+ 	   ldt = new LocalyDisconnectTest(utils);
+        
     }
 
     /**
@@ -311,54 +333,7 @@ public class AdjacencyFinder implements I_ColorScheme {
      *
      */
     private boolean isBottleNeck(Node n) {
-
-        byte counter = 0;
-        boolean[] takenSeat = new boolean[8];
-        Pixel p;
-
-        p = noded.getPixel(n.getX(), n.getY());
-
-        riop.setPixelToCheckAround(p);
-
-        for (Pixel pRecycled: riop) {
-            if (isWhite(pRecycled) || isRed(pRecycled)) takenSeat[counter] = true;
-            else takenSeat[counter] = false;
-            counter++;
-        }
-        for (byte i = 0; i < 4; i++) {
-            if (!takenSeat[i] && !takenSeat[i + 4]) return true; //rotation of xox mask
-        }
-
-        //now rotation of permutation matrix
-        //xoo
-        //oox
-        //oxo
-        int firstPoint, secondPoint;
-        for (byte i = 0; i < 8; i++) {
-
-            firstPoint = i + 3;
-            if (firstPoint > 7) firstPoint -= 8;
-            secondPoint = i + 5;
-            if (secondPoint > 7) secondPoint -= 8;
-
-            if (!takenSeat[i] && !takenSeat[firstPoint] && !takenSeat[secondPoint]) return true;
-
-        }
-        return false;
-    }
-
-    private boolean isWhite(Pixel p) {
-        if (p.getRed() == whiteScheme[0] && p.getGreen() == whiteScheme[1] && p.getBlue() == whiteScheme[2]) return true;
-        return false;
-    }
-    private boolean isRed(Pixel p) {
-        if (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]) return true;
-        return false;
-    }
-    @SuppressWarnings("unused")
-    private boolean isYellow(Pixel p) {
-        if (p.getRed() == yellowScheme[0] && p.getGreen() == yellowScheme[1] && p.getBlue() == yellowScheme[2]) return true;
-        return false;
+    	return ldt.locallyDisconnects(noded.getPixel(n.getX(),n.getY()));
     }
 
     /**
