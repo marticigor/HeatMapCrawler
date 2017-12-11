@@ -41,17 +41,18 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 	 */
 	private void skeletonize(SkeletonUtils utils) {
 
-		if (debug) System.out.println("NEW TASK " + Thread.currentThread().toString());
+		if (debug)
+			System.out.println("NEW TASK " + Thread.currentThread().toString());
 
 		Pixel current;
 		List<Pixel> applicants = new ArrayList<Pixel>();
 		int removed = 0;
 
 		int count = 0;
-	
-		int[] fore = new int[] { 3 };//3 hilditch settings 1
-		int[] back = new int[] { 1 };//1 hilditch settings 1
-		int[] foreMax = new int[] { 7000 };//1000 hilditch settings 7
+
+		int[] fore = new int[] { 3 };// 3 hilditch settings 1
+		int[] back = new int[] { 1 };// 1 hilditch settings 1
+		int[] foreMax = new int[] { 7000 };// 1000 hilditch settings 7
 		int[] backMax = new int[] { 1000 };
 
 		for (int i = 0; i < 1; i++) { // stages ??
@@ -67,15 +68,14 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 						current = in.getPixel(absX, absY);
 
-						if (current.getRed() == redScheme[0] &&
-							utils.isApplicable(current)){
+						if (current.getRed() == redScheme[0] && utils.isApplicable(current)) {
 							applicants.add(current);
 						}
 					}
 				}
-				
+
 				for (Pixel p : applicants) {
-					if(utils.isRemovable(p)){
+					if (utils.isRemovable(p)) {
 						p.setRed(lightGreenScheme[0]);
 						p.setGreen(lightGreenScheme[1]);
 						p.setBlue(lightGreenScheme[2]);
@@ -102,7 +102,7 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 		private final RoundIteratorOfPixels riop;
 		private int foregroundColorThreshold; // value of red channel
-		private byte fGround,bGround;
+		private byte fGround, bGround;
 		private boolean removable;
 		private boolean fullySurr;
 		private Pixel pivot = null;
@@ -178,8 +178,8 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 		 * @return
 		 */
 		public boolean isApplicable(Pixel pivot) {
-			//Neighbors test
-			byte background = 0,foreground = 0;
+			// Neighbors test
+			byte background = 0, foreground = 0;
 			riop.setPixelToCheckAround(pivot);
 			for (Pixel aroundPivot : riop) {
 				if (isForeground(aroundPivot)) {
@@ -187,26 +187,30 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 				} else if (isBackground(aroundPivot))
 					background++;
 			}
-			
-			boolean neighbors = ((int) background > backThresh && (int) foreground > foreThresh && (int) background < backMax
-					&& (int) foreground < foreMax);
-			
-			//hilditch algo specific stuff
-			
-			//____  p2  ____
-			// p8  pivot p4 
-			//____  p6  ____
-			
-			//Pixel p2 = in.getPixel(pivot.getX(), pivot.getY() - 1);
-			//Pixel p8 = in.getPixel(pivot.getX() - 1, pivot.getY());
-			//Pixel p4 = in.getPixel(pivot.getX() + 1, pivot.getY());
-			//Pixel p6 = in.getPixel(pivot.getX(), pivot.getY() + 1);
-			
-			//ensures that 2-pixel wide vertical lines do not get completely eroded by the algorithm.
-			boolean vert = true; //isBackground(p2) || isBackground(p4) || isBackground(p8);
-			//ensures that 2-pixel wide horizontal lines do not get completely eroded by the algorithm.
-			boolean hori = true; //isBackground(p2) || isBackground(p4) || isBackground(p6);
-			
+
+			boolean neighbors = ((int) background > backThresh && (int) foreground > foreThresh
+					&& (int) background < backMax && (int) foreground < foreMax);
+
+			// hilditch algo specific stuff
+
+			// ____ p2 ____
+			// p8 pivot p4
+			// ____ p6 ____
+
+			// Pixel p2 = in.getPixel(pivot.getX(), pivot.getY() - 1);
+			// Pixel p8 = in.getPixel(pivot.getX() - 1, pivot.getY());
+			// Pixel p4 = in.getPixel(pivot.getX() + 1, pivot.getY());
+			// Pixel p6 = in.getPixel(pivot.getX(), pivot.getY() + 1);
+
+			// ensures that 2-pixel wide vertical lines do not get completely
+			// eroded by the algorithm.
+			boolean vert = true; // isBackground(p2) || isBackground(p4) ||
+									// isBackground(p8);
+			// ensures that 2-pixel wide horizontal lines do not get completely
+			// eroded by the algorithm.
+			boolean hori = true; // isBackground(p2) || isBackground(p4) ||
+									// isBackground(p6);
+
 			return neighbors && vert && hori;
 		}
 
@@ -225,19 +229,21 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 			fGround = 0;
 			bGround = 0;
-			
+
 			for (Pixel aroundPivot : riop) {
 				if (isForeground(aroundPivot)) {
-					fGround ++;
-					// why is all this so complicated here? If I recall I have found some edge case when simpler 0 to 1
-					// count approach failed but cannot remember which case it was.
+					fGround++;
+					// why is all this so complicated here? If I recall I have
+					// found some edge case when simpler 0 to 1
+					// count approach failed but cannot remember which case it
+					// was.
 					disjointSet = new HashSet<Pixel>();
 					disjointSet.add(aroundPivot);
 					pixelToDisjointSet.put(aroundPivot, disjointSet);
 					foregroundPixels.add(aroundPivot);// keep order
-				
-				}else if(isBackground(aroundPivot)){
-					bGround ++;
+
+				} else if (isBackground(aroundPivot)) {
+					bGround++;
 				}
 			}
 
@@ -249,7 +255,7 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 				for (Pixel pIn : riop) {
 					if (!isWithinEnvelope(pIn, pivot)) {
-						//NOT WITHIN ENVELOPE
+						// NOT WITHIN ENVELOPE
 						continue;
 					}
 
@@ -264,7 +270,8 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 			int maxSize = 0;
 			// System.out.println("_______________________________________________________________");
-			// System.out.println("foregroundPixels size: " + foregroundPixels.size());
+			// System.out.println("foregroundPixels size: " +
+			// foregroundPixels.size());
 			for (Pixel p : foregroundPixels) {
 				Set<Pixel> s = pixelToDisjointSet.get(p);
 				if (s.size() > maxSize)
@@ -275,7 +282,7 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 			fullySurr = ((int) bGround == 0 && (int) fGround == 8);
 
-		}//compute
+		}// compute
 
 		/**
 		 * 
@@ -304,5 +311,5 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			this.foreMax = foreMax;
 		}
 
-	}//SkeletonUtils
+	}// SkeletonUtils
 }

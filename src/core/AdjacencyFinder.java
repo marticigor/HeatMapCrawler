@@ -165,7 +165,7 @@ public class AdjacencyFinder implements I_ColorScheme {
                 noded.draw();
                 Pause.pause(500);
             }
-            System.out.println("actualy highlighting nodes");
+			System.out.println("actualy highlighting nodes");
 
             RoundIteratorOfPixels makeYellow = new RoundIteratorOfPixels();
             makeYellow.setImageResource(noded);

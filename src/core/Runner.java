@@ -285,23 +285,25 @@ public class Runner implements Runnable {
 				addNodeCount(nodes.size());
 				System.out.println("CURRENT Number of nodes: " + getNodeCount());
 
-				//Do we have reference TO zero adjacency list nodes?"
-				
-				//TODO not a very good style?
+				// Do we have reference TO zero adjacency list nodes?"
+
+				// TODO not a very good style?
 				CorrectMutualVisibility cmv = new CorrectMutualVisibility();
 				int newEdgesNmb = cmv.proces(nodes);
 				System.out.println("NEW EDGES (CorrectMutualVisibility): " + newEdgesNmb);
 				ZeroAdjacencyNodesFilter zanf = new ZeroAdjacencyNodesFilter();
-				List <Node> noZeroAdjacents = zanf.procesChunk(nodes);
+				List<Node> noZeroAdjacents = zanf.procesChunk(nodes);
 				System.out.println("ZERO ADJACENCY NODES FILTERED OUT: " + (nodes.size() - noZeroAdjacents.size()));
-				
+
 				if (visual) {
 					af.drawAdjacencyEdges(noZeroAdjacents);
 					Pause.pause(2000);
 				}
-				
-				if(noZeroAdjacents.size() == 0) System.err.println("ZERO NODES TO PERSIST!");
-				else persist(noZeroAdjacents);
+
+				if (noZeroAdjacents.size() == 0)
+					System.err.println("ZERO NODES TO PERSIST!");
+				else
+					persist(noZeroAdjacents);
 
 				// OR inject MOCKS
 				// NodeGraphMocks mocks = new NodeGraphMocks();

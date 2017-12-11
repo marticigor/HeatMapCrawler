@@ -18,7 +18,7 @@ public class ImageChunks {
     public ImageChunks(int x, int y, int size){
         this.x = x;
         this.y = y;
-        assert x > 100 && y > 100;
+		assert x > 100 && y > 100;
         assert size >= 2 && size <= 64;
         this.size = size;
         this.fromX = new int [size];
