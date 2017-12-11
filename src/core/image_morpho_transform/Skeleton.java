@@ -45,9 +45,9 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 		int count = 0;
 	
-		int[] fore = new int[] { 3 };//3 hilditch settings 1
+		int[] fore = new int[] { 1 };//3 hilditch settings 1
 		int[] back = new int[] { 1 };//1 hilditch settings 1
-		int[] foreMax = new int[] { 7000 };//1000 hilditch settings 7
+		int[] foreMax = new int[] { 7 };//1000 hilditch settings 7
 		int[] backMax = new int[] { 1000 };
 
 		for (int i = 0; i < 1; i++) { // stages ??
@@ -168,15 +168,15 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			// p8  pivot p4 
 			//____  p6  ____
 			
-			//Pixel p2 = in.getPixel(pivot.getX(), pivot.getY() - 1);
-			//Pixel p8 = in.getPixel(pivot.getX() - 1, pivot.getY());
-			//Pixel p4 = in.getPixel(pivot.getX() + 1, pivot.getY());
-			//Pixel p6 = in.getPixel(pivot.getX(), pivot.getY() + 1);
+			Pixel p2 = in.getPixel(pivot.getX(), pivot.getY() - 1);
+			Pixel p8 = in.getPixel(pivot.getX() - 1, pivot.getY());
+			Pixel p4 = in.getPixel(pivot.getX() + 1, pivot.getY());
+			Pixel p6 = in.getPixel(pivot.getX(), pivot.getY() + 1);
 			
 			//ensures that 2-pixel wide vertical lines do not get completely eroded by the algorithm.
-			boolean vert = true; //isBackground(p2) || isBackground(p4) || isBackground(p8);
+			boolean vert = isBackground(p2) || isBackground(p4) || isBackground(p8);
 			//ensures that 2-pixel wide horizontal lines do not get completely eroded by the algorithm.
-			boolean hori = true; //isBackground(p2) || isBackground(p4) || isBackground(p6);
+			boolean hori = isBackground(p2) || isBackground(p4) || isBackground(p6);
 			
 			return neighbors && vert && hori;
 		}

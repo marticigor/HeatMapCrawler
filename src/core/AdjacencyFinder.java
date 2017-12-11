@@ -21,10 +21,12 @@ public class AdjacencyFinder implements I_ColorScheme {
 	private boolean visual;
 	private boolean debug;
 
-	private HashMap<Pixel, Node> mapPixToNode;
+	private Map<Pixel, Node> mapPixToNode;
+	private Set<Node> adjacentNodes;
 
 	private int bottleneckSize, passableSize;
-	LocalyDisconnectTest ldt;
+	private LocalyDisconnectTest ldt;
+	private HashSet<Pixel> branch;
 
 	public AdjacencyFinder(int borderInSharpenStage, ImageResource noded,
 			List<Node> nodes, boolean visual, boolean debug,
@@ -41,11 +43,12 @@ public class AdjacencyFinder implements I_ColorScheme {
 		riop.setImageResource(noded);
 
 		mapPixToNode = new HashMap<Pixel, Node>();
+		adjacentNodes = new HashSet<Node>();
 
-		rcf = new RecursiveClusterFinder(noded, nodes, mapPixToNode,
-				redScheme[0], redScheme[1], redScheme[2], greenScheme[0],
-				greenScheme[1], greenScheme[2], this.debug); // visualize
-																// "debuger"
+		// public RecursiveClusterFinder(ImageResource ir, int red, int green,
+		// int blue, boolean visualize)
+		rcf = new RecursiveClusterFinder(noded, redScheme[0], redScheme[1],
+				redScheme[2], this.debug);
 
 		if (this.visual) {
 			visualizeIR = new ImageResource(noded.getWidth(), noded.getHeight());
@@ -66,7 +69,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 	}
 
 	/**
-	 * wrap method to build all lists into nodes
+	 * build all adjacency lists into nodes
 	 */
 	public void buildAdjacencyLists() {
 
@@ -93,11 +96,9 @@ public class AdjacencyFinder implements I_ColorScheme {
 			}
 		}
 
-		Collections.sort(nodes);
+		// Collections.sort(nodes);
 
 		{ // scope for adjacency lists builder
-
-			redCluster = new HashSet<Pixel>();
 
 			Pixel currP;
 			int currX, currY;
@@ -119,7 +120,6 @@ public class AdjacencyFinder implements I_ColorScheme {
 				noded.draw();
 			}
 
-			HashSet<Node> adjacents;
 			for (Node buildForThis : nodes) {
 
 				maskOrDemaskNode(buildForThis, false); // demask this node, not
@@ -129,25 +129,26 @@ public class AdjacencyFinder implements I_ColorScheme {
 					Pause.pause(500);
 				}
 
-				redCluster.clear();
+				redCluster = new HashSet<Pixel>();
 
 				currX = buildForThis.getX();
 				currY = buildForThis.getY();
 				currP = noded.getPixel(currX, currY);
 
 				riop.setPixelToCheckAround(currP);
-				
-				//>>>>>>>>>>>>>>>>>>>>>>>>> around Node buildForThis
+
+				// >>>>>>>>>>>>>>>>>>>>>>>>> around Node buildForThis
 				for (Pixel iterP : riop) {
 					putAllSurrReds(iterP);
 				}
-				
+
 				// now redCluster is build for Node buildForThis
-				adjacents = rcf.getAdjacents();
-				for (Node singleAdjacent : adjacents) {
+				adjacentNodes = getAdjacents(buildForThis);
+				for (Node singleAdjacent : adjacentNodes) {
 					buildForThis.addAdjacentNode(singleAdjacent);
 				}
-				rcf.resetToNewAdjacents();
+
+				adjacentNodes = new HashSet<Node>();
 
 				if (visual && debug) {
 					for (Pixel pDebug : redCluster) {
@@ -160,15 +161,16 @@ public class AdjacencyFinder implements I_ColorScheme {
 					visualizeIR.draw();
 					Pause.pause(500);
 					for (Pixel pDebug : redCluster) {
-						Pixel pIr = visualizeIR.getPixel(pDebug.getX(), pDebug.getY());
+						Pixel pIr = visualizeIR.getPixel(pDebug.getX(),
+								pDebug.getY());
 						pIr.setRed(redischScheme[0]);
 						pIr.setGreen(redischScheme[1]);
 						pIr.setBlue(redischScheme[2]);
 					}
 				} // visual && debug
-				
+
 				maskOrDemaskNode(buildForThis, true); // doMask
-				
+
 				if (visual & debug) {
 					noded.draw();
 					Pause.pause(500);
@@ -216,7 +218,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 			}
 			if (visual) {
 				noded.draw();
-				Pause.pause(500);
+				Pause.pause(5000);
 			}
 		} // scope for adjacency lists builder
 	}
@@ -228,8 +230,10 @@ public class AdjacencyFinder implements I_ColorScheme {
 
 		rcf.resetAllCluster();
 		rcf.buildPartialCluster(currP);
-
-		HashSet<Pixel> branch = rcf.getAllCluster();
+		branch = rcf.getAllCluster();
+		// if(branch.size() == 0 && (visual || debug)){
+		// System.err.print(" ZERO size branch.");
+		// }
 		copyBranchIntoRedCluster(branch);
 	}
 
@@ -241,13 +245,16 @@ public class AdjacencyFinder implements I_ColorScheme {
 			redCluster.add(p);
 		}
 	}
-
+	
+	/**
+	 * 
+	 */
 	private void mapBackgrounds() {
 
 		int maskSize = 0;
 		int toSizes = 0;
 		int counter = 0;
-		Pixel original, copy; // TODO do we really need a copy?
+		Pixel original, copy;
 
 		for (Node n : nodes) {
 			counter = 0;
@@ -317,13 +324,40 @@ public class AdjacencyFinder implements I_ColorScheme {
 	}
 
 	/**
+     *  
+     */
+	private Set<Node> getAdjacents(Node buildForThis) {
+		Set<Node> adjacentNodes = new HashSet<Node>();
+		Node adj = null;
+		for (Pixel p : redCluster) {
+			riop.setPixelToCheckAround(p);
+			for (Pixel pRound : riop) {
+				if (isNode(pRound)) {
+					adj = mapPixToNode.get(pRound);
+					if (adj != buildForThis)
+						adjacentNodes.add(adj);
+				}
+			}
+		}
+		return adjacentNodes;
+	}
+
+	/**
+	 * 
+	 * @param p
+	 * @return
+	 */
+	private boolean isNode(Pixel p) {
+		return (p.getRed() == greenScheme[0] && p.getGreen() == greenScheme[1] &&
+				p.getBlue() == greenScheme[2]);
+	}
+
+	/**
      *
      */
 	private void maskAllNodes(boolean firstRun) {
-
 		if (firstRun)
 			mapBackgrounds();
-
 		for (Node node : nodes) {
 			maskOrDemaskNode(node, true);
 		}

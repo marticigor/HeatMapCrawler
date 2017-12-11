@@ -296,12 +296,12 @@ public class Runner implements Runnable {
 				System.out.println("ZERO ADJACENCY NODES FILTERED OUT: " + (nodes.size() - noZeroAdjacents.size()));
 				
 				if (visual) {
-					af.drawAdjacencyEdges(noZeroAdjacents);
+					af.drawAdjacencyEdges(nodes);//noZeroAdjacents
 					Pause.pause(2000);
 				}
 				
-				if(noZeroAdjacents.size() == 0) System.err.println("ZERO NODES TO PERSIST!");
-				else persist(noZeroAdjacents);
+				if(nodes.size() == 0) System.err.println("ZERO NODES TO PERSIST!");//noZeroAdjacents
+				else persist(nodes);//noZeroAdjacents
 
 				// OR inject MOCKS
 				// NodeGraphMocks mocks = new NodeGraphMocks();

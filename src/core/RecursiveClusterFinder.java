@@ -12,17 +12,13 @@ import ifaces.I_ColorScheme;
      private RoundIteratorOfPixels iteratorRound;
      private ImageResource ir;
      private int red, green, blue;
-     private int redBottleneck, greenBottleneck, blueBottleneck;
      private boolean redClusterSearch = false;
+     
      private boolean visualize;
-     //private List < Node > nodes;
      private Visualizer vis;
 
-     private HashMap < Pixel, Node > mapPixToNode;
-     private HashSet < Node > adjacents;
-
      /**
-      *
+      * called by NodeFinder
       */
      public RecursiveClusterFinder(ImageResource ir, int red, int green, int blue) {
 
@@ -43,18 +39,12 @@ import ifaces.I_ColorScheme;
      /**
       *  called by AdjacencyFinder
       */
-     public RecursiveClusterFinder(ImageResource ir, List < Node > nodes, HashMap < Pixel, Node > mapPixToNode,
-         int red, int green, int blue, int redBottleneck,
-         int greenBottleneck, int blueBottleneck, boolean visualize) {
+     public RecursiveClusterFinder(ImageResource ir, int red, int green, int blue, boolean visualize) {
 
          this.ir = ir;
          this.red = red;
          this.green = green;
          this.blue = blue;
-
-         this.redBottleneck = redBottleneck;
-         this.greenBottleneck = greenBottleneck;
-         this.blueBottleneck = blueBottleneck;
 
          this.visualize = visualize;
 
@@ -65,20 +55,18 @@ import ifaces.I_ColorScheme;
          iteratorRound = new RoundIteratorOfPixels();
          iteratorRound.setImageResource(ir);
 
-         //this.nodes = nodes;
-         this.mapPixToNode = mapPixToNode;
-
          allClusterAroundNode = new HashSet < Pixel > ();
-         adjacents = new HashSet < Node > ();
-
      }
 
+     HashSet < Pixel > neighbours;
+     
      /**
-      * loads recursively set of (colorScheme) pixels into neighbours and then allClusterAroundNode 
+      * loads recursively set of (colorScheme) pixels into neighbors and then allClusterAroundNode
+      * maybe called from outside a few times (thus building allClusterAroundNode gradually)
       */
      public void buildPartialCluster(Pixel p) {
 
-         if (allClusterAroundNode.size() > 7000) {
+         if (allClusterAroundNode.size() > 4000) {
              throw new RuntimeException("RecursiveClusterFinder, setCluster() size");
          }
 
@@ -92,35 +80,18 @@ import ifaces.I_ColorScheme;
 
          iteratorRound.setPixelToCheckAround(p);
 
-         if (redClusterSearch) {
-             for (Pixel pixelStoper: iteratorRound) {
-                 if (pixelStoper.getRed() == redBottleneck &&
-                     pixelStoper.getGreen() == greenBottleneck &&
-                     pixelStoper.getBlue() == blueBottleneck) {
+         neighbours = new HashSet < Pixel > ();
 
-                     Node mappedToThisPix = mapPixToNode.get(pixelStoper);
-                     adjacents.add(mappedToThisPix);
-
-                     return;//my base condition
-                 }
-             }
-             iteratorRound.resetCount();
-         }
-
-         HashSet < Pixel > neighbours = new HashSet < Pixel > ();
-
-         for (Pixel pRecycled: iteratorRound) {
-             if (pRecycled.getRed() == red && pRecycled.getGreen() == green && pRecycled.getBlue() == blue) {
-                 neighbours.add(pRecycled); //color scheme check
+         for (Pixel px : iteratorRound) {
+             if (px.getRed() == red && px.getGreen() == green && px.getBlue() == blue) {
+                 neighbours.add(px);
              }
          }
 
          for (Pixel pCopied: neighbours) {
              if (allClusterAroundNode.contains(pCopied)) continue; //to skip recursion in many cases
-             allClusterAroundNode.add(pCopied);
              buildPartialCluster(pCopied); //now immerse into recursion
          }
-
      }
 
      /**
@@ -134,21 +105,7 @@ import ifaces.I_ColorScheme;
       *  
       */
      public void resetAllCluster() {
-         allClusterAroundNode.clear();
-     }
-
-     /**
-      *  
-      */
-     public void resetToNewAdjacents() {
-         adjacents = new HashSet < Node > ();
-     }
-
-     /**
-      *  
-      */
-     public HashSet < Node > getAdjacents() {
-         return adjacents;
+         allClusterAroundNode = new HashSet <Pixel>();
      }
 
      /**
@@ -160,11 +117,9 @@ import ifaces.I_ColorScheme;
          RoundIteratorOfPixels riop;
 
          Visualizer() {
-
              visIr = new ImageResource(ir.getWidth(), ir.getHeight());
              riop = new RoundIteratorOfPixels();
              riop.setImageResource(visIr);
-
          }
 
          /**
@@ -190,9 +145,7 @@ import ifaces.I_ColorScheme;
                      pHighlight.setBlue(whiteScheme[2]);
 
                  }
-
              }
-             //visIr.draw();
          }
 
          /**
@@ -207,9 +160,7 @@ import ifaces.I_ColorScheme;
                  pVis.setRed(blueischScheme[0]);
                  pVis.setGreen(blueischScheme[1]);
                  pVis.setBlue(blueischScheme[2]);
-
              }
-             //visIr.draw();
          }
      }
  }

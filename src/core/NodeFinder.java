@@ -226,16 +226,10 @@ public class NodeFinder implements I_ColorScheme {
     	
         if(visual) {
         	noded.draw();
-        	//thresholded.draw();
         	Pause.pause(9000);
-            //SALIENT SALIENT
-        	//System.out.println("DRAWING SALIENT AREA");
-            //salientArea.draw();
         }
         
-        //
         rcf = new RecursiveClusterFinder(noded, whiteScheme[0], whiteScheme[1], whiteScheme[2]);
-        //
 
         int x, y;
         double lon, lat;
@@ -257,14 +251,14 @@ public class NodeFinder implements I_ColorScheme {
 
         for (Pixel pOfNoded: noded.pixels()) { //1
 
-            if (isSetToClusterAround(pOfNoded)) { //2 white check only
+            if (isSetToBeClustered(pOfNoded)) { //2 is the pixel white?
 
-                allClusterAroundNode.clear();
+                allClusterAroundNode = new HashSet<Pixel>();
                 rcf.resetAllCluster();
 
-                //now define recursively a node object as a small bitmap
+                //now define recursively (in clusterFinder) a future node object as a small bitmap
 
-                setClustered(pOfNoded); //as this emerges from recursion we have filled allClusterAroundNode
+                buildBranch(pOfNoded); //as this emerges from recursion (in clusterFinder) allClusterAroundNode is build
 
                 if (debug && nmbOfNodes % 20 == 0) printAllClustered(allClusterAroundNode); //size of print REDUCED
 
@@ -278,7 +272,7 @@ public class NodeFinder implements I_ColorScheme {
 
                 ArrayList < Node > maximusNodes = new ArrayList < Node > ();
 
-                for (Pixel pChecked: allClusterAroundNode) { //find int max
+                for (Pixel pChecked: allClusterAroundNode) { //find max
 
                     neighboursToFindMax = getNumberOfSurrWhites(pChecked, noded);
 
@@ -365,7 +359,8 @@ public class NodeFinder implements I_ColorScheme {
 
                     nmbOfNodes++;
                 } //out
-
+                
+                //we are done with white nodes in allClusterAroundNode
                 for (Pixel toRed: allClusterAroundNode) {
                     setRed(toRed);
                 }
@@ -381,20 +376,20 @@ public class NodeFinder implements I_ColorScheme {
     }
     
     /**
-     * loads recursively set of white pixels into neighbours and then allClusterAroundNode
+     * Loads recursively set of white pixels into allClusterAroundNode.
+     * No locally disconnecting nodes (and their Pixels) yet, a branch is always full cluster.
      */
-    private void setClustered(Pixel p) {
+    private void buildBranch(Pixel p) {
 
         rcf.buildPartialCluster(p);
         this.allClusterAroundNode = rcf.getAllCluster();
-
+        assert(allClusterAroundNode.size() != 0);
     }
 
     /**
      * checks if p is set to white scheme
      */
-    private boolean isSetToClusterAround(Pixel p) {
-
+    private boolean isSetToBeClustered(Pixel p) {
         if (p.getRed() == whiteScheme[0] && p.getGreen() == whiteScheme[1] && p.getBlue() == whiteScheme[2]) return true;
         return false;
     }
@@ -410,16 +405,13 @@ public class NodeFinder implements I_ColorScheme {
         iteratorRound.setPixelToCheckAround(p);
 
         for (Pixel myPx: iteratorRound) {
-
             if (myPx.getRed() == whiteScheme[0] && myPx.getGreen() == whiteScheme[1] && myPx.getBlue() == whiteScheme[2]) neighbours++;
-
         }
-
         return neighbours;
     }
     
     /**
-     * prints simplistic visualisation of clusters
+     * prints simplistic visualization of clusters
      */
     private void printAllClustered(HashSet < Pixel > cluster) {
 
@@ -433,10 +425,8 @@ public class NodeFinder implements I_ColorScheme {
         int minY = Integer.MAX_VALUE;
 
         for (Pixel p: cluster) {
-
             if (p.getX() < minX) minX = p.getX();
             if (p.getY() < minY) minY = p.getY();
-
         }
 
         int xToVis = 0;
