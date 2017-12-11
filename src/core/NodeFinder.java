@@ -385,7 +385,7 @@ public class NodeFinder implements I_ColorScheme {
      */
     private void setClustered(Pixel p) {
 
-        rcf.setCluster(p);
+        rcf.buildPartialCluster(p);
         this.allClusterAroundNode = rcf.getAllCluster();
 
     }

@@ -12,7 +12,7 @@ import ifaces.I_ColorScheme;
      private RoundIteratorOfPixels iteratorRound;
      private ImageResource ir;
      private int red, green, blue;
-     private int redAllBottleneck, greenAllBottleneck, blueAllBottleneck;
+     private int redBottleneck, greenBottleneck, blueBottleneck;
      private boolean redClusterSearch = false;
      private boolean visualize;
      //private List < Node > nodes;
@@ -44,17 +44,17 @@ import ifaces.I_ColorScheme;
       *  called by AdjacencyFinder
       */
      public RecursiveClusterFinder(ImageResource ir, List < Node > nodes, HashMap < Pixel, Node > mapPixToNode,
-         int red, int green, int blue, int redAllBottleneck,
-         int greenAllBottleneck, int blueAllBottleneck, boolean visualize) {
+         int red, int green, int blue, int redBottleneck,
+         int greenBottleneck, int blueBottleneck, boolean visualize) {
 
          this.ir = ir;
          this.red = red;
          this.green = green;
          this.blue = blue;
 
-         this.redAllBottleneck = redAllBottleneck;
-         this.greenAllBottleneck = greenAllBottleneck;
-         this.blueAllBottleneck = blueAllBottleneck;
+         this.redBottleneck = redBottleneck;
+         this.greenBottleneck = greenBottleneck;
+         this.blueBottleneck = blueBottleneck;
 
          this.visualize = visualize;
 
@@ -76,7 +76,7 @@ import ifaces.I_ColorScheme;
      /**
       * loads recursively set of (colorScheme) pixels into neighbours and then allClusterAroundNode 
       */
-     public void setCluster(Pixel p) {
+     public void buildPartialCluster(Pixel p) {
 
          if (allClusterAroundNode.size() > 7000) {
              throw new RuntimeException("RecursiveClusterFinder, setCluster() size");
@@ -94,9 +94,9 @@ import ifaces.I_ColorScheme;
 
          if (redClusterSearch) {
              for (Pixel pixelStoper: iteratorRound) {
-                 if (pixelStoper.getRed() == redAllBottleneck && //check for allBottlenecks
-                     pixelStoper.getGreen() == greenAllBottleneck &&
-                     pixelStoper.getBlue() == blueAllBottleneck) {
+                 if (pixelStoper.getRed() == redBottleneck &&
+                     pixelStoper.getGreen() == greenBottleneck &&
+                     pixelStoper.getBlue() == blueBottleneck) {
 
                      Node mappedToThisPix = mapPixToNode.get(pixelStoper);
                      adjacents.add(mappedToThisPix);
@@ -118,7 +118,7 @@ import ifaces.I_ColorScheme;
          for (Pixel pCopied: neighbours) {
              if (allClusterAroundNode.contains(pCopied)) continue; //to skip recursion in many cases
              allClusterAroundNode.add(pCopied);
-             setCluster(pCopied); //now immerse into recursion
+             buildPartialCluster(pCopied); //now immerse into recursion
          }
 
      }
