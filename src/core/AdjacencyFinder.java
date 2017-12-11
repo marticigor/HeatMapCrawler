@@ -96,8 +96,6 @@ public class AdjacencyFinder implements I_ColorScheme {
 			}
 		}
 
-		// Collections.sort(nodes);
-
 		{ // scope for adjacency lists builder
 
 			Pixel currP;
@@ -245,7 +243,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 			redCluster.add(p);
 		}
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -348,8 +346,8 @@ public class AdjacencyFinder implements I_ColorScheme {
 	 * @return
 	 */
 	private boolean isNode(Pixel p) {
-		return (p.getRed() == greenScheme[0] && p.getGreen() == greenScheme[1] &&
-				p.getBlue() == greenScheme[2]);
+		return (p.getRed() == greenScheme[0] && p.getGreen() == greenScheme[1] && p
+				.getBlue() == greenScheme[2]);
 	}
 
 	/**
