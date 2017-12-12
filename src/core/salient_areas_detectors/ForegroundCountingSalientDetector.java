@@ -10,15 +10,11 @@ import lib_duke.Pixel;
 import ifaces.I_ColorScheme;
 import ifaces.I_SalientDetector;
 
-public class ForegroundCountingSalientDetector implements I_SalientDetector,
-		I_ColorScheme {
+public class ForegroundCountingSalientDetector implements I_SalientDetector, I_ColorScheme {
 
-	public ForegroundCountingSalientDetector(ImageResource workBench,
-			ImageResource noded, ImageResource testAgainst,
-			int borderInSharpenStage, int lookAheadAndBack,
-			int surfaceConstant1_1, int surfaceConstant1_2,
-			int surfaceConstant2_1, int surfaceConstant2_2,
-			int neighbourghsConstant, boolean visual, boolean debug) {
+	public ForegroundCountingSalientDetector(ImageResource workBench, ImageResource noded, ImageResource testAgainst,
+			int borderInSharpenStage, int lookAheadAndBack, int surfaceConstant1_1, int surfaceConstant1_2,
+			int surfaceConstant2_1, int surfaceConstant2_2, int neighbourghsConstant, boolean visual, boolean debug) {
 
 		this.workBench = workBench;
 		this.noded = noded;
@@ -28,36 +24,18 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector,
 		this.height = workBench.getHeight();
 		this.visual = visual;
 		this.debug = debug;
-		
+
 		/*
-		int surfaceConstant1_1,
-		int surfaceConstant1_2,
-		int surfaceConstant2_1,
-		int surfaceConstant2_2,
-		int neighbourghsConstant,
-		int borderInSharpenStage,
-		int lookAheadAndBack,
-		int width,
-		int height,
-		ImageResource workBench,
-		ImageResource projectWorkInto,
-		ImageResource testAgainst
-		*/
-		
-		this.utils = new UtilMethods(
-				surfaceConstant1_1,
-				surfaceConstant1_2,
-				surfaceConstant2_1,
-				surfaceConstant2_2,
-				neighbourghsConstant,
-				borderInSharpenStage,
-				lookAheadAndBack,
-				width,
-				height,
-				workBench,
-				noded,
-				testAgainst
-				);
+		 * int surfaceConstant1_1, int surfaceConstant1_2, int
+		 * surfaceConstant2_1, int surfaceConstant2_2, int neighbourghsConstant,
+		 * int borderInSharpenStage, int lookAheadAndBack, int width, int
+		 * height, ImageResource workBench, ImageResource projectWorkInto,
+		 * ImageResource testAgainst
+		 */
+
+		this.utils = new UtilMethods(surfaceConstant1_1, surfaceConstant1_2, surfaceConstant2_1, surfaceConstant2_2,
+				neighbourghsConstant, borderInSharpenStage, lookAheadAndBack, width, height, workBench, noded,
+				testAgainst);
 	}
 
 	private ImageResource workBench, noded;
@@ -65,7 +43,7 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector,
 	private int width, height;
 	private boolean visual, debug;
 	private UtilMethods utils;
-	
+
 	@Override
 	public void detectSalientAreas(boolean testAgainstAnotherImageResource) {
 
@@ -114,8 +92,8 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector,
 		for (int x = lookAheadAndBack; x < width - lookAheadAndBack; x++) {
 			for (int y = lookAheadAndBack; y < height - lookAheadAndBack; y++) {
 
-				if (testAgainstAnotherImageResource
-						&& !utils.isSalientPixInAnother(x, y)) continue;
+				if (testAgainstAnotherImageResource && !utils.isSalientPixInAnother(x, y))
+					continue;
 
 				p = workBench.getPixel(x, y);
 
@@ -139,10 +117,10 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector,
 						}
 					}
 
-					if (utils.evaluateAgainstConstants(surfaceArea,
-							routableNeighbours)) {
+					if (utils.evaluateAgainstConstants(surfaceArea, routableNeighbours)) {
 
-						// do not do anything based on heuristics affected by borders
+						// do not do anything based on heuristics affected by
+						// borders
 
 						if (utils.isOkBorders(x, y)) {
 							toBeWhite.add(noded.getPixel(x, y));
@@ -166,7 +144,6 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector,
 		}
 
 		if (visual || debug)
-			System.out.println("Surface min max " + minSurface + " "
-					+ maxSurface);
+			System.out.println("Surface min max " + minSurface + " " + maxSurface);
 	}
 }

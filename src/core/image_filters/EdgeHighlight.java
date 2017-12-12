@@ -10,60 +10,67 @@ import lib_duke.Pixel;
 //INVARIANT: create with HashMap from Canny Detect
 public class EdgeHighlight extends BaseFilter implements I_ColorScheme {
 
-    private final Map < Pixel, AugmentedPixel > toAugmented;
-    private ImageResource in,out;
+	private final Map<Pixel, AugmentedPixel> toAugmented;
+	private ImageResource in, out;
 
-    public EdgeHighlight(ImageResource in, ImageResource out,int border,
-    		Map < Pixel, AugmentedPixel > toAugmented, boolean w, boolean d, int...intArgs) {
-    	super(in.getWidth(), in.getHeight(), border, w, d, 5, intArgs);//hardcoded mock border
-        this.toAugmented = toAugmented;
-        this.in = in;
-        this.out = out;
-    }
+	public EdgeHighlight(ImageResource in, ImageResource out, int border, Map<Pixel, AugmentedPixel> toAugmented,
+			boolean w, boolean d, int... intArgs) {
+		super(in.getWidth(), in.getHeight(), border, w, d, 5, intArgs);// hardcoded
+																		// mock
+																		// border
+		this.toAugmented = toAugmented;
+		this.in = in;
+		this.out = out;
+	}
 
-    public void doYourThing() {
+	public void doYourThing() {
 
-        Pixel inP, outP;
-        Pixel inPlus, inMinus;
-        int xPlus, xMinus, yPlus, yMinus;
-        double gradCurr, gradPlus, gradMinus;
-        AugmentedPixel augCurr, augPlus, augMinus;
+		Pixel inP, outP;
+		Pixel inPlus, inMinus;
+		int xPlus, xMinus, yPlus, yMinus;
+		double gradCurr, gradPlus, gradMinus;
+		AugmentedPixel augCurr, augPlus, augMinus;
 
-        for (int absX = widthFrom; absX < widthTo; absX++) {
-            for (int absY = heightFrom; absY < heightTo; absY++) {
+		for (int absX = widthFrom; absX < widthTo; absX++) {
+			for (int absY = heightFrom; absY < heightTo; absY++) {
 
-                inP = in .getPixel(absX, absY);
+				inP = in.getPixel(absX, absY);
 
-                if (!toAugmented.keySet().contains(inP)) throw new RuntimeException("HashMap mess 1");
+				if (!toAugmented.keySet().contains(inP))
+					throw new RuntimeException("HashMap mess 1");
 
-                augCurr = toAugmented.get(inP);
-                gradCurr = augCurr.getGradientComputed();
-                xPlus = augCurr.getDirEnum().getxMove();
-                yPlus = augCurr.getDirEnum().getyMove();
-                xMinus = -xPlus;
-                yMinus = -yPlus;
-                inPlus = in .getPixel(inP.getX() + xPlus, inP.getY() + yPlus);
-                inMinus = in .getPixel(inP.getX() + xMinus, inP.getY() + yMinus);
-                if (toAugmented.keySet().contains(inPlus)) augPlus = toAugmented.get(inPlus);
-                else continue;
+				augCurr = toAugmented.get(inP);
+				gradCurr = augCurr.getGradientComputed();
+				xPlus = augCurr.getDirEnum().getxMove();
+				yPlus = augCurr.getDirEnum().getyMove();
+				xMinus = -xPlus;
+				yMinus = -yPlus;
+				inPlus = in.getPixel(inP.getX() + xPlus, inP.getY() + yPlus);
+				inMinus = in.getPixel(inP.getX() + xMinus, inP.getY() + yMinus);
+				if (toAugmented.keySet().contains(inPlus))
+					augPlus = toAugmented.get(inPlus);
+				else
+					continue;
 
-                gradPlus = augPlus.getGradientComputed();
-                if (toAugmented.keySet().contains(inMinus)) augMinus = toAugmented.get(inMinus);
-                else continue;
+				gradPlus = augPlus.getGradientComputed();
+				if (toAugmented.keySet().contains(inMinus))
+					augMinus = toAugmented.get(inMinus);
+				else
+					continue;
 
-                gradMinus = augMinus.getGradientComputed();
-                outP = out.getPixel(absX, absY);
-                if (gradCurr > gradPlus && gradCurr > gradMinus) {
-                    outP.setRed(redScheme[0]);
-                    outP.setGreen(redScheme[1]);
-                    outP.setBlue(redScheme[2]);
-                } else {
-                    outP.setRed(0);
-                    outP.setGreen(25);
-                    outP.setBlue(0);
-                }
+				gradMinus = augMinus.getGradientComputed();
+				outP = out.getPixel(absX, absY);
+				if (gradCurr > gradPlus && gradCurr > gradMinus) {
+					outP.setRed(redScheme[0]);
+					outP.setGreen(redScheme[1]);
+					outP.setBlue(redScheme[2]);
+				} else {
+					outP.setRed(0);
+					outP.setGreen(25);
+					outP.setBlue(0);
+				}
 
-            }
-        }
-    }
+			}
+		}
+	}
 }

@@ -13,7 +13,7 @@ import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import core.nodes_decorators.CorrectMutualVisibility;
+import core.nodes_decorators.TestMutualVisibility;
 import core.nodes_filters.ZeroAdjacencyNodesFilter;
 import core.tasks.TaskCanny;
 import core.tasks.TaskGaussian;
@@ -247,7 +247,8 @@ public class Runner implements Runnable {
 
 				List<Node> nodes = nf.getNodes();
 
-				AdjacencyFinder af = new AdjacencyFinder(borderInSharpenStage, noded, nodes, visual, debug, bottleneckSize, passableSize);
+				AdjacencyFinder af = new AdjacencyFinder(borderInSharpenStage, noded, nodes, visual, debug,
+						bottleneckSize, passableSize);
 				af.buildAdjacencyLists();
 
 				// test output gpx
@@ -285,23 +286,27 @@ public class Runner implements Runnable {
 				addNodeCount(nodes.size());
 				System.out.println("CURRENT Number of nodes: " + getNodeCount());
 
-				//Do we have reference TO zero adjacency list nodes?"
-				
-				//TODO not a very good style?
-				CorrectMutualVisibility cmv = new CorrectMutualVisibility();
-				int newEdgesNmb = cmv.proces(nodes);
-				System.out.println("NEW EDGES (CorrectMutualVisibility): " + newEdgesNmb);
+				// Do we have reference TO zero adjacency list nodes?"
+
+				// TODO not a very good style?
+				TestMutualVisibility tmv = new TestMutualVisibility();
+				int newEdgesNmb = tmv.proces(nodes);
+				System.out.println("NEW EDGES (TestMutualVisibility): " + newEdgesNmb);
+				if (newEdgesNmb != 0)
+					throw new RuntimeException("TestMutualVisibility");
 				ZeroAdjacencyNodesFilter zanf = new ZeroAdjacencyNodesFilter();
-				List <Node> noZeroAdjacents = zanf.procesChunk(nodes);
+				List<Node> noZeroAdjacents = zanf.procesChunk(nodes);
 				System.out.println("ZERO ADJACENCY NODES FILTERED OUT: " + (nodes.size() - noZeroAdjacents.size()));
-				
+
 				if (visual) {
-					af.drawAdjacencyEdges(nodes);//noZeroAdjacents
+					af.drawAdjacencyEdges(nodes);// noZeroAdjacents
 					Pause.pause(2000);
 				}
-				
-				if(nodes.size() == 0) System.err.println("ZERO NODES TO PERSIST!");//noZeroAdjacents
-				else persist(nodes);//noZeroAdjacents
+
+				if (nodes.size() == 0)
+					System.err.println("ZERO NODES TO PERSIST!");// noZeroAdjacents
+				else
+					persist(nodes);// noZeroAdjacents
 
 				// OR inject MOCKS
 				// NodeGraphMocks mocks = new NodeGraphMocks();

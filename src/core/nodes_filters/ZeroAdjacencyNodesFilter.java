@@ -16,7 +16,9 @@ public class ZeroAdjacencyNodesFilter implements I_NodeFilter {
 	@Override
 	public List<Node> procesChunk(List<Node> nodes) {
 		List<Node> noZeroAdjacent = new LinkedList<Node>();
-		for (Node n : nodes) if (passes(n)) noZeroAdjacent.add(n);
+		for (Node n : nodes)
+			if (passes(n))
+				noZeroAdjacent.add(n);
 		return noZeroAdjacent;
 	}
 

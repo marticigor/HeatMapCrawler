@@ -4,30 +4,29 @@ import java.util.*;
 
 public class OutputTester {
 
+	public void test() {
 
- public void test() {
+		ArrayList<Trackpoint> track = new ArrayList<Trackpoint>();
 
-  ArrayList < Trackpoint > track = new ArrayList < Trackpoint > ();
+		for (int i = 1; i < 100; i++) {
 
-  for (int i = 1; i < 100; i++) {
+			Trackpoint t = new Trackpoint((double) i, (double) i);
+			track.add(t);
 
-   Trackpoint t = new Trackpoint((double)i, (double)i);
-   track.add(t);
+		}
 
-  }
-  
-  System.out.println("track.size " + track.size());
-  OutputXml out = new OutputXml(track, "filename.gpx");
+		System.out.println("track.size " + track.size());
+		OutputXml out = new OutputXml(track, "filename.gpx");
 
-  try {
+		try {
 
-   out.composeOutputDoc();
-   out.writeOutputFile();
+			out.composeOutputDoc();
+			out.writeOutputFile();
 
-  } catch (Exception e) {
+		} catch (Exception e) {
 
-   e.printStackTrace();
+			e.printStackTrace();
 
-  }
- }
+		}
+	}
 }

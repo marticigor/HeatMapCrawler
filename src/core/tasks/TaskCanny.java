@@ -2,7 +2,7 @@ package core.tasks;
 
 import core.ImagePreprocesor;
 
-public class TaskCanny extends BaseTask{
+public class TaskCanny extends BaseTask {
 
 	/**
 	 * 
@@ -15,12 +15,13 @@ public class TaskCanny extends BaseTask{
 
 	@Override
 	protected void compute() {
-        //System.out.println("COMPUTE CANNY ON THREAD " + Thread.currentThread() + this.toString());
+		// System.out.println("COMPUTE CANNY ON THREAD " +
+		// Thread.currentThread() + this.toString());
 		ip.procesCanny(xFromIncl, xToExcl, yFromIncl, yToExcl, false);
 	}
-	
+
 	@Override
-    public String toString(){
-    	return super.toString() + this.hashCode() + this.getClass().getName();
-    }
+	public String toString() {
+		return super.toString() + this.hashCode() + this.getClass().getName();
+	}
 }

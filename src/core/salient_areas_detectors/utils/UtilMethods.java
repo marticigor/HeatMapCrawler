@@ -6,21 +6,10 @@ import lib_duke.Pixel;
 
 public class UtilMethods implements I_ColorScheme {
 
-    public UtilMethods(
-    		int surfaceConstant1_1,
-    		int surfaceConstant1_2,
-    		int surfaceConstant2_1,
-    		int surfaceConstant2_2,
-			int neighbourghsConstant,
-			int borderInSharpenStage,
-			int lookAheadAndBack,
-			int width,
-			int height,
-			ImageResource workBench,
-			ImageResource projectWorkInto,
-			ImageResource testAgainst
-			) {
-		//super();
+	public UtilMethods(int surfaceConstant1_1, int surfaceConstant1_2, int surfaceConstant2_1, int surfaceConstant2_2,
+			int neighbourghsConstant, int borderInSharpenStage, int lookAheadAndBack, int width, int height,
+			ImageResource workBench, ImageResource projectWorkInto, ImageResource testAgainst) {
+		// super();
 		this.surfaceConstant1_1 = surfaceConstant1_1;
 		this.surfaceConstant1_2 = surfaceConstant1_2;
 		this.surfaceConstant2_1 = surfaceConstant2_1;
@@ -34,12 +23,12 @@ public class UtilMethods implements I_ColorScheme {
 	}
 
 	private int surfaceConstant1_1, surfaceConstant1_2, surfaceConstant2_1, surfaceConstant2_2;
-    private int neighbourghsConstant;
-    private int borderInSharpenStage, lookAheadAndBack;
+	private int neighbourghsConstant;
+	private int borderInSharpenStage, lookAheadAndBack;
 	private int width;
 	private int height;
 	private ImageResource testAgainst;
-	
+
 	/**
 	 * 
 	 * @param surface
@@ -87,8 +76,7 @@ public class UtilMethods implements I_ColorScheme {
 	 * @return
 	 */
 	public boolean isForeground(Pixel pIn) {
-		return pIn.getRed() == redScheme[0] && pIn.getGreen() == redScheme[1]
-				&& pIn.getBlue() == redScheme[2];
+		return pIn.getRed() == redScheme[0] && pIn.getGreen() == redScheme[1] && pIn.getBlue() == redScheme[2];
 	}
 
 	/**
@@ -106,8 +94,7 @@ public class UtilMethods implements I_ColorScheme {
 	 * @return
 	 */
 	public boolean isSetToClusterAround(Pixel p) {
-		if (p.getRed() == whiteScheme[0] && p.getGreen() == whiteScheme[1]
-				&& p.getBlue() == whiteScheme[2])
+		if (p.getRed() == whiteScheme[0] && p.getGreen() == whiteScheme[1] && p.getBlue() == whiteScheme[2])
 			return true;
 		return false;
 	}
@@ -121,7 +108,7 @@ public class UtilMethods implements I_ColorScheme {
 		p.setGreen(whiteScheme[1]);
 		p.setBlue(whiteScheme[2]);
 	}
-	
+
 	/**
 	 * 
 	 * @param p

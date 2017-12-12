@@ -15,13 +15,13 @@ public class TaskHighlight extends BaseTask {
 
 	@Override
 	protected void compute() {
-        //System.out.println("COMPUTE HIGHLIGHT ON THREAD " + Thread.currentThread() + this.toString());
+		// System.out.println("COMPUTE HIGHLIGHT ON THREAD " +
+		// Thread.currentThread() + this.toString());
 		ip.procesHighlight(xFromIncl, xToExcl, yFromIncl, yToExcl, false);
 	}
 
-    public String toString(){
-    	return super.toString() + this.hashCode() + this.getClass().getName();
-    }
-	
-	
+	public String toString() {
+		return super.toString() + this.hashCode() + this.getClass().getName();
+	}
+
 }

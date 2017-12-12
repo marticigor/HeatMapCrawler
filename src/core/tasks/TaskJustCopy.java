@@ -12,12 +12,13 @@ public class TaskJustCopy extends BaseTask {
 
 	@Override
 	protected void compute() {
-        //System.out.println("COMPUTE JUSTCOPY ON THREAD " + Thread.currentThread() + this.toString());
+		// System.out.println("COMPUTE JUSTCOPY ON THREAD " +
+		// Thread.currentThread() + this.toString());
 		ip.procesJustCopy(xFromIncl, xToExcl, yFromIncl, yToExcl, false);
 	}
-	
+
 	@Override
-    public String toString(){
-    	return super.toString() + this.hashCode() + this.getClass().getName();
-    }
+	public String toString() {
+		return super.toString() + this.hashCode() + this.getClass().getName();
+	}
 }

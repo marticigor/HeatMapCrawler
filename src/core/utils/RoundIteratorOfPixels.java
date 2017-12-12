@@ -6,104 +6,90 @@ import java.util.NoSuchElementException;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
-public class RoundIteratorOfPixels implements Iterable < Pixel > , Iterator < Pixel > {
+public class RoundIteratorOfPixels implements Iterable<Pixel>, Iterator<Pixel> {
 
-	public RoundIteratorOfPixels (ImageResource ir){
+	public RoundIteratorOfPixels(ImageResource ir) {
 		this.ir = ir;
 	}
-	
-    public RoundIteratorOfPixels() {
+
+	public RoundIteratorOfPixels() {
 	}
 
 	private ImageResource ir = null;
-    //private Pixel home = null;
-    private int homeX,
-    homeY;
-    private byte[] roundHomeX = {
-    	-1,
-        0,
-        +1,
-        +1,
-        +1,
-        0,
-        -1,
-        -1
-    };
-    private byte[] roundHomeY = {
-    	-1,
-        -1,
-        -1,
-        0,
-        +1,
-        +1,
-        +1,
-        0
-    };
+	// private Pixel home = null;
+	private int homeX, homeY;
+	private byte[] roundHomeX = { -1, 0, +1, +1, +1, 0, -1, -1 };
+	private byte[] roundHomeY = { -1, -1, -1, 0, +1, +1, +1, 0 };
 
-    public byte[] getRoundY(){
-    	return roundHomeY;
-    }
-    
-    public byte[] getRoundX(){
-    	return roundHomeX;
-    }
-    
-    private byte count = 0;
-    public boolean print = false;
+	public byte[] getRoundY() {
+		return roundHomeY;
+	}
 
-    /**
-     *  
-     */
-    public void setImageResource(ImageResource ir) {
-        this.ir = ir;
-    }
+	public byte[] getRoundX() {
+		return roundHomeX;
+	}
 
-    /**
-     *  
-     */
-    public void setPixelToCheckAround(Pixel home) {
+	private byte count = 0;
+	public boolean print = false;
 
-        //this.home = home;
-        this.homeX = home.getX();
-        this.homeY = home.getY();
-        resetCount();
-    }
+	/**
+	 *  
+	 */
+	public void setImageResource(ImageResource ir) {
+		this.ir = ir;
+	}
 
-    /**
-     *  
-     */
-    public void resetCount() {
-        count = 0;
-    }
+	/**
+	 *  
+	 */
+	public void setPixelToCheckAround(Pixel home) {
 
-    /**
-     *  
-     */
-    public boolean hasNext() {
+		// this.home = home;
+		this.homeX = home.getX();
+		this.homeY = home.getY();
+		resetCount();
+	}
 
-        if (count < 8) return true;
-        else return false;
-    }
+	/**
+	 *  
+	 */
+	public void resetCount() {
+		count = 0;
+	}
 
-    /**
-     *  
-     */
-    public Pixel next() {
+	/**
+	 *  
+	 */
+	public boolean hasNext() {
 
-        if (print) System.out.println("now DEBUG from iterator count " + count + " " + this.toString() + " X Y " + (homeX + roundHomeX[count]) + " " + (homeY + roundHomeY[count]));
-        if (count > 7) throw new NoSuchElementException();
-        Pixel returning = ir.getPixel((homeX + roundHomeX[count]), (homeY + roundHomeY[count]));
+		if (count < 8)
+			return true;
+		else
+			return false;
+	}
 
-        count++;
-        return returning;
-    }
+	/**
+	 *  
+	 */
+	public Pixel next() {
 
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
+		if (print)
+			System.out.println("now DEBUG from iterator count " + count + " " + this.toString() + " X Y "
+					+ (homeX + roundHomeX[count]) + " " + (homeY + roundHomeY[count]));
+		if (count > 7)
+			throw new NoSuchElementException();
+		Pixel returning = ir.getPixel((homeX + roundHomeX[count]), (homeY + roundHomeY[count]));
 
-    public Iterator < Pixel > iterator() {
-        return this;
-    }
+		count++;
+		return returning;
+	}
+
+	public void remove() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Iterator<Pixel> iterator() {
+		return this;
+	}
 
 }

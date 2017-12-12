@@ -11,6 +11,7 @@ public class RecursiveClusterFinder {
 
 	private HashSet<Pixel> allClusterAroundNode;
 	private RoundIteratorOfPixels iteratorRound;
+	private HashSet<Pixel> neighbours;
 	private ImageResource ir;
 	private int red, green, blue;
 	private boolean redClusterSearch = false;
@@ -40,8 +41,7 @@ public class RecursiveClusterFinder {
 	/**
 	 * called by AdjacencyFinder
 	 */
-	public RecursiveClusterFinder(ImageResource ir, int red, int green,
-			int blue, boolean visualize) {
+	public RecursiveClusterFinder(ImageResource ir, int red, int green, int blue, boolean visualize) {
 
 		this.ir = ir;
 		this.red = red;
@@ -61,25 +61,21 @@ public class RecursiveClusterFinder {
 		allClusterAroundNode = new HashSet<Pixel>();
 	}
 
-	HashSet<Pixel> neighbours;
-
 	/**
 	 * loads recursively set of (colorScheme) pixels into neighbors and then
-	 * allClusterAroundNode maybe called from outside a few times (thus building
-	 * allClusterAroundNode gradually)
+	 * allClusterAroundNode. Maybe called from outside a few times (thus
+	 * building allClusterAroundNode gradually)
 	 */
 	public void buildPartialCluster(Pixel p) {
 
 		if (allClusterAroundNode.size() > 4000) {
-			throw new RuntimeException(
-					"RecursiveClusterFinder, setCluster() size");
+			throw new RuntimeException("RecursiveClusterFinder, setCluster() size");
 		}
 
 		if (!redClusterSearch)
 			allClusterAroundNode.add(p);
 
-		if (redClusterSearch && p.getRed() == red && p.getGreen() == green
-				&& p.getBlue() == blue)
+		if (redClusterSearch && p.getRed() == red && p.getGreen() == green && p.getBlue() == blue)
 			allClusterAroundNode.add(p);
 
 		if (visualize && allClusterAroundNode.size() == 1)
@@ -92,8 +88,7 @@ public class RecursiveClusterFinder {
 		neighbours = new HashSet<Pixel>();
 
 		for (Pixel px : iteratorRound) {
-			if (px.getRed() == red && px.getGreen() == green
-					&& px.getBlue() == blue) {
+			if (px.getRed() == red && px.getGreen() == green && px.getBlue() == blue && !neighbours.contains(px)) {
 				neighbours.add(px);
 			}
 		}
@@ -106,22 +101,22 @@ public class RecursiveClusterFinder {
 	}
 
 	/**
-      * 
-      */
+	  * 
+	  */
 	public HashSet<Pixel> getAllCluster() {
 		return allClusterAroundNode;
 	}
 
 	/**
-      *  
-      */
+	  *  
+	  */
 	public void resetAllCluster() {
 		allClusterAroundNode = new HashSet<Pixel>();
 	}
 
 	/**
-      *  
-      */
+	  *  
+	  */
 	class Visualizer implements I_ColorScheme {
 
 		ImageResource visIr;
@@ -134,8 +129,8 @@ public class RecursiveClusterFinder {
 		}
 
 		/**
-          *  
-          */
+		  *  
+		  */
 		public void displayInitial() {
 			for (Pixel p : visIr.pixels()) {
 				p.setRed(0);
@@ -160,8 +155,8 @@ public class RecursiveClusterFinder {
 		}
 
 		/**
-          *  
-          */
+		  *  
+		  */
 		public void displayProgres() {
 
 			for (Pixel p : allClusterAroundNode) {

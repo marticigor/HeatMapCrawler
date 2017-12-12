@@ -28,9 +28,10 @@ public class AdjacencyFinder implements I_ColorScheme {
 	private LocalyDisconnectTest ldt;
 	private HashSet<Pixel> branch;
 
-	public AdjacencyFinder(int borderInSharpenStage, ImageResource noded,
-			List<Node> nodes, boolean visual, boolean debug,
-			int bottleneckSize, int passableSize) {
+	// boolean investigative = false; //hardcore problem analysis approach.. sad
+
+	public AdjacencyFinder(int borderInSharpenStage, ImageResource noded, List<Node> nodes, boolean visual,
+			boolean debug, int bottleneckSize, int passableSize) {
 
 		this.noded = noded;
 		this.nodes = nodes;
@@ -47,23 +48,17 @@ public class AdjacencyFinder implements I_ColorScheme {
 
 		// public RecursiveClusterFinder(ImageResource ir, int red, int green,
 		// int blue, boolean visualize)
-		rcf = new RecursiveClusterFinder(noded, redScheme[0], redScheme[1],
-				redScheme[2], this.debug);
+		rcf = new RecursiveClusterFinder(noded, redScheme[0], redScheme[1], redScheme[2], this.debug);
 
 		if (this.visual) {
 			visualizeIR = new ImageResource(noded.getWidth(), noded.getHeight());
 		}
 
-		Skeleton skeletonMock = new Skeleton(
-
-		noded, borderInSharpenStage, true, false, -1, -1, -1, -1,
-				borderInSharpenStage
-
-		);
+		Skeleton skeletonMock = new Skeleton(noded, borderInSharpenStage, true, false, -1, -1, -1, -1,
+				borderInSharpenStage);
 
 		// OuterClass.InnerClass innerObject = outerObject.new InnerClass();
-		Skeleton.SkeletonUtils utils = skeletonMock.new SkeletonUtils(
-				skeletonMock.getThresholdForeBack());
+		Skeleton.SkeletonUtils utils = skeletonMock.new SkeletonUtils(skeletonMock.getThresholdForeBack());
 		ldt = new LocalyDisconnectTest(utils);
 
 	}
@@ -120,11 +115,14 @@ public class AdjacencyFinder implements I_ColorScheme {
 
 			for (Node buildForThis : nodes) {
 
+				// if(investigative) System.out.println("buildForThis: " +
+				// buildForThis);
+
 				maskOrDemaskNode(buildForThis, false); // demask this node, not
 														// first run
 				if (visual & debug) {
 					noded.draw();
-					Pause.pause(500);
+					Pause.pause(1000);
 				}
 
 				redCluster = new HashSet<Pixel>();
@@ -137,6 +135,11 @@ public class AdjacencyFinder implements I_ColorScheme {
 
 				// >>>>>>>>>>>>>>>>>>>>>>>>> around Node buildForThis
 				for (Pixel iterP : riop) {
+
+					if (!isRoutable(iterP))
+						continue;
+					// if(investigative) System.out.println("iterating around
+					// this node " + iterP);
 					putAllSurrReds(iterP);
 				}
 
@@ -146,12 +149,11 @@ public class AdjacencyFinder implements I_ColorScheme {
 					buildForThis.addAdjacentNode(singleAdjacent);
 				}
 
-				adjacentNodes = new HashSet<Node>();
+				adjacentNodes = new HashSet<Node>();// clear
 
 				if (visual && debug) {
 					for (Pixel pDebug : redCluster) {
-						Pixel pIr = visualizeIR.getPixel(pDebug.getX(),
-								pDebug.getY());
+						Pixel pIr = visualizeIR.getPixel(pDebug.getX(), pDebug.getY());
 						pIr.setRed(blueischScheme[0]);
 						pIr.setGreen(blueischScheme[1]);
 						pIr.setBlue(blueischScheme[2]);
@@ -159,8 +161,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 					visualizeIR.draw();
 					Pause.pause(500);
 					for (Pixel pDebug : redCluster) {
-						Pixel pIr = visualizeIR.getPixel(pDebug.getX(),
-								pDebug.getY());
+						Pixel pIr = visualizeIR.getPixel(pDebug.getX(), pDebug.getY());
 						pIr.setRed(redischScheme[0]);
 						pIr.setGreen(redischScheme[1]);
 						pIr.setBlue(redischScheme[2]);
@@ -173,7 +174,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 					noded.draw();
 					Pause.pause(500);
 				}
-			}// for buildForThis
+			} // for buildForThis
 
 			demaskAllNodes();
 
@@ -199,6 +200,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 					nodePix.setGreen(whiteScheme[1]);
 					nodePix.setBlue(whiteScheme[2]);
 				}
+
 				if (visual) {
 					highlightByColor.setPixelToCheckAround(nodePix);
 					for (Pixel pix : highlightByColor) {
@@ -213,17 +215,18 @@ public class AdjacencyFinder implements I_ColorScheme {
 						}
 					}
 				}
+
 			}
 			if (visual) {
 				noded.draw();
-				Pause.pause(5000);
+				Pause.pause(10000);
 			}
 		} // scope for adjacency lists builder
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private void putAllSurrReds(Pixel currP) {
 
 		rcf.resetAllCluster();
@@ -236,8 +239,8 @@ public class AdjacencyFinder implements I_ColorScheme {
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private void copyBranchIntoRedCluster(HashSet<Pixel> branch) {
 		for (Pixel p : branch) {
 			redCluster.add(p);
@@ -277,8 +280,8 @@ public class AdjacencyFinder implements I_ColorScheme {
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private void maskOrDemaskNode(Node n, boolean doMask) {
 
 		int maskSize = 0;
@@ -292,8 +295,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 		toSizes = (maskSize - 1) / 2;
 
 		if (!doMask && (maskSize != (int) Math.sqrt(n.getMask().size()))) {
-			throw new RuntimeException("Mask size problem."
-					+ n.getMask().size());
+			throw new RuntimeException("Mask size problem." + n.getMask().size());
 		}
 		if (!doMask)
 			retrievedMask = n.getMask();
@@ -307,8 +309,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 					original.setGreen(greenScheme[1]);
 					original.setBlue(greenScheme[2]);
 				} else { // demask
-					if (retrievedMask.size() != (toSizes * 2 + 1)
-							* (toSizes * 2 + 1))
+					if (retrievedMask.size() != (toSizes * 2 + 1) * (toSizes * 2 + 1))
 						throw new RuntimeException("retrievedMaskSize");
 					original = noded.getPixel(x, y);
 					copy = retrievedMask.get(counter);
@@ -322,8 +323,8 @@ public class AdjacencyFinder implements I_ColorScheme {
 	}
 
 	/**
-     *  
-     */
+	 *  
+	 */
 	private Set<Node> getAdjacents(Node buildForThis) {
 		Set<Node> adjacentNodes = new HashSet<Node>();
 		Node adj = null;
@@ -346,13 +347,21 @@ public class AdjacencyFinder implements I_ColorScheme {
 	 * @return
 	 */
 	private boolean isNode(Pixel p) {
-		return (p.getRed() == greenScheme[0] && p.getGreen() == greenScheme[1] && p
-				.getBlue() == greenScheme[2]);
+		return (p.getRed() == greenScheme[0] && p.getGreen() == greenScheme[1] && p.getBlue() == greenScheme[2]);
 	}
 
 	/**
-     *
-     */
+	 * 
+	 * @param p
+	 * @return
+	 */
+	private boolean isRoutable(Pixel p) {
+		return (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]);
+	}
+
+	/**
+	 *
+	 */
 	private void maskAllNodes(boolean firstRun) {
 		if (firstRun)
 			mapBackgrounds();
@@ -362,8 +371,8 @@ public class AdjacencyFinder implements I_ColorScheme {
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private void demaskAllNodes() {
 		for (Node node : nodes) {
 			maskOrDemaskNode(node, false);
@@ -371,18 +380,17 @@ public class AdjacencyFinder implements I_ColorScheme {
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	private boolean isBottleNeck(Node n) {
 		return ldt.locallyDisconnects(noded.getPixel(n.getX(), n.getY()));
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	public void drawAdjacencyEdges(List<Node> nodesToDraw) {
-		ImageResource edges = new ImageResource(noded.getWidth(),
-				noded.getHeight());
+		ImageResource edges = new ImageResource(noded.getWidth(), noded.getHeight());
 		LineMaker lm = new LineMaker(edges);
 		int x1, y1, x2, y2;
 		int r, g, b;
@@ -410,5 +418,16 @@ public class AdjacencyFinder implements I_ColorScheme {
 			}
 		}
 		edges.draw();
+	}
+
+	/**
+	 * 
+	 */
+	@SuppressWarnings("unused")
+	private void testPrintRedCluster() {
+		System.out.println("TEST PRINT RED CLUSTER");
+		for (Pixel p : redCluster) {
+			System.out.println("---- " + p);
+		}
 	}
 }

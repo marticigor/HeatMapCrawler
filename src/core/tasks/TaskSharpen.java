@@ -2,35 +2,41 @@ package core.tasks;
 
 import core.ImagePreprocesor;
 
-    public class TaskSharpen extends BaseTask {
-    	
-        //Instances of RecursiveAction represent executions that do not yield a return value.
+public class TaskSharpen extends BaseTask {
 
-        //First and foremost, fork/join tasks should operate as “pure” in-memory
-    	//algorithms in which no I/O operations come into play. Also, communication
-    	//between tasks through shared state should be avoided as much as possible,
-        //because that implies that locking might have to be performed. Ideally, tasks
-    	//communicate only when one task forks another or when one task joins another.
+	// Instances of RecursiveAction represent executions that do not yield a
+	// return value.
 
-        //http://www.oracle.com/technetwork/articles/java/fork-join-422606.html
+	// First and foremost, fork/join tasks should operate as “pure” in-memory
+	// algorithms in which no I/O operations come into play. Also, communication
+	// between tasks through shared state should be avoided as much as possible,
+	// because that implies that locking might have to be performed. Ideally,
+	// tasks
+	// communicate only when one task forks another or when one task joins
+	// another.
 
-        /**
-		 * 
-		 */
-		private static final long serialVersionUID = 3395050943108602251L;
+	// http://www.oracle.com/technetwork/articles/java/fork-join-422606.html
 
-        public TaskSharpen(ImagePreprocesor ip, Integer xFrom, Integer xTo, Integer yFrom, Integer yTo) {
-            super(ip,xFrom, xTo, yFrom, yTo);
-        }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3395050943108602251L;
 
-        @Override
-        protected void compute() {
-            //System.out.println("COMPUTE SHARPEN ON THREAD " + Thread.currentThread() + this.toString());
-            ip.procesSharpen(xFromIncl, xToExcl, yFromIncl, yToExcl, false); //false for real segments
-        }
-        
-        public String toString(){
-        	return super.toString() + this.hashCode() + this.getClass().getName();
-        }
-    }
+	public TaskSharpen(ImagePreprocesor ip, Integer xFrom, Integer xTo, Integer yFrom, Integer yTo) {
+		super(ip, xFrom, xTo, yFrom, yTo);
+	}
 
+	@Override
+	protected void compute() {
+		// System.out.println("COMPUTE SHARPEN ON THREAD " +
+		// Thread.currentThread() + this.toString());
+		ip.procesSharpen(xFromIncl, xToExcl, yFromIncl, yToExcl, false); // false
+																			// for
+																			// real
+																			// segments
+	}
+
+	public String toString() {
+		return super.toString() + this.hashCode() + this.getClass().getName();
+	}
+}

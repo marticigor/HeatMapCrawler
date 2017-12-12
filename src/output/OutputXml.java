@@ -17,83 +17,84 @@ import java.util.*;
 
 public class OutputXml {
 
-    private Document outputDocument;
-    private String filenameOutput = "not_defined.gpx";
-    private String trackName = "heatExp";
-    private static final String URI = "http://www.topografix.com/GPX/1/1";
+	private Document outputDocument;
+	private String filenameOutput = "not_defined.gpx";
+	private String trackName = "heatExp";
+	private static final String URI = "http://www.topografix.com/GPX/1/1";
 
-    private List <Trackpoint> track;
-    
-    private Element mainRootElement;
-    private Element nameElement;
-    private Element trackElement;
-    private Element trackSeqElement;
-    private Element trackpointElement;
+	private List<Trackpoint> track;
 
-    public OutputXml (List <Trackpoint> track, String filenameOutput) {
-        this.track = track;
-        this.filenameOutput = filenameOutput;
-    }
+	private Element mainRootElement;
+	private Element nameElement;
+	private Element trackElement;
+	private Element trackSeqElement;
+	private Element trackpointElement;
 
-  /**
-   *
-   */
-  public void composeOutputDoc() throws ParserConfigurationException{
+	public OutputXml(List<Trackpoint> track, String filenameOutput) {
+		this.track = track;
+		this.filenameOutput = filenameOutput;
+	}
 
-    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	/**
+	 *
+	 */
+	public void composeOutputDoc() throws ParserConfigurationException {
 
-    dbf.setNamespaceAware(true);
-    dbf.setValidating(true);
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
-    DocumentBuilder db = dbf.newDocumentBuilder();
+		dbf.setNamespaceAware(true);
+		dbf.setValidating(true);
 
-    outputDocument = db.newDocument();
+		DocumentBuilder db = dbf.newDocumentBuilder();
 
-    mainRootElement = outputDocument.createElementNS(URI, "gpx");
+		outputDocument = db.newDocument();
 
-    mainRootElement.setAttribute("xmlns", "http://www.topografix.com/GPX/1/1");
-    mainRootElement.setAttribute("creator", "experimental.program");
-    mainRootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-    mainRootElement.setAttribute("xsi:schemaLocation", "http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensions/v3/GpxExtensionsv3.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd");
+		mainRootElement = outputDocument.createElementNS(URI, "gpx");
 
-    trackElement = outputDocument.createElementNS(URI, "trk");
-    
-    nameElement = outputDocument.createElementNS(URI, "name");
-    nameElement.setTextContent(trackName);
-    
-    trackSeqElement = outputDocument.createElementNS(URI, "trkseg");
-    
-    outputDocument.appendChild(mainRootElement);
-      mainRootElement.appendChild(trackElement);
-        trackElement.appendChild(nameElement);
-          trackElement.appendChild(trackSeqElement);
-          
-          for(Trackpoint trackpoint : track){
-              
-              trackpointElement = outputDocument.createElementNS(URI, "trkpt");
-              
-              trackpointElement.setAttribute("lat", trackpoint.getLat());
-              trackpointElement.setAttribute("lon", trackpoint.getLon());
-              
-              trackSeqElement.appendChild(trackpointElement);
-            
-          }	   
-  }
-	
-  /**
-  *
-  */
-  public void writeOutputFile()throws TransformerException{
+		mainRootElement.setAttribute("xmlns", "http://www.topografix.com/GPX/1/1");
+		mainRootElement.setAttribute("creator", "experimental.program");
+		mainRootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+		mainRootElement.setAttribute("xsi:schemaLocation",
+				"http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensions/v3/GpxExtensionsv3.xsd http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd");
 
-      TransformerFactory tf = TransformerFactory.newInstance();
-      Transformer transformer = tf.newTransformer();
-      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-      DOMSource source = new DOMSource(outputDocument);
+		trackElement = outputDocument.createElementNS(URI, "trk");
 
-      StreamResult result = new StreamResult(new File(filenameOutput));
+		nameElement = outputDocument.createElementNS(URI, "name");
+		nameElement.setTextContent(trackName);
 
-      transformer.transform(source, result);
-      
-  }	
+		trackSeqElement = outputDocument.createElementNS(URI, "trkseg");
+
+		outputDocument.appendChild(mainRootElement);
+		mainRootElement.appendChild(trackElement);
+		trackElement.appendChild(nameElement);
+		trackElement.appendChild(trackSeqElement);
+
+		for (Trackpoint trackpoint : track) {
+
+			trackpointElement = outputDocument.createElementNS(URI, "trkpt");
+
+			trackpointElement.setAttribute("lat", trackpoint.getLat());
+			trackpointElement.setAttribute("lon", trackpoint.getLon());
+
+			trackSeqElement.appendChild(trackpointElement);
+
+		}
+	}
+
+	/**
+	*
+	*/
+	public void writeOutputFile() throws TransformerException {
+
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer transformer = tf.newTransformer();
+		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		DOMSource source = new DOMSource(outputDocument);
+
+		StreamResult result = new StreamResult(new File(filenameOutput));
+
+		transformer.transform(source, result);
+
+	}
 }

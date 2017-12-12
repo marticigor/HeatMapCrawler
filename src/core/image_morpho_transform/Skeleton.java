@@ -24,7 +24,7 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 	private ImageResource in;
 	private int threshold = redScheme[0];
-	
+
 	@Override
 	public void doYourThing() {
 		SkeletonUtils utils = new SkeletonUtils(threshold); // threshold
@@ -37,17 +37,18 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 	 */
 	private void skeletonize(SkeletonUtils utils) {
 
-		if (debug) System.out.println("NEW TASK " + Thread.currentThread().toString());
+		if (debug)
+			System.out.println("NEW TASK " + Thread.currentThread().toString());
 
 		Pixel current;
 		List<Pixel> applicants = new ArrayList<Pixel>();
 		int removed = 0;
 
 		int count = 0;
-	
-		int[] fore = new int[] { 1 };//3 hilditch settings 1
-		int[] back = new int[] { 1 };//1 hilditch settings 1
-		int[] foreMax = new int[] { 7 };//1000 hilditch settings 7
+
+		int[] fore = new int[] { 1 };// 3 hilditch settings 1
+		int[] back = new int[] { 1 };// 1 hilditch settings 1
+		int[] foreMax = new int[] { 7 };// 1000 hilditch settings 7
 		int[] backMax = new int[] { 1000 };
 
 		for (int i = 0; i < 1; i++) { // stages ??
@@ -63,15 +64,14 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 						current = in.getPixel(absX, absY);
 
-						if (current.getRed() == redScheme[0] &&
-							utils.isApplicable(current)){
+						if (current.getRed() == redScheme[0] && utils.isApplicable(current)) {
 							applicants.add(current);
 						}
 					}
 				}
-				
+
 				for (Pixel p : applicants) {
-					if(utils.isRemovable(p)){
+					if (utils.isRemovable(p)) {
 						p.setRed(lightGreenScheme[0]);
 						p.setGreen(lightGreenScheme[1]);
 						p.setBlue(lightGreenScheme[2]);
@@ -90,8 +90,10 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			} // while
 		}
 	}
-	
-	public int getThresholdForeBack(){return threshold;}
+
+	public int getThresholdForeBack() {
+		return threshold;
+	}
 
 	/**
 	 * 
@@ -100,7 +102,7 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 
 		private final RoundIteratorOfPixels riop;
 		private int foregroundColorThreshold; // value of red channel
-		private byte fGround,bGround;
+		private byte fGround, bGround;
 		private boolean removable;
 		private Pixel pivot = null;
 
@@ -149,8 +151,8 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 		 * @return
 		 */
 		public boolean isApplicable(Pixel pivot) {
-			//Neighbors test
-			byte background = 0,foreground = 0;
+			// Neighbors test
+			byte background = 0, foreground = 0;
 			riop.setPixelToCheckAround(pivot);
 			for (Pixel aroundPivot : riop) {
 				if (isForeground(aroundPivot)) {
@@ -158,39 +160,41 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 				} else if (isBackground(aroundPivot))
 					background++;
 			}
-			
-			boolean neighbors = ((int) background > backThresh && (int) foreground > foreThresh && (int) background < backMax
-					&& (int) foreground < foreMax);
-			
-			//hilditch algo specific stuff
-			
-			//____  p2  ____
-			// p8  pivot p4 
-			//____  p6  ____
-			
+
+			boolean neighbors = ((int) background > backThresh && (int) foreground > foreThresh
+					&& (int) background < backMax && (int) foreground < foreMax);
+
+			// hilditch algo specific stuff
+
+			// ____ p2 ____
+			// p8 pivot p4
+			// ____ p6 ____
+
 			Pixel p2 = in.getPixel(pivot.getX(), pivot.getY() - 1);
 			Pixel p8 = in.getPixel(pivot.getX() - 1, pivot.getY());
 			Pixel p4 = in.getPixel(pivot.getX() + 1, pivot.getY());
 			Pixel p6 = in.getPixel(pivot.getX(), pivot.getY() + 1);
-			
-			//ensures that 2-pixel wide vertical lines do not get completely eroded by the algorithm.
+
+			// ensures that 2-pixel wide vertical lines do not get completely
+			// eroded by the algorithm.
 			boolean vert = isBackground(p2) || isBackground(p4) || isBackground(p8);
-			//ensures that 2-pixel wide horizontal lines do not get completely eroded by the algorithm.
+			// ensures that 2-pixel wide horizontal lines do not get completely
+			// eroded by the algorithm.
 			boolean hori = isBackground(p2) || isBackground(p4) || isBackground(p6);
-			
+
 			return neighbors && vert && hori;
 		}
-		
+
 		/**
 		 * 
 		 * @return
 		 */
-		ImageResource getImageResource(){
+		ImageResource getImageResource() {
 			return in;
 		}
 
 		LocalyDisconnectTest ldt = new LocalyDisconnectTest(this);
-		
+
 		/**
 		 * 
 		 */
@@ -209,7 +213,7 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			boolean y = (pIn.getY() > pivot.getY() - 2 && pIn.getY() < pivot.getY() + 2);
 			return x && y;
 		}
-		
+
 		/**
 		 * 
 		 */
@@ -237,5 +241,5 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			this.foreMax = foreMax;
 		}
 
-	}//SkeletonUtils
+	}// SkeletonUtils
 }

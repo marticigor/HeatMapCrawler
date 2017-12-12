@@ -8,21 +8,25 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name=beans.RunnerBean.TABLE_SHOTS)
+@Table(name = beans.RunnerBean.TABLE_SHOTS)
 public class NmbShotsEntity {
 
-	public NmbShotsEntity(){}
-	public NmbShotsEntity(int nmb){ this.nmb = nmb; }
-	
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+	public NmbShotsEntity() {
+	}
+
+	public NmbShotsEntity(int nmb) {
+		this.nmb = nmb;
+	}
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private long id;
-	
+
 	@Column(name = "nmb")
 	private int nmb;
-	
+
 	public int getNmb() {
 		return nmb;
-	}	
+	}
 }
