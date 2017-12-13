@@ -11,6 +11,8 @@ public class Node implements Comparable<Node> {
 	private final int y;
 	private double lon;
 	private double lat;
+	
+	private short weight;
 	//
 	private final long idHash;
 	private final long shotId;
@@ -35,19 +37,20 @@ public class Node implements Comparable<Node> {
 	 * @param id
 	 * @param shotId
 	 */
-	public Node(int x, int y, double lon, double lat, long id, long shotId) {
+	public Node(int x, int y, short weight,double lon, double lat, long id, long shotId) {
 
 		this.x = x;
 		this.y = y;
 		this.lon = lon;
 		this.lat = lat;
+		this.setWeight(weight);
 		this.distToCenter = 0;
 		adjacentNodes = new HashSet<Node>();
 		mask = new ArrayList<Pixel>();
 		this.idHash = id;
 		this.shotId = shotId;
 
-		this.entity = new NodeEntity(shotId, lon, lat, new HashSet<NodeEntity>());
+		this.entity = new NodeEntity(shotId, lon, lat, weight,new HashSet<NodeEntity>());
 
 	}
 
@@ -98,6 +101,20 @@ public class Node implements Comparable<Node> {
 		return lat;
 	}
 
+	/**
+	 * @return the weight
+	 */
+	public short getWeight() {
+		return weight;
+	}
+
+	/**
+	 * @param weight the weight to set
+	 */
+	public void setWeight(short weight) {
+		this.weight = weight;
+	}
+	
 	public boolean getBottleneck() {
 		return isBottleneck;
 	}
@@ -161,5 +178,4 @@ public class Node implements Comparable<Node> {
 	public ArrayList<Pixel> getMask() {
 		return mask;
 	}
-
 }

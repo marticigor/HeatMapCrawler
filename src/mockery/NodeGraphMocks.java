@@ -14,11 +14,11 @@ public class NodeGraphMocks {
 		List<Node> list = new LinkedList<Node>();
 		// public Node(int x, int y, double lon, double lat, long id, long
 		// shotId)
-		nodes[0] = new Node(12, 1, 12.0, 1.0, 0, 0);
-		nodes[1] = new Node(13, 1, 13.0, 1.0, 1, 1);
-		nodes[2] = new Node(14, 1, 14.0, 1.0, 2, 2);
-		nodes[3] = new Node(15, 2, 15.0, 2.0, 3, 3);
-		nodes[4] = new Node(16, 1, 16.0, 1.0, 4, 4);
+		nodes[0] = new Node(12, 1, (short)-1, 12.0, 1.0, 0, 0);
+		nodes[1] = new Node(13, 1, (short)-1, 13.0, 1.0, 1, 1);
+		nodes[2] = new Node(14, 1, (short)-1, 14.0, 1.0, 2, 2);
+		nodes[3] = new Node(15, 2, (short)-1, 15.0, 2.0, 3, 3);
+		nodes[4] = new Node(16, 1, (short)-1, 16.0, 1.0, 4, 4);
 
 		nodes[1].addAdjacentNode(nodes[2]);
 

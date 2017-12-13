@@ -13,6 +13,8 @@ import lib_duke.Pixel;
 public class NodeFinder implements I_ColorScheme {
 
 	private ImageResource thresholded;
+	private final static int COMPUTE_WEIGHT_OUTLOOK = 5;
+	//max weight 122
 	private ImageResource skeletonized;
 	private ArrayList<Node> nodes = new ArrayList<Node>();
 	private int width;
@@ -203,6 +205,7 @@ public class NodeFinder implements I_ColorScheme {
 
 		int x, y;
 		double lon, lat;
+		short weight;
 
 		final double dLon = Math.abs(bounds[0] - bounds[3]);
 		final double lonShiftToPixCenter = (dLon / width) / 2;
@@ -273,9 +276,11 @@ public class NodeFinder implements I_ColorScheme {
 
 						lon = bounds[3] + ((((double) x / ((double) (width))) * dLon) + lonShiftToPixCenter);
 						lat = bounds[1] - ((((double) y / ((double) (height))) * dLat) + latShiftToPixCenter);
-
+						
+						weight = computeWeight(x,y);
+						
 						// the only instantiation of Node in the project
-						Node node = new Node(x, y, lon, lat, myHandler.incrAndGetId(), shotId);
+						Node node = new Node(x, y, weight, lon, lat, myHandler.incrAndGetId(), shotId);
 
 						maximusNodes.add(node);
 
@@ -385,6 +390,39 @@ public class NodeFinder implements I_ColorScheme {
 		return neighbours;
 	}
 
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	private short computeWeight(int x, int y){
+		//ImageResource thresholded;
+		//int borderSharpenStage;
+		short weight = 0;//weird, on purpose
+		Pixel pix;
+		for(int xNow = (x - COMPUTE_WEIGHT_OUTLOOK); xNow <= x + COMPUTE_WEIGHT_OUTLOOK; xNow ++){
+			for(int yNow = (y - COMPUTE_WEIGHT_OUTLOOK); yNow <= y + COMPUTE_WEIGHT_OUTLOOK; yNow ++){
+				//this will get corrected when concatenating graph later;
+				if(xNow < 0 || xNow > thresholded.getWidth() - 1 ||
+						yNow < 0 || yNow > thresholded.getHeight() - 1) continue;
+				pix = thresholded.getPixel(xNow, yNow);
+				if(isRoutable(pix)) weight ++;
+			}
+		}
+		return weight;
+	}
+	
+	/**
+	 * @param pix
+	 * @return
+	 */
+	private boolean isRoutable(Pixel pix){
+		return pix.getRed() == redScheme[0] &&
+				pix.getGreen() == redScheme[1] &&
+						pix.getBlue() == redScheme[2];
+	}
+	
 	/**
 	 * prints simplistic visualization of clusters
 	 */

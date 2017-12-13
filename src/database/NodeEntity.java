@@ -35,6 +35,8 @@ public class NodeEntity {
 	private double lon;
 	@Column(name = "lat")
 	private double lat;
+	@Column(name = "weight")
+	private short weight;
 
 	@ManyToMany
 	@JoinTable(name = beans.RunnerBean.TABLE_ADJACENTS)
@@ -45,8 +47,9 @@ public class NodeEntity {
 	public NodeEntity() {
 	}
 
-	public NodeEntity(long shotId, double lon, double lat, Set<NodeEntity> adjacents) {
+	public NodeEntity(long shotId, double lon, double lat, short weight, Set<NodeEntity> adjacents) {
 
+		this.weight = weight;
 		this.shotId = shotId;
 		this.lon = lon;
 		this.lat = lat;
@@ -88,6 +91,20 @@ public class NodeEntity {
 
 	public void setLat(double l) {
 		this.lat = l;
+	}
+	
+	/**
+	 * @return the weight
+	 */
+	public short getWeight() {
+		return weight;
+	}
+
+	/**
+	 * @param weight the weight to set
+	 */
+	public void setWeight(short weight) {
+		this.weight = weight;
 	}
 
 	public Set<NodeEntity> getAdjacents() {
