@@ -1,0 +1,25 @@
+RED CLUSTER TEST PRINT FOR NODE 11379| ID 9 | X = 324 | Y = 374----- |LON 14.463801963039783 |LAT 50.02175578011804
+TEST PRINT RED CLUSTER
+---- Pixel X = 327 Y = 375 R: 255 G: 3 B: 3
+---- Pixel X = 326 Y = 375 R: 255 G: 3 B: 3
+---- Pixel X = 328 Y = 375 R: 255 G: 3 B: 3
+
+RED CLUSTER TEST PRINT FOR NODE 11535| ID 10 | X = 329 | Y = 375----- |LON 14.464445371499128 |LAT 50.02167042272079
+TEST PRINT RED CLUSTER
+---- Pixel X = 332 Y = 374 R: 255 G: 3 B: 3
+---- Pixel X = 327 Y = 375 R: 255 G: 3 B: 3
+---- Pixel X = 327 Y = 370 R: 255 G: 3 B: 3
+---- Pixel X = 326 Y = 375 R: 255 G: 3 B: 3
+---- Pixel X = 331 Y = 374 R: 255 G: 3 B: 3
+---- Pixel X = 324 Y = 366 R: 255 G: 3 B: 3
+---- Pixel X = 323 Y = 364 R: 255 G: 3 B: 3
+---- Pixel X = 325 Y = 368 R: 255 G: 3 B: 3
+---- Pixel X = 330 Y = 374 R: 255 G: 3 B: 3
+---- Pixel X = 326 Y = 369 R: 255 G: 3 B: 3
+---- Pixel X = 324 Y = 367 R: 255 G: 3 B: 3
+---- Pixel X = 328 Y = 371 R: 255 G: 3 B: 3
+---- Pixel X = 333 Y = 374 R: 255 G: 3 B: 3
+---- Pixel X = 323 Y = 365 R: 255 G: 3 B: 3
+---- Pixel X = 328 Y = 375 R: 255 G: 3 B: 3
+---- Pixel X = 330 Y = 373 R: 255 G: 3 B: 3
+---- Pixel X = 329 Y = 372 R: 255 G: 3 B: 3

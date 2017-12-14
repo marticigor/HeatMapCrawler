@@ -12,6 +12,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name = beans.RunnerBean.TABLE_NODES)
 public class NodeEntity {
@@ -154,15 +155,26 @@ public class NodeEntity {
 
 	@Override
 	public String toString() {
-		String value = "|id " + id + " |shotId " + shotId + " |lon " + lon + " |lat " + lat + "\n";
-		value += "adjacents:\n" + adjacents.size() + "\n";
+		StringBuilder sb  = new StringBuilder();
+		sb.append("\nN O D E    E N T I T Y\n");
+		sb.append("|id ").append(id).append(" |shotId ").append(shotId).append(" |lon ").append(lon)
+		.append(" |lat ").append(lat).append("\n");
+		sb.append("|weight ");
+		sb.append("\n|hashCode(): ").append(hashCode());
+		sb.append("\n\tadjacents:").append(adjacents.size()).append("\n");
+		
 		for (NodeEntity n : adjacents) {
 			if (n == this) {
 				System.err.println("reference to this in adjacents in NodeEntity.toString()");
 				continue;
 			}
-			value += (n.getId() + "---------- some NodeEntity\n");
+			sb.append("\n\t" + n.getId() + "---------------------------------");
+			sb.append("\n\thash: ").append(n.hashCode());
+			sb.append("\n\tshot: ").append(n.getShotId());
+			sb.append("\n\tlat: ").append(n.getLat());
+			sb.append("\n\tlon:").append(n.getLon());
+			sb.append("\n\tweight: ").append(n.getWeight());
 		}
-		return value;
+		return sb.toString();
 	}
 }
