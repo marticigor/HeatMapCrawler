@@ -2,7 +2,7 @@ package core;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import ifaces.for_string_beans.I_KickStart;
+import ifaces.spring_beans.I_KickStart;
 
 public class App {
 

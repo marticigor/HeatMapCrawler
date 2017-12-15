@@ -11,7 +11,7 @@ public class Node implements Comparable<Node> {
 	private final int y;
 	private double lon;
 	private double lat;
-	
+
 	private short weight;
 	//
 	private final long idHash;
@@ -37,7 +37,7 @@ public class Node implements Comparable<Node> {
 	 * @param id
 	 * @param shotId
 	 */
-	public Node(int x, int y, short weight,double lon, double lat, long id, long shotId) {
+	public Node(int x, int y, short weight, double lon, double lat, long id, long shotId) {
 
 		this.x = x;
 		this.y = y;
@@ -50,7 +50,7 @@ public class Node implements Comparable<Node> {
 		this.idHash = id;
 		this.shotId = shotId;
 
-		this.entity = new NodeEntity(shotId, lon, lat, weight,new HashSet<NodeEntity>());
+		this.entity = new NodeEntity(shotId, lon, lat, weight, new HashSet<NodeEntity>());
 
 	}
 
@@ -109,12 +109,13 @@ public class Node implements Comparable<Node> {
 	}
 
 	/**
-	 * @param weight the weight to set
+	 * @param weight
+	 *            the weight to set
 	 */
 	public void setWeight(short weight) {
 		this.weight = weight;
 	}
-	
+
 	public boolean getBottleneck() {
 		return isBottleneck;
 	}

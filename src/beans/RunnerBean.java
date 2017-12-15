@@ -1,7 +1,7 @@
 package beans;
 
 import core.Runner;
-import ifaces.for_string_beans.I_KickStart;
+import ifaces.spring_beans.I_KickStart;
 
 public class RunnerBean implements I_KickStart {
 

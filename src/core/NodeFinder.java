@@ -3,8 +3,14 @@ package core;
 import java.util.*;
 
 import core.image_filters.JustCopy;
+import core.node_finder_utils.TopLeftOfClosest;
+import core.node_finder_utils.CenterOfGravity;
+import core.node_finder_utils.MaximusPixels;
+import core.node_finder_utils.SurrPixels;
 import core.salient_areas_detectors.SimilaritySalientDetector;
 import core.utils.RoundIteratorOfPixels;
+import ifacec.node_finder.I_PixelExam;
+import ifacec.node_finder.I_PixelSelector;
 import ifaces.I_ColorScheme;
 import ifaces.I_SalientDetector;
 import lib_duke.ImageResource;
@@ -14,13 +20,12 @@ public class NodeFinder implements I_ColorScheme {
 
 	private ImageResource thresholded;
 	private final static int COMPUTE_WEIGHT_OUTLOOK = 5;
-	//max weight 122
+	// max weight 122
 	private ImageResource skeletonized;
 	private ArrayList<Node> nodes = new ArrayList<Node>();
 	private int width;
 	private int height;
 	private ImageResource noded;
-	private int nmbOfNodes = 0;
 
 	private int lookAheadAndBack;
 	private int surfaceConstantInterval1_MinExcl;
@@ -50,12 +55,9 @@ public class NodeFinder implements I_ColorScheme {
 
 	private final long shotId;
 
-	private RoundIteratorOfPixels iteratorRound = new RoundIteratorOfPixels();
-	private RecursiveClusterFinder rcf;
-
 	// represents white pixels clustered around future node
-	private HashSet<Pixel> allClusterAroundNode = new HashSet<Pixel>();
-	private final Runner myHandler;
+	private Set<Pixel> allClusterSetResource = new HashSet<Pixel>();
+
 	int borderSharpenStage;
 	private double[] bounds;
 	private boolean debug;
@@ -63,6 +65,11 @@ public class NodeFinder implements I_ColorScheme {
 
 	private static double spanLon = -1.0;
 	private static double spanLat = -1.0;
+
+	private I_PixelExam surrPixels;
+	private final Runner myHandler;
+	private RoundIteratorOfPixels iteratorRound = new RoundIteratorOfPixels();
+	private RecursiveClusterFinder rcf;
 
 	/**
 	 *
@@ -181,24 +188,16 @@ public class NodeFinder implements I_ColorScheme {
 
 		// detectSalientAreas
 
-		/**
-		 * public ForegroundCountingSalientDetector( ImageResource workBench,
-		 * ImageResource noded, ImageResource testAgainst, int
-		 * borderInSharpenStage, int lookAheadAndBack, int surfaceConstant1_1,
-		 * int surfaceConstant1_2, int surfaceConstant2_1, int
-		 * surfaceConstant2_2, int neighbourghsConstant, boolean visual, boolean
-		 * debug )
-		 **/
-
 		I_SalientDetector detector = new SimilaritySalientDetector(// ForegroundCountingSalientDetector(
 				skeletonized, noded, thresholded, borderSharpenStage, lookAheadAndBack, surfaceConstant1_1,
 				surfaceConstant1_2, surfaceConstant2_1, surfaceConstant2_2, neighbourghsConstant, visual, debug);
 
 		detector.detectSalientAreas(false);
 
+		// ##############################################
 		if (visual) {
 			noded.draw();
-			Pause.pause(9000);
+			Pause.pause(5000);
 		}
 
 		rcf = new RecursiveClusterFinder(noded, whiteScheme[0], whiteScheme[1], whiteScheme[2]);
@@ -221,11 +220,12 @@ public class NodeFinder implements I_ColorScheme {
 			System.out.println("______________________________________");
 		}
 
+		int helperCountOne = 0, helperCountTwo = 0;
 		for (Pixel pOfNoded : noded.pixels()) { // 1
 
 			if (isSetToBeClustered(pOfNoded)) { // 2 is the pixel white?
 
-				allClusterAroundNode = new HashSet<Pixel>();
+				allClusterSetResource = new HashSet<Pixel>();
 				rcf.resetAllCluster();
 
 				// now define recursively (in clusterFinder) a future node
@@ -235,120 +235,52 @@ public class NodeFinder implements I_ColorScheme {
 										// clusterFinder) allClusterAroundNode
 										// is build
 
-				if (debug && nmbOfNodes % 20 == 0)
-					printAllClustered(allClusterAroundNode); // size of print
+				if (debug && nodes.size() % 20 == 0)
+					printAllClustered(allClusterSetResource); // size of print
 																// REDUCED
 
-				int neighboursToFindMax;
-				int maxNeighbours = 0;
+				// find the Pixel - future Node queue start
 
-				int sumX = 0;
-				int sumY = 0;
-				int centerGravityX = 0;
-				int centerGravityY = 0;
+				surrPixels = new SurrPixels(noded, whiteScheme);
+				int maxSurr = getMaxNumberOfSurroundingWhites(allClusterSetResource);
+				I_PixelSelector maximusesSurr = new MaximusPixels();
+				maximusesSurr.proces(allClusterSetResource, surrPixels, maxSurr);
+				Set<Pixel> maximusesSetResource = maximusesSurr.getSet();
+				I_PixelSelector center = new CenterOfGravity();
+				center.proces(maximusesSetResource, null, 0);
+				Set<Pixel> closestToCenter = center.getSet();
 
-				ArrayList<Node> maximusNodes = new ArrayList<Node>();
-
-				for (Pixel pChecked : allClusterAroundNode) { // find max
-
-					neighboursToFindMax = getNumberOfSurrWhites(pChecked, noded);
-
-					if (neighboursToFindMax > maxNeighbours)
-						maxNeighbours = neighboursToFindMax;
-
-				}
-
-				for (Pixel maybeMaximus : allClusterAroundNode) {
-
-					if (getNumberOfSurrWhites(maybeMaximus, noded) == maxNeighbours) {
-
-						// bounds
-
-						// 0 lon east
-						// 1 lat north
-						// 2 lat south
-						// 3 lon west
-						// 4 lat center
-						// 5 lon center
-
-						x = maybeMaximus.getX();
-						y = maybeMaximus.getY();
-
-						lon = bounds[3] + ((((double) x / ((double) (width))) * dLon) + lonShiftToPixCenter);
-						lat = bounds[1] - ((((double) y / ((double) (height))) * dLat) + latShiftToPixCenter);
-						
-						weight = computeWeight(x,y);
-						
-						// the only instantiation of Node in the project
-						Node node = new Node(x, y, weight, lon, lat, myHandler.incrAndGetId(), shotId);
-
-						maximusNodes.add(node);
-
-						// find average X Y for this cluster of maximuses
-						sumX += node.getX();
-						sumY += node.getY();
-
-					}
-				}
-
-				out: {
-
-					centerGravityX = sumX / maximusNodes.size();
-					centerGravityY = sumY / maximusNodes.size();
-
-					double minDist = Double.MAX_VALUE;
-
-					// select one of maximusNodes and add it to nodes;
-
-					for (Node maybeClosest : maximusNodes) {
-
-						// we do have (among maximusNodes) a node with exactly
-						// avg x y values
-
-						if (maybeClosest.getX() == centerGravityX && maybeClosest.getY() == centerGravityY) {
-							nodes.add(maybeClosest);
-							nmbOfNodes++;
-							if (debug)
-								System.out.println(maybeClosest.toString());
-							break out;
-						}
-
-						// calculate dist to center of gravity
-
-						int deltaX = Math.abs(maybeClosest.getX() - centerGravityX);
-						int deltaY = Math.abs(maybeClosest.getY() - centerGravityY);
-						double dist = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
-
-						maybeClosest.setDstToCenter(dist);
-						if (dist < minDist)
-							minDist = dist;
-					}
-
-					for (Node possiblyClosestNode : maximusNodes) {
-
-						if (possiblyClosestNode.getDstToCenter() == minDist) {
-							nodes.add(possiblyClosestNode);
-							if (debug)
-								System.out.println(possiblyClosestNode.toString());
-							break;
-						}
-					}
-
-					nmbOfNodes++;
-				} // out
-
-				// we are done with white nodes in allClusterAroundNode
-				for (Pixel toRed : allClusterAroundNode) {
+				if (closestToCenter.size() == 0) {
+					throw new RuntimeException("closestToCenter.size() = 0");
+				} else if (closestToCenter.size() == 1)
+					helperCountOne++;
+				else if (closestToCenter.size() == 2)
+					helperCountTwo++;
+				else if (closestToCenter.size() > 2 && (debug || visual))
+					System.err.println("ClosestToCenter.size() > 2 :" + closestToCenter.size());
+				I_PixelSelector topLeft = new TopLeftOfClosest();
+				topLeft.proces(closestToCenter, null, 0);
+				Set <Pixel> theWinner = topLeft.getSet();
+				// we are done with white pixels in allClusterAroundNode
+				for (Pixel toRed : allClusterSetResource) {
 					setRed(toRed);
 				}
 			} // 2
 		} // 1
+
+		System.out.println("HELPER COUNT ONE: " + helperCountOne);
+		System.out.println("HELPER COUNT TWO: " + helperCountTwo);
 
 		// now set pixels white
 		Pixel px;
 		for (Node n : nodes) {
 			px = noded.getPixel(n.getX(), n.getY());
 			setWhite(px);
+		}
+		// ##############################################
+		if (visual) {
+			noded.draw();
+			Pause.pause(5000);
 		}
 	}
 
@@ -359,8 +291,49 @@ public class NodeFinder implements I_ColorScheme {
 	 */
 	private void buildBranch(Pixel p) {
 		rcf.buildPartialCluster(p);
-		this.allClusterAroundNode = rcf.getAllCluster();
-		assert (allClusterAroundNode.size() != 0);
+		this.allClusterSetResource = rcf.getAllCluster();
+		assert (allClusterSetResource.size() != 0);
+	}
+
+	/**
+	 * 
+	 * @param cluster
+	 * @return
+	 */
+	private int getMaxNumberOfSurroundingWhites(Set<Pixel> cluster) {
+		assert (cluster.size() > 0);
+		int max = 0;
+		int curr = 0;
+		for (Pixel p : cluster) {
+			curr = surrPixels.exam(p);
+			if (curr > max)
+				max = curr;
+		}
+		return max;
+	}
+
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	private short computeWeight(int x, int y) {
+		// ImageResource thresholded;
+		// int borderSharpenStage;
+		short weight = 0;// weird, on purpose
+		Pixel pix;
+		for (int xNow = (x - COMPUTE_WEIGHT_OUTLOOK); xNow <= x + COMPUTE_WEIGHT_OUTLOOK; xNow++) {
+			for (int yNow = (y - COMPUTE_WEIGHT_OUTLOOK); yNow <= y + COMPUTE_WEIGHT_OUTLOOK; yNow++) {
+				// this will get corrected when concatenating graph later;
+				if (xNow < 0 || xNow > thresholded.getWidth() - 1 || yNow < 0 || yNow > thresholded.getHeight() - 1)
+					continue;
+				pix = thresholded.getPixel(xNow, yNow);
+				if (isRoutable(pix))
+					weight++;
+			}
+		}
+		return weight;
 	}
 
 	/**
@@ -373,61 +346,18 @@ public class NodeFinder implements I_ColorScheme {
 	}
 
 	/**
-	 *
-	 */
-	private int getNumberOfSurrWhites(Pixel p, ImageResource ir) {
-
-		int neighbours = 0;
-
-		iteratorRound.setImageResource(ir);
-		iteratorRound.setPixelToCheckAround(p);
-
-		for (Pixel myPx : iteratorRound) {
-			if (myPx.getRed() == whiteScheme[0] && myPx.getGreen() == whiteScheme[1]
-					&& myPx.getBlue() == whiteScheme[2])
-				neighbours++;
-		}
-		return neighbours;
-	}
-
-	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @return
-	 */
-	private short computeWeight(int x, int y){
-		//ImageResource thresholded;
-		//int borderSharpenStage;
-		short weight = 0;//weird, on purpose
-		Pixel pix;
-		for(int xNow = (x - COMPUTE_WEIGHT_OUTLOOK); xNow <= x + COMPUTE_WEIGHT_OUTLOOK; xNow ++){
-			for(int yNow = (y - COMPUTE_WEIGHT_OUTLOOK); yNow <= y + COMPUTE_WEIGHT_OUTLOOK; yNow ++){
-				//this will get corrected when concatenating graph later;
-				if(xNow < 0 || xNow > thresholded.getWidth() - 1 ||
-						yNow < 0 || yNow > thresholded.getHeight() - 1) continue;
-				pix = thresholded.getPixel(xNow, yNow);
-				if(isRoutable(pix)) weight ++;
-			}
-		}
-		return weight;
-	}
-	
-	/**
 	 * @param pix
 	 * @return
 	 */
-	private boolean isRoutable(Pixel pix){
-		return pix.getRed() == redScheme[0] &&
-				pix.getGreen() == redScheme[1] &&
-						pix.getBlue() == redScheme[2];
+	private boolean isRoutable(Pixel pix) {
+		return pix.getRed() == redScheme[0] && pix.getGreen() == redScheme[1] && pix.getBlue() == redScheme[2];
 	}
-	
+
 	/**
 	 * prints simplistic visualization of clusters
 	 */
-	private void printAllClustered(HashSet<Pixel> cluster) {
-
+	private void printAllClustered(Set<Pixel> cluster) {
+		assert (cluster.size() > 0);
 		System.out.println("--------------------------");
 
 		boolean[][] clusterA = new boolean[(lookAheadAndBack * 2 + 1)][(lookAheadAndBack * 2 + 1)];
@@ -455,9 +385,7 @@ public class NodeFinder implements I_ColorScheme {
 			yToVis = yToVis >= (lookAheadAndBack * 2 + 1) ? (lookAheadAndBack * 2) : yToVis;
 
 			clusterA[xToVis][yToVis] = true;
-
 		}
-
 		for (int x = 0; x < clusterA.length; x++) {
 			for (int y = 0; y < clusterA.length; y++) {
 
@@ -465,7 +393,6 @@ public class NodeFinder implements I_ColorScheme {
 					sb.append("X");
 				else
 					sb.append("_");
-
 			}
 			System.out.println(sb.toString());
 			sb = new StringBuilder();

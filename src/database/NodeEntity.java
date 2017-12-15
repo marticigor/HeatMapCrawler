@@ -12,7 +12,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = beans.RunnerBean.TABLE_NODES)
 public class NodeEntity {
@@ -93,7 +92,7 @@ public class NodeEntity {
 	public void setLat(double l) {
 		this.lat = l;
 	}
-	
+
 	/**
 	 * @return the weight
 	 */
@@ -102,7 +101,8 @@ public class NodeEntity {
 	}
 
 	/**
-	 * @param weight the weight to set
+	 * @param weight
+	 *            the weight to set
 	 */
 	public void setWeight(short weight) {
 		this.weight = weight;
@@ -155,14 +155,14 @@ public class NodeEntity {
 
 	@Override
 	public String toString() {
-		StringBuilder sb  = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		sb.append("\nN O D E    E N T I T Y\n");
-		sb.append("|id ").append(id).append(" |shotId ").append(shotId).append(" |lon ").append(lon)
-		.append(" |lat ").append(lat).append("\n");
+		sb.append("|id ").append(id).append(" |shotId ").append(shotId).append(" |lon ").append(lon).append(" |lat ")
+				.append(lat).append("\n");
 		sb.append("|weight ");
 		sb.append("\n|hashCode(): ").append(hashCode());
 		sb.append("\n\tadjacents:").append(adjacents.size()).append("\n");
-		
+
 		for (NodeEntity n : adjacents) {
 			if (n == this) {
 				System.err.println("reference to this in adjacents in NodeEntity.toString()");
