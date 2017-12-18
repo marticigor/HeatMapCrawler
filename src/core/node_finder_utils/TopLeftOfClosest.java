@@ -14,7 +14,6 @@ public class TopLeftOfClosest implements I_PixelSelector {
 	public void proces(Set<Pixel> inputSet, I_PixelExam exam, int... args) {
 		assert(exam == null);
 		assert(args.length == 1 && args [0] == 0);
-		//System.out.println("CALL +++++++++++++++++++++++++++++++++++++++++++++++++");
 		CallForDimen xCall = Xcaller::get;
 		CallForDimen yCall = Ycaller::get;
 		List<Pixel> survivors = new ArrayList<Pixel>(inputSet);//no need to optimize here
@@ -24,10 +23,8 @@ public class TopLeftOfClosest implements I_PixelSelector {
 		for(CallForDimen stage : stages){
 			prune.clear();
 			//iterate survivors, find min x y respectively, prune
-			//System.out.println("===============================stage");
 			int min = Integer.MAX_VALUE, curr;
 			for (Pixel p : survivors){
-				//System.out.println("survivors " + p);
 				curr = stage.get(p);
 				if(curr < min) min = curr;
 			}
@@ -35,9 +32,7 @@ public class TopLeftOfClosest implements I_PixelSelector {
 			for (Pixel p : prune) survivors.remove(p);
 		}
 		if(survivors.size() != 1)throw new RuntimeException("survivors.size() != 1");
-		//System.out.println("winner " + survivers.get(0));
 		outputSet = new HashSet <Pixel>(survivors);
-		
 	}
 
 	private interface CallForDimen { int get(Pixel p); }
