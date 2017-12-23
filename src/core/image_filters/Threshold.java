@@ -31,7 +31,9 @@ public class Threshold extends BaseFilter implements I_ColorScheme {
 				inP = in.getPixel(x, y);
 				outP = out.getPixel(inP.getX(), inP.getY());
 
-				if (inP.getRed() == inP.getGreen() && inP.getGreen() == inP.getBlue()) {
+				if (  (inP.getRed() == inP.getGreen() && inP.getGreen() == inP.getBlue()) ||
+						isWatermarkInSomeCases(inP) // COMMENT THIS OUT WHEN NO WATERMARK
+						) {
 
 					// valueOfGray = inP.getRed();
 					// outP.setRed(valueOfGray);
@@ -75,6 +77,16 @@ public class Threshold extends BaseFilter implements I_ColorScheme {
 		dev += Math.abs(p.getBlue() - avg);
 
 		if (dev > devToMakeItValidRoutable)
+			return true;
+		else
+			return false;
+	}
+
+	/*
+	 * switch this feature on in rare case watermark in right bottom
+	 */
+	private boolean isWatermarkInSomeCases(Pixel p) {
+		if (p.getX() > 856 && p.getY() > 1006)
 			return true;
 		else
 			return false;
