@@ -19,7 +19,7 @@ public class OutputXml {
 
 	private Document outputDocument;
 	private String filenameOutput = "not_defined.gpx";
-	private String trackName = "heatExp";
+	private String trackName = "not_defined";
 	private static final String URI = "http://www.topografix.com/GPX/1/1";
 
 	private List<Trackpoint> track;
@@ -30,8 +30,9 @@ public class OutputXml {
 	private Element trackSeqElement;
 	private Element trackpointElement;
 
-	public OutputXml(List<Trackpoint> track, String filenameOutput) {
+	public OutputXml(List<Trackpoint> track, String trackName, String filenameOutput) {
 		this.track = track;
+		this.trackName = trackName;
 		this.filenameOutput = filenameOutput;
 	}
 

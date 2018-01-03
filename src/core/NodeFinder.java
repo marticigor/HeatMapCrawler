@@ -4,6 +4,7 @@ import java.util.*;
 
 import core.image_filters.JustCopy;
 import core.node_finder_utils.TopLeftOfClosest;
+import core.nodes_filters.AffectedByBorder;
 import core.node_finder_utils.CenterOfGravity;
 import core.node_finder_utils.MaximusPixels;
 import core.node_finder_utils.SurrPixels;
@@ -11,6 +12,7 @@ import core.salient_areas_detectors.SimilaritySalientDetector;
 import ifacec.node_finder.I_PixelExam;
 import ifacec.node_finder.I_PixelSelector;
 import ifaces.I_ColorScheme;
+import ifaces.I_NodeFilter;
 import ifaces.I_SalientDetector;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
@@ -21,7 +23,7 @@ public class NodeFinder implements I_ColorScheme {
 	private final static int COMPUTE_WEIGHT_OUTLOOK = 5;
 	// max weight 122
 	private ImageResource skeletonized;
-	private ArrayList<Node> nodes = new ArrayList<Node>();
+	private List<Node> nodes = new ArrayList<Node>();
 	private int width;
 	private int height;
 	private ImageResource noded;
@@ -294,7 +296,13 @@ public class NodeFinder implements I_ColorScheme {
 
 		//System.out.println("HELPER COUNT ONE: " + helperCountOne);
 		//System.out.println("HELPER COUNT TWO: " + helperCountTwo);
-
+		
+		System.out.println("NODES BEFORE BORDER filtering: " + nodes.size());
+		I_NodeFilter abb = new AffectedByBorder(lookAheadAndBack * 2,width, height);
+		List<Node> filtered = abb.procesChunk(nodes);
+		nodes = filtered;
+		System.out.println("NODES AFTER BORDER filtering: " + nodes.size());
+		
 		// now set pixels white
 		Pixel px;
 		for (Node n : nodes) {
@@ -427,7 +435,7 @@ public class NodeFinder implements I_ColorScheme {
 		return noded;
 	}
 
-	public ArrayList<Node> getNodes() {
+	public List<Node> getNodes() {
 		return nodes;
 	}
 

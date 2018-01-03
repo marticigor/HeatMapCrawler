@@ -16,7 +16,7 @@ public class OutputTester {
 		}
 
 		System.out.println("track.size " + track.size());
-		OutputXml out = new OutputXml(track, "filename.gpx");
+		OutputXml out = new OutputXml(track, "test", "filename.gpx");
 
 		try {
 

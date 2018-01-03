@@ -24,7 +24,7 @@ public class Node implements Comparable<Node> {
 									// ImageResource;
 	private NodeEntity entity = null;
 
-	// finaly I will want this graph format
+	// graph format
 	// https://www.dropbox.com/s/8et183ufeskkibi/IMG_20171019_194557.jpg?dl=0
 
 	// https://stackoverflow.com/questions/35958335/jpa-onetomany-on-same-entity

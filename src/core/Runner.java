@@ -59,8 +59,8 @@ public class Runner implements Runnable {
 	private final int sizeDivKonq = 4;
 
 	// config in aplicationContext.xml
-	boolean visual; // also pauses execution now and then, is purism (e.g
-					// boolean pauseVisual;) really needed here?
+	boolean visual; // also pauses execution now and then
+
 	boolean debug;
 
 	private ImageChunks chunks;
@@ -272,7 +272,7 @@ public class Runner implements Runnable {
 						tr = new Trackpoint(n.getLon(), n.getLat());
 						points.add(tr);// inside envelope should be
 					}
-					OutputXml out = new OutputXml(points, fileName + ".gpx");
+					OutputXml out = new OutputXml(points, "debug_output", fileName + ".gpx");
 					try {
 						out.composeOutputDoc();
 						out.writeOutputFile();
