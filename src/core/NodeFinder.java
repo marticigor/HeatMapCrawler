@@ -21,6 +21,7 @@ public class NodeFinder implements I_ColorScheme {
 
 	private ImageResource thresholded;
 	private final static int COMPUTE_WEIGHT_OUTLOOK = 5;
+	private final static int MULTIPLICATE_LOOKAHEADANDBACK = 12;
 	// max weight 122
 	private ImageResource skeletonized;
 	private List<Node> nodes = new ArrayList<Node>();
@@ -202,7 +203,7 @@ public class NodeFinder implements I_ColorScheme {
 
 		rcf = new RecursiveClusterFinder(noded, whiteScheme[0], whiteScheme[1], whiteScheme[2]);
 
-		int x,y;
+		int x, y;
 		double lon, lat;
 		short weight;
 		Pixel theOneP = null;
@@ -221,7 +222,7 @@ public class NodeFinder implements I_ColorScheme {
 			System.out.println("______________________________________");
 		}
 
-		//int helperCountOne = 0, helperCountTwo = 0;
+		// int helperCountOne = 0, helperCountTwo = 0;
 		for (Pixel pOfNoded : noded.pixels()) { // 1
 
 			if (isSetToBeClustered(pOfNoded)) { // 2 is the pixel white?
@@ -252,21 +253,22 @@ public class NodeFinder implements I_ColorScheme {
 				Set<Pixel> closestToCenter = center.getSet();
 
 				/*
-				if (closestToCenter.size() == 0) {
-					throw new RuntimeException("closestToCenter.size() = 0");
-				} else if (closestToCenter.size() == 1)
-					helperCountOne++;
-				else if (closestToCenter.size() == 2)
-					helperCountTwo++;
-				else if (closestToCenter.size() > 2 && (debug || visual))
-					System.err.println("ClosestToCenter.size() > 2 :" + closestToCenter.size());
-				*/
-				
+				 * if (closestToCenter.size() == 0) { throw new
+				 * RuntimeException("closestToCenter.size() = 0"); } else if
+				 * (closestToCenter.size() == 1) helperCountOne++; else if
+				 * (closestToCenter.size() == 2) helperCountTwo++; else if
+				 * (closestToCenter.size() > 2 && (debug || visual))
+				 * System.err.println("ClosestToCenter.size() > 2 :" +
+				 * closestToCenter.size());
+				 */
+
 				I_PixelSelector topLeft = new TopLeftOfClosest();
 				topLeft.proces(closestToCenter, null, 0);
-				Set <Pixel> theWinnerSet = topLeft.getSet();//guaranteed to have only one member
-				for(Pixel pixel : theWinnerSet) theOneP = pixel;
-				
+				Set<Pixel> theWinnerSet = topLeft.getSet();// guaranteed to have
+															// only one member
+				for (Pixel pixel : theWinnerSet)
+					theOneP = pixel;
+
 				// bounds
 
 				// 0 lon east
@@ -278,15 +280,15 @@ public class NodeFinder implements I_ColorScheme {
 
 				x = theOneP.getX();
 				y = theOneP.getY();
-				
+
 				lon = bounds[3] + ((((double) x / ((double) (width))) * dLon) + lonShiftToPixCenter);
 				lat = bounds[1] - ((((double) y / ((double) (height))) * dLat) + latShiftToPixCenter);
 
 				weight = computeWeight(x, y);
-				
+
 				Node node = new Node(x, y, weight, lon, lat, myHandler.incrAndGetId(), shotId);
 				nodes.add(node);
-				
+
 				// we are done with white pixels in allClusterAroundNode
 				for (Pixel toRed : allClusterSetResource) {
 					setRed(toRed);
@@ -294,15 +296,15 @@ public class NodeFinder implements I_ColorScheme {
 			} // 2
 		} // 1
 
-		//System.out.println("HELPER COUNT ONE: " + helperCountOne);
-		//System.out.println("HELPER COUNT TWO: " + helperCountTwo);
-		
-		System.out.println("NODES BEFORE BORDER filtering: " + nodes.size());
-		I_NodeFilter abb = new AffectedByBorder(lookAheadAndBack * 2,width, height);
+		// System.out.println("HELPER COUNT ONE: " + helperCountOne);
+		// System.out.println("HELPER COUNT TWO: " + helperCountTwo);
+
+		System.out.println("\nNODES BEFORE BORDER filtering: " + nodes.size());
+		I_NodeFilter abb = new AffectedByBorder(lookAheadAndBack * MULTIPLICATE_LOOKAHEADANDBACK, width, height);
 		List<Node> filtered = abb.procesChunk(nodes);
 		nodes = filtered;
 		System.out.println("NODES AFTER BORDER filtering: " + nodes.size());
-		
+
 		// now set pixels white
 		Pixel px;
 		for (Node n : nodes) {

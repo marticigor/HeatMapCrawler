@@ -9,26 +9,18 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import core.nodes_decorators.TestMutualVisibility;
 import core.nodes_filters.ZeroAdjacencyNodesFilter;
-import core.tasks.TaskCanny;
-import core.tasks.TaskGaussian;
-import core.tasks.TaskHighlight;
 import core.tasks.TaskJustCopy;
 import core.tasks.TaskSharpen;
-import core.tasks.TaskSkeleton;
 import database.ManageNodeEntity;
 import database.NmbShotsEntity;
 import database.NodeEntity;
-import ifaces.I_NodeFilter;
 import lib_duke.DirectoryResource;
 import lib_duke.ImageResource;
-import lib_duke.Pixel;
-import mockery.NodeGraphMocks;
 import output.OutputXml;
 import output.Trackpoint;
 
@@ -36,7 +28,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 import java.util.regex.Pattern;
 
-@SuppressWarnings("unused")
+
 public class Runner implements Runnable {
 
 	static {
@@ -431,6 +423,7 @@ public class Runner implements Runnable {
 	 *
 	 * @param nodes
 	 */
+	@SuppressWarnings("unused")
 	private void printBuiltNodes(List<Node> nodes) {
 		for (Node n : nodes) {
 			System.out.println("------------------------------------------------------");
