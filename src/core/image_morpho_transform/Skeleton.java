@@ -170,19 +170,19 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			// p8 pivot p4
 			// ____ p6 ____
 
-			// Pixel p2 = in.getPixel(pivot.getX(), pivot.getY() - 1);
-			// Pixel p8 = in.getPixel(pivot.getX() - 1, pivot.getY());
-			// Pixel p4 = in.getPixel(pivot.getX() + 1, pivot.getY());
-			// Pixel p6 = in.getPixel(pivot.getX(), pivot.getY() + 1);
+			 //Pixel p2 = in.getPixel(pivot.getX(), pivot.getY() - 1);
+			 //Pixel p8 = in.getPixel(pivot.getX() - 1, pivot.getY());
+			 //Pixel p4 = in.getPixel(pivot.getX() + 1, pivot.getY());
+			 //Pixel p6 = in.getPixel(pivot.getX(), pivot.getY() + 1);
 
 			// ensures that 2-pixel wide vertical lines do not get completely
 			// eroded by the algorithm.
-			boolean vert = true;// isBackground(p2) || isBackground(p4) ||
-								// isBackground(p8);
+			boolean vert = true;//isBackground(p2) || isBackground(p4) ||
+								 //isBackground(p8);
 			// ensures that 2-pixel wide horizontal lines do not get completely
 			// eroded by the algorithm.
-			boolean hori = true;// isBackground(p2) || isBackground(p4) ||
-								// isBackground(p6);
+			boolean hori = true;//isBackground(p2) || isBackground(p4) ||
+					//isBackground(p6);
 
 			return neighbors && vert && hori;
 		}

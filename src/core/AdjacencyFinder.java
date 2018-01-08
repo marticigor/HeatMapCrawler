@@ -27,6 +27,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 	private int bottleneckSize, passableSize;
 	private LocalyDisconnectTest ldt;
 	private HashSet<Pixel> branch;
+	private int borderInSharpenStage;
 
 	// boolean investigative = false; //hardcore problem analysis approach.. sad
 
@@ -39,6 +40,8 @@ public class AdjacencyFinder implements I_ColorScheme {
 		this.debug = debug;
 		this.bottleneckSize = bottleneckSize;
 		this.passableSize = passableSize;
+
+		this.borderInSharpenStage = borderInSharpenStage;
 
 		riop = new RoundIteratorOfPixels();
 		riop.setImageResource(noded);
@@ -232,9 +235,9 @@ public class AdjacencyFinder implements I_ColorScheme {
 		rcf.resetAllCluster();
 		rcf.buildPartialCluster(currP);
 		branch = rcf.getAllCluster();
-		// if(branch.size() == 0 && (visual || debug)){
-		// System.err.print(" ZERO size branch.");
-		// }
+		if (branch.size() == 0 && (visual || debug)) {
+			System.err.print(" ZERO size branch.");
+		}
 		copyBranchIntoRedCluster(branch);
 	}
 
@@ -262,6 +265,8 @@ public class AdjacencyFinder implements I_ColorScheme {
 			maskSize = (n.getBottleneck()) ? bottleneckSize : passableSize;
 
 			toSizes = (maskSize - 1) / 2;
+
+			assert (toSizes <= borderInSharpenStage);
 
 			for (int x = n.getX() - toSizes; x < n.getX() + toSizes + 1; x++) {
 				for (int y = n.getY() - toSizes; y < n.getY() + toSizes + 1; y++) {

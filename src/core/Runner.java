@@ -28,7 +28,6 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 import java.util.regex.Pattern;
 
-
 public class Runner implements Runnable {
 
 	static {
@@ -45,8 +44,8 @@ public class Runner implements Runnable {
 			thresholded_surface4, thresholded_neighbours;
 
 	// config NOT in aplicationContext.xml
-	private final int bottleneckSize = 1; // 3
-	private final int passableSize = 1; // 3
+	private final int bottleneckSize = 5; // 3 //1
+	private final int passableSize = 7; // 3 //1
 
 	private final int sizeDivKonq = 4;
 
@@ -93,7 +92,10 @@ public class Runner implements Runnable {
 		this.thresholded_surface4 = thresholded_v6;
 		this.thresholded_neighbours = thresholded_nei;
 
-		this.borderInSharpenStage = Math.max(thresholded_look, look);
+		assert(passableSize >= bottleneckSize);
+		
+		this.borderInSharpenStage = Math.max(Math.max((bottleneckSize - 1) / 2, (passableSize - 1) / 2),
+				Math.max(thresholded_look, look));
 
 		this.visual = visual;
 		this.debug = debug;
@@ -284,21 +286,23 @@ public class Runner implements Runnable {
 				TestMutualVisibility tmv = new TestMutualVisibility();
 				int newEdgesNmb = tmv.proces(nodes);
 				System.out.println("NEW EDGES (TestMutualVisibility): " + newEdgesNmb);
-				if (newEdgesNmb != 0)
-					throw new RuntimeException("TestMutualVisibility");
+				if (newEdgesNmb != 0) {
+					System.err.println(" THIS MEANS WARNING!!!");
+					// throw new RuntimeException("TestMutualVisibility");
+				}
 				ZeroAdjacencyNodesFilter zanf = new ZeroAdjacencyNodesFilter();
 				List<Node> noZeroAdjacents = zanf.procesChunk(nodes);
 				System.out.println("ZERO ADJACENCY NODES FILTERED OUT: " + (nodes.size() - noZeroAdjacents.size()));
 
 				if (visual) {
-					af.drawAdjacencyEdges(nodes);// noZeroAdjacents
+					af.drawAdjacencyEdges(noZeroAdjacents);
 					Pause.pause(2000);
 				}
 
-				if (nodes.size() == 0)
-					System.err.println("ZERO NODES TO PERSIST!");// noZeroAdjacents
+				if (noZeroAdjacents.size() == 0)
+					System.err.println("ZERO NODES TO PERSIST!");
 				else
-					persist(nodes);// noZeroAdjacents
+					persist(noZeroAdjacents);
 
 				// OR inject MOCKS
 				// NodeGraphMocks mocks = new NodeGraphMocks();

@@ -21,7 +21,7 @@ public class NodeFinder implements I_ColorScheme {
 
 	private ImageResource thresholded;
 	private final static int COMPUTE_WEIGHT_OUTLOOK = 5;
-	private final static int MULTIPLICATE_LOOKAHEADANDBACK = 12;
+	private final static int MULTIPLICATE_LOOKAHEADANDBACK = 5;
 	// max weight 122
 	private ImageResource skeletonized;
 	private List<Node> nodes = new ArrayList<Node>();
@@ -298,12 +298,15 @@ public class NodeFinder implements I_ColorScheme {
 
 		// System.out.println("HELPER COUNT ONE: " + helperCountOne);
 		// System.out.println("HELPER COUNT TWO: " + helperCountTwo);
-
-		System.out.println("\nNODES BEFORE BORDER filtering: " + nodes.size());
-		I_NodeFilter abb = new AffectedByBorder(lookAheadAndBack * MULTIPLICATE_LOOKAHEADANDBACK, width, height);
-		List<Node> filtered = abb.procesChunk(nodes);
-		nodes = filtered;
-		System.out.println("NODES AFTER BORDER filtering: " + nodes.size());
+		
+		//BE CAREFULL USING AffectedByBorder filter.
+		//IT MAY CUT IMPORTANT LINES EITHER STRICTLY VERTICAL OR HORIZONTAL 
+		
+		//System.out.println("\nNODES BEFORE BORDER filtering: " + nodes.size());
+		//I_NodeFilter abb = new AffectedByBorder(lookAheadAndBack * MULTIPLICATE_LOOKAHEADANDBACK, width, height);
+		//List<Node> filtered = abb.procesChunk(nodes);
+		//nodes = filtered;
+		//System.out.println("NODES AFTER BORDER filtering: " + nodes.size());
 
 		// now set pixels white
 		Pixel px;

@@ -87,12 +87,12 @@ public class Threshold extends BaseFilter implements I_ColorScheme {
 	 */
 	private boolean isWatermarkInSomeCases(Pixel p) {
 		
-		return false;
+		//return false;
 		//COMMENT THIS OUT WHEN NO WATERMARK
-		//if (p.getX() > 856 && p.getY() > 1006)
-			//return true;
-		//else
-			//return false;
+		if (p.getX() > 856 && p.getY() > 1006)
+			return true;
+		else
+			return false;
 	}
 
 }
