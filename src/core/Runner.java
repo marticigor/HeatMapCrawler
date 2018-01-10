@@ -287,7 +287,7 @@ public class Runner implements Runnable {
 				int newEdgesNmb = tmv.proces(nodes);
 				System.out.println("NEW EDGES (TestMutualVisibility): " + newEdgesNmb);
 				if (newEdgesNmb != 0) {
-					System.err.println(" THIS MEANS WARNING!!!");
+					System.err.println("\nNEW EDGES WARNING!!!\n");
 					// throw new RuntimeException("TestMutualVisibility");
 				}
 				ZeroAdjacencyNodesFilter zanf = new ZeroAdjacencyNodesFilter();
