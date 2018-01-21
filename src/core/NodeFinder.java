@@ -296,18 +296,6 @@ public class NodeFinder implements I_ColorScheme {
 			} // 2
 		} // 1
 
-		// System.out.println("HELPER COUNT ONE: " + helperCountOne);
-		// System.out.println("HELPER COUNT TWO: " + helperCountTwo);
-		
-		//BE CAREFULL USING AffectedByBorder filter.
-		//IT MAY CUT IMPORTANT LINES EITHER STRICTLY VERTICAL OR HORIZONTAL 
-		
-		//System.out.println("\nNODES BEFORE BORDER filtering: " + nodes.size());
-		//I_NodeFilter abb = new AffectedByBorder(lookAheadAndBack * MULTIPLICATE_LOOKAHEADANDBACK, width, height);
-		//List<Node> filtered = abb.procesChunk(nodes);
-		//nodes = filtered;
-		//System.out.println("NODES AFTER BORDER filtering: " + nodes.size());
-
 		// now set pixels white
 		Pixel px;
 		for (Node n : nodes) {
