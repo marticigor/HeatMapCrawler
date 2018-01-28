@@ -83,16 +83,16 @@ public class Threshold extends BaseFilter implements I_ColorScheme {
 	}
 
 	/*
-	 * switch this feature on in rare case watermark in right bottom
+	 * switch this feature on in the rare case of a watermark in right bottom
 	 */
 	private boolean isWatermarkInSomeCases(Pixel p) {
 		
-		//return false;
+		return false;
 		//COMMENT THIS OUT WHEN NO WATERMARK
-		if (p.getX() > 856 && p.getY() > 1006)
-			return true;
-		else
-			return false;
+		//if (p.getX() > 856 && p.getY() > 1006)
+			//return true;
+		//else
+			//return false;
 	}
 
 }

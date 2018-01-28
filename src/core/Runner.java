@@ -44,8 +44,10 @@ public class Runner implements Runnable {
 			thresholded_surface4, thresholded_neighbours;
 
 	// config NOT in aplicationContext.xml
-	private final int bottleneckSize = 5; // 3 //1
-	private final int passableSize = 7; // 3 //1
+	// carefull carefull carefull. Can this break adjacency relations in case of very close nodes?
+	// YES, IT CAN, keep it 1;
+	private final int bottleneckSize = 1; // 3 //1//5
+	private final int passableSize = 1; // 3 //1//7
 
 	private final int sizeDivKonq = 4;
 
