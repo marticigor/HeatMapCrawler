@@ -16,7 +16,7 @@ public class MapNmbToColor<T extends Number> {
 			color.blue = 0;
 			return color;
 		}
-		// cevena
+		// cervena
 		else if (iValue > 210 && iValue <= 230) {
 			color.red = 255;
 			color.green = 0;
