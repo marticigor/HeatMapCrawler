@@ -116,10 +116,20 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			foregroundColorThreshold = foregroundColor;
 		}
 
+		/**
+		 * 
+		 * @param p
+		 * @return cares about red only
+		 */
 		boolean isForeground(Pixel p) {
 			return (p.getRed() >= foregroundColorThreshold);
 		}
 
+		/**
+		 * 
+		 * @param p
+		 * @return cares about red only
+		 */
 		boolean isBackground(Pixel p) {
 			return (p.getRed() < foregroundColorThreshold);
 		}
@@ -216,6 +226,17 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			return x && y;
 		}
 
+		/**
+		 * 
+		 * @param p
+		 * @return
+		 */
+		boolean isWithinImageBounds(int x, int y) {
+			boolean xOk = (x < in.getWidth() && x >= 0);
+			boolean yOk = (y < in.getHeight() && y >= 0);
+			return xOk && yOk;
+		}
+		
 		/**
 		 * 
 		 */
