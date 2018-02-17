@@ -10,6 +10,7 @@ import core.image_filters.GaussianBlur;
 import core.image_filters.JustCopy;
 import core.image_filters.Threshold;
 import core.image_filters.filter_utils.MapMerge;
+import core.image_morpho_transform.DistanceMapSkeleton;
 import core.image_morpho_transform.Skeleton;
 import ifaces.I_ColorScheme;
 import ifaces.I_ImageProcesor;
@@ -164,14 +165,23 @@ public class ImagePreprocesor implements I_ColorScheme {
 	 */
 	public void procesSkeleton(int xFromIncl, int xToExcl, int yFromIncl, int yToExcl, boolean whole) {
 
+		/*
 		I_ImageProcesor skeleton = new Skeleton(
 
 				procesedImageResourceStage2, borderAtSharpenStage, whole, debug, xFromIncl, xToExcl, yFromIncl, yToExcl,
 				borderAtSharpenStage
 
 		);
+		*/
+		
+		I_ImageProcesor distanceMapSkeleton = new DistanceMapSkeleton(
 
-		skeleton.doYourThing();
+				procesedImageResourceStage2, borderAtSharpenStage, whole, debug, xFromIncl, xToExcl, yFromIncl, yToExcl,
+				borderAtSharpenStage
+
+		);
+
+		distanceMapSkeleton.doYourThing();
 
 	}
 
