@@ -174,15 +174,14 @@ public class ImagePreprocesor implements I_ColorScheme {
 		);
 		*/
 		
-		I_ImageProcesor distanceMapSkeleton = new DistanceMapSkeleton(
+		I_ImageProcesor skeleton = new DistanceMapSkeleton(
 
 				procesedImageResourceStage2, borderAtSharpenStage, whole, debug, xFromIncl, xToExcl, yFromIncl, yToExcl,
 				borderAtSharpenStage
 
 		);
-
-		distanceMapSkeleton.doYourThing();
-
+		
+		skeleton.doYourThing();
 	}
 
 	/**

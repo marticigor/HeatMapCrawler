@@ -41,7 +41,7 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			System.out.println("NEW TASK " + Thread.currentThread().toString());
 
 		Pixel current;
-		List<Pixel> applicants = new ArrayList<Pixel>();
+		List<Pixel> aplicants = new ArrayList<Pixel>();
 		int removed = 0;
 
 		int count = 0;
@@ -65,12 +65,12 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 						current = in.getPixel(absX, absY);
 
 						if (current.getRed() == redScheme[0] && utils.isApplicable(current)) {
-							applicants.add(current);
+							aplicants.add(current);
 						}
 					}
 				}
 
-				for (Pixel p : applicants) {
+				for (Pixel p : aplicants) {
 					if (utils.isRemovable(p)) {
 						p.setRed(lightGreenScheme[0]);
 						p.setGreen(lightGreenScheme[1]);
@@ -82,9 +82,9 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 				if (removed == 0)
 					break;
 				else if (debug)
-					System.out.println("toRemove = applicable: " + applicants.size() + "\nremoved: " + removed
+					System.out.println("toRemove = applicable: " + aplicants.size() + "\nremoved: " + removed
 							+ "\n___________________________________________");
-				applicants.clear();
+				aplicants.clear();
 				count++;
 				removed = 0;
 			} // while
@@ -134,6 +134,24 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			return (p.getRed() < foregroundColorThreshold);
 		}
 
+		int getNmbOfBackgroundPix(Pixel p){
+			riop.setPixelToCheckAround(p);
+			int count = 0;
+			for(Pixel pi : riop){
+				if(isBackground(pi)) count ++;
+			}
+			return count;
+		}
+		
+		int getNmbOfForegroundPix(Pixel p){
+			riop.setPixelToCheckAround(p);
+			int count = 0;
+			for(Pixel pi : riop){
+				if(isForeground(pi)) count ++;
+			}
+			return count;			
+		}
+		
 		/**
 		 * 
 		 * @param pivot
@@ -211,7 +229,7 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 		 * 
 		 */
 		private void computeRemovable() {
-			removable = (false == ldt.locallyDisconnects(pivot));
+			removable = (! ldt.locallyDisconnects(pivot));
 		}
 
 		/**
@@ -237,6 +255,23 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			return xOk && yOk;
 		}
 		
+		int clipXToImageBounds(int x){
+			if(x < 0) return 0;
+			if(x >= in.getWidth())return in.getWidth() - 1;
+			return x;
+		}
+		
+		int clipYToImageBounds(int y){
+			if(y < 0) return 0;
+			if(y >= in.getHeight())return in.getHeight() - 1;
+			return y;
+		}
+		
+		int cartesianDistPixels(Pixel from, Pixel to){
+			int dX = from.getX() - to.getX();
+			int dY = from.getY() - to.getY();
+			return (int) Math.sqrt((dX * dX) + (dY * dY));
+		}
 		/**
 		 * 
 		 */
