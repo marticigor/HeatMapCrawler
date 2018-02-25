@@ -7,7 +7,7 @@ public class RunnerBean implements I_KickStart {
 
 	// TODO but how...
 	// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	public static final String NAME = "small_sample";
+	public static final String NAME = "jih_od_prahy";
 			//"smallSample_single_file";
 	public static final String TABLE_SHOTS = NAME + "_shots";
 	public static final String TABLE_NODES = NAME + "_nodes";
