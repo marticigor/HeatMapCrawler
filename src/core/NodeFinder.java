@@ -20,6 +20,7 @@ import lib_duke.Pixel;
 public class NodeFinder implements I_ColorScheme {
 
 	private ImageResource thresholded;
+	//the android app uses this hardcoded constant
 	private final static int COMPUTE_WEIGHT_OUTLOOK = 5;
 	private final static int MULTIPLICATE_LOOKAHEADANDBACK = 5;
 	// max weight 122
