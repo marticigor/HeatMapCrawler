@@ -2,8 +2,8 @@ package core.node_finder_utils;
 
 import java.util.*;
 
-import ifacec.node_finder.I_PixelExam;
-import ifacec.node_finder.I_PixelSelector;
+import ifaces.node_finder.I_PixelExam;
+import ifaces.node_finder.I_PixelSelector;
 import lib_duke.Pixel;
 
 public class CenterOfGravity implements I_PixelSelector {

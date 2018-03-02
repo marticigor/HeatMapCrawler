@@ -1,4 +1,4 @@
-package ifacec.node_finder;
+package ifaces.node_finder;
 
 import lib_duke.Pixel;
 

@@ -9,11 +9,11 @@ import core.node_finder_utils.CenterOfGravity;
 import core.node_finder_utils.MaximusPixels;
 import core.node_finder_utils.SurrPixels;
 import core.salient_areas_detectors.SimilaritySalientDetector;
-import ifacec.node_finder.I_PixelExam;
-import ifacec.node_finder.I_PixelSelector;
 import ifaces.I_ColorScheme;
 import ifaces.I_NodeFilter;
 import ifaces.I_SalientDetector;
+import ifaces.node_finder.I_PixelExam;
+import ifaces.node_finder.I_PixelSelector;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 

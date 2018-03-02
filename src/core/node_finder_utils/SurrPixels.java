@@ -1,7 +1,7 @@
 package core.node_finder_utils;
 
 import core.utils.RoundIteratorOfPixels;
-import ifacec.node_finder.I_PixelExam;
+import ifaces.node_finder.I_PixelExam;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
