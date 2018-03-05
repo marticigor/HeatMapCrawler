@@ -202,7 +202,7 @@ public class NodeFinder implements I_ColorScheme {
 			Pause.pause(5000);
 		}
 
-		rcf = new RecursiveClusterFinder(noded, whiteScheme[0], whiteScheme[1], whiteScheme[2]);
+		rcf = new RecursiveClusterFinder(noded);
 
 		int x, y;
 		double lon, lat;

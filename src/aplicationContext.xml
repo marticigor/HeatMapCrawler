@@ -10,7 +10,7 @@
     <!-- reasonable defaults to start with: -->
     <bean id="kickStart" class="beans.RunnerBean">
     
-        <property name="devToMakeItValidRoutable" value="20" />
+        <property name="devToMakeItValidRoutable" value="38" />
         
         <property name="thresholded_lookVicinity" value="1" />
         <property name="thresholded_surfaceOfSalientAreaConstant1" value="32" />

@@ -7,27 +7,26 @@ import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
 import lib_duke.Pixel;
 
-public class RecursiveClusterFinder {
+public class RecursiveClusterFinder implements I_ColorScheme {
 
 	private HashSet<Pixel> allClusterAroundNode;
 	private RoundIteratorOfPixels iteratorRound;
 	private HashSet<Pixel> neighbours;
 	private ImageResource ir;
-	private int red, green, blue;
 	private boolean redClusterSearch = false;
 
 	private boolean visualize;
 	private Visualizer vis;
+	
+	public enum PixColors{ WHITE,RED,YELLOW };
+	private List<PixColors> colorsToCheck;
 
 	/**
 	 * called by NodeFinder
 	 */
-	public RecursiveClusterFinder(ImageResource ir, int red, int green, int blue) {
+	public RecursiveClusterFinder(ImageResource ir) {
 
 		this.ir = ir;
-		this.red = red;
-		this.green = green;
-		this.blue = blue;
 
 		iteratorRound = new RoundIteratorOfPixels();
 		iteratorRound.setImageResource(ir);
@@ -35,19 +34,22 @@ public class RecursiveClusterFinder {
 		this.redClusterSearch = false;
 
 		allClusterAroundNode = new HashSet<Pixel>();
+		colorsToCheck = new LinkedList<PixColors>();
+		colorsToCheck.add(PixColors.WHITE);
 
 	}
 
 	/**
 	 * called by AdjacencyFinder
 	 */
-	public RecursiveClusterFinder(ImageResource ir, int red, int green, int blue, boolean visualize) {
+	public RecursiveClusterFinder(
+			
+			ImageResource ir,
+			boolean visualize
+			
+			) {
 
 		this.ir = ir;
-		this.red = red;
-		this.green = green;
-		this.blue = blue;
-
 		this.visualize = visualize;
 
 		if (visualize)
@@ -59,6 +61,9 @@ public class RecursiveClusterFinder {
 		iteratorRound.setImageResource(ir);
 
 		allClusterAroundNode = new HashSet<Pixel>();
+		colorsToCheck = new LinkedList<PixColors>();
+		colorsToCheck.add(PixColors.RED);
+		colorsToCheck.add(PixColors.YELLOW);
 	}
 
 	/**
@@ -68,14 +73,10 @@ public class RecursiveClusterFinder {
 	 */
 	public void buildPartialCluster(Pixel p) {
 
-		if (allClusterAroundNode.size() > 4000) {
-			throw new RuntimeException("RecursiveClusterFinder, setCluster() size");
-		}
-
 		if (!redClusterSearch)
 			allClusterAroundNode.add(p);
 
-		if (redClusterSearch && p.getRed() == red && p.getGreen() == green && p.getBlue() == blue)
+		if (redClusterSearch && (  checkColors(p)  ))
 			allClusterAroundNode.add(p);
 
 		if (visualize && allClusterAroundNode.size() == 1)
@@ -88,7 +89,7 @@ public class RecursiveClusterFinder {
 		neighbours = new HashSet<Pixel>();
 
 		for (Pixel px : iteratorRound) {
-			if (px.getRed() == red && px.getGreen() == green && px.getBlue() == blue && !neighbours.contains(px)) {
+			if ((  checkColors(px)  ) && !neighbours.contains(px)) {
 				neighbours.add(px);
 			}
 		}
@@ -114,6 +115,45 @@ public class RecursiveClusterFinder {
 		allClusterAroundNode = new HashSet<Pixel>();
 	}
 
+	private boolean isRed(Pixel p){
+		return (
+				p.getRed() == redScheme[0] &&
+				p.getGreen() == redScheme[1] &&
+				p.getBlue() == redScheme[2]
+				);
+	}
+	private boolean isYellow(Pixel p){
+		return (
+				p.getRed() == yellowScheme[0] &&
+				p.getGreen() == yellowScheme[1] &&
+				p.getBlue() == yellowScheme[2]
+				);
+	}
+	private boolean isWhite(Pixel p){
+		return (
+				p.getRed() == whiteScheme[0] &&
+				p.getGreen() == whiteScheme[1] &&
+				p.getBlue() == whiteScheme[2]
+				);
+	}
+	private boolean checkColors(Pixel p){
+		for(PixColors pc : colorsToCheck){
+	        switch (pc) {
+            	case WHITE:
+            		if(isWhite(p))return true;
+            		break;
+            	case RED:
+            		if(isRed(p))return true;
+            		break;
+            	case YELLOW:
+            		if(isYellow(p))return true;
+            		break;
+            		default:
+           			throw new RuntimeException("switch mess");
+	        }
+		}
+		return false;
+	}
 	/**
 	  *  
 	  */

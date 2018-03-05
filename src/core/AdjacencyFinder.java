@@ -51,7 +51,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 
 		// public RecursiveClusterFinder(ImageResource ir, int red, int green,
 		// int blue, boolean visualize)
-		rcf = new RecursiveClusterFinder(noded, redScheme[0], redScheme[1], redScheme[2], this.debug);
+		rcf = new RecursiveClusterFinder(noded, this.debug);
 
 		if (this.visual) {
 			visualizeIR = new ImageResource(noded.getWidth(), noded.getHeight());
@@ -162,7 +162,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 						pIr.setBlue(blueischScheme[2]);
 					}
 					visualizeIR.draw();
-					Pause.pause(500);
+					Pause.pause(50);
 					for (Pixel pDebug : redCluster) {
 						Pixel pIr = visualizeIR.getPixel(pDebug.getX(), pDebug.getY());
 						pIr.setRed(redischScheme[0]);
@@ -175,7 +175,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 
 				if (visual & debug) {
 					noded.draw();
-					Pause.pause(500);
+					Pause.pause(50);
 				}
 			} // for buildForThis
 
@@ -222,7 +222,7 @@ public class AdjacencyFinder implements I_ColorScheme {
 			}
 			if (visual) {
 				noded.draw();
-				Pause.pause(10000);
+				Pause.pause(5000);
 			}
 		} // scope for adjacency lists builder
 	}
@@ -361,7 +361,16 @@ public class AdjacencyFinder implements I_ColorScheme {
 	 * @return
 	 */
 	private boolean isRoutable(Pixel p) {
-		return (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]);
+		return (
+				(p.getRed() == redScheme[0] &&
+				p.getGreen() == redScheme[1] &&
+				p.getBlue() == redScheme[2])
+				||
+				(p.getRed() == yellowScheme[0] &&
+				p.getGreen() == yellowScheme[1] &&
+				p.getBlue() == yellowScheme[2])
+				
+				);
 	}
 
 	/**
