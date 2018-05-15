@@ -4,13 +4,11 @@ import java.util.*;
 
 import core.image_filters.JustCopy;
 import core.node_finder_utils.TopLeftOfClosest;
-import core.nodes_filters.AffectedByBorder;
 import core.node_finder_utils.CenterOfGravity;
 import core.node_finder_utils.MaximusPixels;
 import core.node_finder_utils.SurrPixels;
 import core.salient_areas_detectors.SimilaritySalientDetector;
 import ifaces.I_ColorScheme;
-import ifaces.I_NodeFilter;
 import ifaces.I_SalientDetector;
 import ifaces.node_finder.I_PixelExam;
 import ifaces.node_finder.I_PixelSelector;
@@ -22,7 +20,7 @@ public class NodeFinder implements I_ColorScheme {
 	private ImageResource thresholded;
 	//the android app uses this hardcoded constant
 	private final static int COMPUTE_WEIGHT_OUTLOOK = 5;
-	private final static int MULTIPLICATE_LOOKAHEADANDBACK = 5;
+	//private final static int MULTIPLICATE_LOOKAHEADANDBACK = 5;
 	// max weight 122
 	private ImageResource skeletonized;
 	private List<Node> nodes = new ArrayList<Node>();
