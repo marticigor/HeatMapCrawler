@@ -11,7 +11,6 @@ import core.image_filters.JustCopy;
 import core.image_filters.Threshold;
 import core.image_filters.filter_utils.MapMerge;
 import core.image_morpho_transform.DistanceMapSkeleton;
-import core.image_morpho_transform.Skeleton;
 import ifaces.I_ColorScheme;
 import ifaces.I_ImageProcesor;
 import lib_duke.AugmentedPixel;
