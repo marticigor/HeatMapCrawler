@@ -131,36 +131,78 @@ public class DistanceMapSkeleton extends BaseFilter implements I_ColorScheme {
 			nDefined = true;
 	}
 
-	private void skeletonize(){
-
+	boolean listeningToForeground = true;
+	Set <Pixel> remove = new HashSet<Pixel>();
+	
+	private void skeletonize() {
 		int dist = 1;
-		Set<Pixel> remove = new HashSet<Pixel>();
-		Set<Pixel> removed = new HashSet<Pixel>();
-		while(dist <= maxDistComputed){//maxDistComputed
+		int width = in.getWidth(); // x
+		int height = in.getHeight(); // y zero is top
+
+		
+		while(dist <= maxDistComputed){
+            //from left to right
+			for (int y = 0; y < height; y++){
+				listeningToForeground = true;
+				for (int x = 0; x < width; x ++){
+					putOnRemoveIfApplicable(x,y, dist);
+				}
+			}
+			removeForegroundPixels();
 			remove.clear();
-			for(Pixel p : in.pixels()){
-				if(p.getGreen() > 0 && p.getGreen() <= dist){
-					remove.add(p);
+			//from right to left
+			for (int y = 0; y < height; y++){
+				listeningToForeground = true;
+				for (int x = width - 1; x >= 0; x --){
+					putOnRemoveIfApplicable(x,y, dist);
 				}
 			}
-			for(int background = 7; background > 0; background --){
-				removed.clear();
-				for(Pixel p : remove){
-					if(utils.getNmbOfBackgroundPix(p) >= background && utils.isRemovable(p)){
-						p.setRed(lightGreenScheme[0]);
-						p.setGreen(lightGreenScheme[1]);
-						p.setBlue(lightGreenScheme[2]);
-						removed.add(p);
-					}
-				}
-				for(Pixel p : removed){
-					remove.remove(p);
+			removeForegroundPixels();
+			remove.clear();
+			//from top to down
+			for (int x = 0; x < width; x++){
+				listeningToForeground = true;
+				for (int y = 0; y < height; y ++){
+					putOnRemoveIfApplicable(x,y, dist);
 				}
 			}
+			removeForegroundPixels();
+			remove.clear();
+			//from down to top
+			for (int x = 0; x < width; x++){
+				listeningToForeground = true;
+				for (int y = height - 1; y >= 0; y --){
+					putOnRemoveIfApplicable(x,y, dist);
+				}
+			}
+			removeForegroundPixels();
+			remove.clear();
 		dist ++;
 		}
+		
 	}
-
+	
+	private void putOnRemoveIfApplicable(int x, int y, int dist) {
+		Pixel current = in.getPixel(x, y);
+		if(utils.isBackground(current)){
+			listeningToForeground = true;
+		}
+        if(listeningToForeground && current.getGreen() == dist && utils.isRemovable(current)) {
+        	remove.add(current);
+        	listeningToForeground = false;
+        } else if (utils.isForeground(current)){
+        	listeningToForeground = false;
+        	}
+	}
+	
+	private void removeForegroundPixels() {
+		for(Pixel p : remove) {
+			p.setRed(lightGreenScheme[0]);
+			p.setGreen(lightGreenScheme[1]);
+			p.setBlue(lightGreenScheme[2]);
+		}
+	}
+	
 	@SuppressWarnings("unused")
 	private boolean blackenR(ImageResource resource){
 		boolean nonZeroExisted = false;
