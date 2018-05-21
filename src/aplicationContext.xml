@@ -26,7 +26,7 @@
         <property name="surfaceOfSalientAreaConstant4" value="23000" />
         <property name="neighbours" value="1" />
         
-        <property name="visual" value="true" />
+        <property name="visual" value="false" />
         <property name="debug" value="false" />
         
     </bean>

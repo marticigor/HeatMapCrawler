@@ -5,9 +5,11 @@ import ifaces.spring_beans.I_KickStart;
 
 public class RunnerBean implements I_KickStart {
 
+	//https://stackoverflow.com/questions/43574426/how-to-resolve-java-lang-noclassdeffounderror-javax-xml-bind-jaxbexception-in-j
+	
 	// TODO but how...
 	// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	public static final String NAME = "betterSkeleton";//BreconBeaconsHikeWest
+	public static final String NAME = "PeakDistrictRide";//BreconBeaconsHikeWest
 			//"smallSample_single_file";
 	public static final String TABLE_SHOTS = NAME + "_shots";
 	public static final String TABLE_NODES = NAME + "_nodes";
