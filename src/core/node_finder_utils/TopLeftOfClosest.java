@@ -14,11 +14,11 @@ public class TopLeftOfClosest implements I_PixelSelector {
 	public void proces(Set<Pixel> inputSet, I_PixelExam exam, int... args) {
 		assert(exam == null);
 		assert(args.length == 1 && args [0] == 0);
-		CallForDimen xCall = Xcaller::get;
-		CallForDimen yCall = Ycaller::get;
-		List<Pixel> survivors = new ArrayList<Pixel>(inputSet);//no need to optimize here
+		CallForDimen xCall = new Xcaller();
+		CallForDimen yCall = new Ycaller();
+		List<Pixel> survivors = new ArrayList<Pixel>(inputSet);
 		List<Pixel> prune = new ArrayList<Pixel>();
-		CallForDimen [] stages = new CallForDimen []{xCall, yCall};
+		CallForDimen [] stages = new CallForDimen []{xCall::get, yCall::get};
 		
 		for(CallForDimen stage : stages){
 			prune.clear();
@@ -36,11 +36,11 @@ public class TopLeftOfClosest implements I_PixelSelector {
 	}
 
 	private interface CallForDimen { int get(Pixel p); }
-	private static class Xcaller {	
-		private static int get(Pixel p) { return p.getX(); }
+	private class Xcaller implements CallForDimen{	
+		public int get(Pixel p) { return p.getX(); }
 	}
-	private static class Ycaller{
-		private static int get(Pixel p) { return p.getY(); }
+	private class Ycaller implements CallForDimen{
+		public int get(Pixel p) { return p.getY(); }
 	}
 	
 	@Override
