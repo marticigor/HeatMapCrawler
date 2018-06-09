@@ -12,7 +12,7 @@ import java.util.*;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import core.nodes_decorators.TestMutualVisibility;
+import core.nodes_decorators.FixMutualVisibility;
 import core.nodes_filters.ZeroAdjacencyNodesFilter;
 import core.tasks.TaskJustCopy;
 import core.tasks.TaskSharpen;
@@ -285,7 +285,7 @@ public class Runner implements Runnable {
 				// Do we have reference TO zero adjacency list nodes?"
 
 				// TODO not a very good style?
-				TestMutualVisibility tmv = new TestMutualVisibility();
+				FixMutualVisibility tmv = new FixMutualVisibility();
 				int newEdgesNmb = tmv.proces(nodes);
 				System.out.println("NEW EDGES (TestMutualVisibility): " + newEdgesNmb);
 				if (newEdgesNmb != 0) {

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import core.Node;
 
-public class TestMutualVisibility {
+public class FixMutualVisibility {
 
 	private Set<Node> leftAdj;
 	private Set<Node> rightAdj;
