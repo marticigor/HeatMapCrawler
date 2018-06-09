@@ -1,7 +1,6 @@
 package database;
 
 import java.util.List;
-import java.util.Properties;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -38,7 +37,6 @@ public class ManageNodeEntity {
 		if (sf == null) {
 
 			Configuration cf = new Configuration().configure("hibernate.cfg.xml");
-			cf.addProperties(getHibernateProperties());
 			cf.addAnnotatedClass(database.NodeEntity.class);
 			cf.addAnnotatedClass(database.NmbShotsEntity.class);
 
@@ -74,12 +72,5 @@ public class ManageNodeEntity {
 			session.close();
 			System.err.println("\nDB+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 		}
-	}
-
-	// TODO ugly
-	private Properties getHibernateProperties() {
-		Properties properties = new Properties();
-		properties.put("hibernate.id.new_generator_mappings", "false");
-		return properties;
 	}
 }
