@@ -303,14 +303,20 @@ public class Runner implements Runnable {
 
 				if (noZeroAdjacents.size() == 0)
 					System.err.println("ZERO NODES TO PERSIST!");
-				else
+				else {
+					int helpPrintCount = 0;
+					for(Node n : noZeroAdjacents) {
+						if( helpPrintCount < 20 ) {
+							System.out.println(n.getEntity().toString());
+							helpPrintCount ++;
+						} else break;
+					}
 					persist(noZeroAdjacents);
-
-				// OR inject MOCKS
-				// NodeGraphMocks mocks = new NodeGraphMocks();
-				// List <Node> mockNodes = mocks.getMocks1();
-				// persist(mockNodes);
-
+					// OR inject MOCKS
+					// NodeGraphMocks mocks = new NodeGraphMocks();
+					// List <Node> mockNodes = mocks.getMocks1();
+					// persist(mockNodes);
+				}
 				shotId++;
 			}
 
