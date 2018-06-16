@@ -21,9 +21,9 @@ import lib_duke.Pixel;
 public class NodeFinder implements I_ColorScheme {
 
 	private ImageResource thresholded;
-	//the android app uses this hardcoded constant
+	// the android app uses this hardcoded constant
 	private final static int COMPUTE_WEIGHT_OUTLOOK = 5;
-	//private final static int MULTIPLICATE_LOOKAHEADANDBACK = 5;
+	// private final static int MULTIPLICATE_LOOKAHEADANDBACK = 5;
 	// max weight 122
 	private ImageResource skeletonized;
 	private List<Node> nodes = new ArrayList<Node>();
@@ -156,12 +156,12 @@ public class NodeFinder implements I_ColorScheme {
 				System.out.println(d);
 			System.out.println("______________________________");
 		}
-		
+
 		Skeleton skeletonMock = new Skeleton(noded, borderSharpenStage, true, false, -1, -1, -1, -1,
 				borderSharpenStage);
 		Skeleton.SkeletonUtils utils = skeletonMock.new SkeletonUtils(skeletonMock.getThresholdForeBack());
 		ldt = new LocalyDisconnectTest(utils);
-		
+
 	}
 
 	/**
@@ -200,34 +200,34 @@ public class NodeFinder implements I_ColorScheme {
 
 		// detectSalientAreas
 
-		//TODO memory wasting...
-		ImageResource nodedCopySimilarity = new ImageResource(noded);//returns blank image
+		// TODO memory wasting...
+		ImageResource nodedCopySimilarity = new ImageResource(noded);// returns blank image
 		ImageResource nodedCopyForeground = new ImageResource(noded);
 
-		I_SalientDetector detectorSimilarity = new SimilaritySalientDetector(
-				skeletonized, nodedCopySimilarity, thresholded, borderSharpenStage, lookAheadAndBack, surfaceConstant1_1,
-				surfaceConstant1_2, surfaceConstant2_1, surfaceConstant2_2, neighbourghsConstant, visual, debug);
+		I_SalientDetector detectorSimilarity = new SimilaritySalientDetector(skeletonized, nodedCopySimilarity,
+				thresholded, borderSharpenStage, lookAheadAndBack, surfaceConstant1_1, surfaceConstant1_2,
+				surfaceConstant2_1, surfaceConstant2_2, neighbourghsConstant, visual, debug);
 
 		detectorSimilarity.detectSalientAreas(false);
-			
-		I_SalientDetector detectorForeground = new ForegroundCountingSalientDetector(
-				skeletonized, nodedCopyForeground, thresholded, borderSharpenStage, lookAheadAndBack, surfaceConstant1_1,
-				surfaceConstant1_2, surfaceConstant2_1, surfaceConstant2_2, neighbourghsConstant, visual, debug);
+
+		I_SalientDetector detectorForeground = new ForegroundCountingSalientDetector(skeletonized, nodedCopyForeground,
+				thresholded, borderSharpenStage, lookAheadAndBack, surfaceConstant1_1, surfaceConstant1_2,
+				surfaceConstant2_1, surfaceConstant2_2, neighbourghsConstant, visual, debug);
 
 		detectorForeground.detectSalientAreas(false);
-		
-		//merge white pixels from both detectors ( OR )
-		
-		for(Pixel p : nodedCopySimilarity.pixels()) {
+
+		// merge white pixels from both detectors ( OR )
+
+		for (Pixel p : nodedCopySimilarity.pixels()) {
 			mergeIntoNoded(p);
 		}
-		for(Pixel p : nodedCopyForeground.pixels()) {
+		for (Pixel p : nodedCopyForeground.pixels()) {
 			mergeIntoNoded(p);
 		}
-		
-		//nodedCopySimilarity.draw();
-		//nodedCopyForeground.draw();
-		
+
+		// nodedCopySimilarity.draw();
+		// nodedCopyForeground.draw();
+
 		if (visual) {
 			noded.draw();
 			Pause.pause(5000);
@@ -289,13 +289,12 @@ public class NodeFinder implements I_ColorScheme {
 				 * (closestToCenter.size() == 1) helperCountOne++; else if
 				 * (closestToCenter.size() == 2) helperCountTwo++; else if
 				 * (closestToCenter.size() > 2 && (debug || visual))
-				 * System.err.println("ClosestToCenter.size() > 2 :" +
-				 * closestToCenter.size());
+				 * System.err.println("ClosestToCenter.size() > 2 :" + closestToCenter.size());
 				 */
 
 				I_PixelSelector topLeft = new TopLeftOfClosest();
 				topLeft.proces(closestToCenter, null, 0);
-				Set<Pixel> theWinnerSet = topLeft.getSet();	// guaranteed to have only one member
+				Set<Pixel> theWinnerSet = topLeft.getSet(); // guaranteed to have only one member
 				for (Pixel pixel : theWinnerSet)
 					theOneP = pixel;
 
@@ -317,10 +316,11 @@ public class NodeFinder implements I_ColorScheme {
 				weight = computeWeight(x, y);
 
 				Node node = new Node(x, y, weight, lon, lat, myHandler.incrAndGetId(), shotId);
-				
-				//TODO think how to move node a bit so it really is bottleneck
-				
-				if(isBottleNeck(node)) node.setBottleneck(true);
+
+				// TODO think how to move node a bit so it really is bottleneck
+
+				if (isBottleNeck(node))
+					node.setBottleneck(true);
 				nodes.add(node);
 
 				// we are done with white pixels in allClusterAroundNode
@@ -344,9 +344,8 @@ public class NodeFinder implements I_ColorScheme {
 	}
 
 	/**
-	 * Loads recursively set of white pixels into allClusterAroundNode. No
-	 * locally disconnecting nodes (and their Pixels) yet, a branch is always
-	 * full cluster.
+	 * Loads recursively set of white pixels into allClusterAroundNode. No locally
+	 * disconnecting nodes (and their Pixels) yet, a branch is always full cluster.
 	 */
 	private void buildBranch(Pixel p) {
 		rcf.buildPartialCluster(p);
@@ -461,21 +460,22 @@ public class NodeFinder implements I_ColorScheme {
 	// no need to optimize
 	Pixel toBeWhite = null;
 	Pixel nodedBackGround = null;
+
 	private void mergeIntoNoded(Pixel p) {
-		if(isWhite(p)) {
+		if (isWhite(p)) {
 			toBeWhite = noded.getPixel(p.getX(), p.getY());
 			setWhite(toBeWhite);
 		} else if (isRed(p)) {
 			nodedBackGround = noded.getPixel(p.getX(), p.getY());
-			if(! isWhite(nodedBackGround))
+			if (!isWhite(nodedBackGround))
 				setRed(nodedBackGround);
 		}
 	}
-	
+
 	private boolean isBottleNeck(Node n) {
 		return ldt.locallyDisconnects(noded.getPixel(n.getX(), n.getY()));
 	}
-	
+
 	public ImageResource getNodedImage() {
 		return noded;
 	}
@@ -495,13 +495,13 @@ public class NodeFinder implements I_ColorScheme {
 		p.setGreen(whiteScheme[1]);
 		p.setBlue(whiteScheme[2]);
 	}
-	
+
 	private boolean isWhite(Pixel p) {
-		return (p.getRed() == whiteScheme[0] && p.getGreen() == whiteScheme[1] && p.getBlue() == whiteScheme[2]); 
+		return (p.getRed() == whiteScheme[0] && p.getGreen() == whiteScheme[1] && p.getBlue() == whiteScheme[2]);
 	}
-	
+
 	private boolean isRed(Pixel p) {
-		return (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]); 
+		return (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]);
 	}
 
 	@SuppressWarnings("unused")

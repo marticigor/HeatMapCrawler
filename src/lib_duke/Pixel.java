@@ -97,8 +97,8 @@ public class Pixel {
 	}
 
 	/**
-	 * Creates a new Pixel from with the same values as the other pixel passed
-	 * as a parameter.
+	 * Creates a new Pixel from with the same values as the other pixel passed as a
+	 * parameter.
 	 * 
 	 * @param other
 	 *            another pixel
@@ -199,8 +199,8 @@ public class Pixel {
 
 	/**
 	 * Resets the value of the pixel's alpha (or transparency) component to the
-	 * value passed as a parameter. If it is not in the range of 0-255 it is
-	 * changed to be in that range.
+	 * value passed as a parameter. If it is not in the range of 0-255 it is changed
+	 * to be in that range.
 	 * 
 	 * @param a
 	 *            the alpha value
@@ -214,6 +214,7 @@ public class Pixel {
 	 * 
 	 * @return a string containing the RGB values
 	 */
+	@Override
 	public String toString() {
 		return "Pixel X = " + myX + " Y = " + myY + " R: " + red + " G: " + green + " B: " + blue;
 	}

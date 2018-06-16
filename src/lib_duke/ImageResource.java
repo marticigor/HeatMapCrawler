@@ -53,8 +53,8 @@ public class ImageResource {
 	private ImageFrame myDisplay;
 
 	/**
-	 * Create an <code>ImageResource</code> object that represents the file
-	 * chosen by the user using a file selection dialog box.
+	 * Create an <code>ImageResource</code> object that represents the file chosen
+	 * by the user using a file selection dialog box.
 	 * 
 	 * @throws exception
 	 *             if no file is selected by the user
@@ -89,8 +89,8 @@ public class ImageResource {
 	}
 
 	/**
-	 * Create an <code>ImageResource</code> object from the file name passed as
-	 * a parameter.
+	 * Create an <code>ImageResource</code> object from the file name passed as a
+	 * parameter.
 	 * 
 	 * @param fileName
 	 *            the name of the file
@@ -102,8 +102,7 @@ public class ImageResource {
 	}
 
 	/**
-	 * Create an <code>ImageResource</code> object from a file given as a
-	 * parameter.
+	 * Create an <code>ImageResource</code> object from a file given as a parameter.
 	 * 
 	 * @param file
 	 *            the file representing an image
@@ -115,8 +114,7 @@ public class ImageResource {
 	}
 
 	/**
-	 * Create an <code>ImageResource</code> object that is a copy of another
-	 * image.
+	 * Create an <code>ImageResource</code> object that is a copy of another image.
 	 * 
 	 * @param other
 	 *            the original image being copied
@@ -146,8 +144,8 @@ public class ImageResource {
 	/**
 	 * Allow access to this image one pixel at a time.
 	 * 
-	 * @return an <code>Iterable</code> that will allow access to each pixel in
-	 *         this image
+	 * @return an <code>Iterable</code> that will allow access to each pixel in this
+	 *         image
 	 */
 	public Iterable<Pixel> pixels() {
 		if (myPixels == null) {
@@ -178,8 +176,8 @@ public class ImageResource {
 	/**
 	 * Returns the file name associated with this image.
 	 *
-	 * @return the name of the file used to create this image or an empty string
-	 *         if it was created as a sized image
+	 * @return the name of the file used to create this image or an empty string if
+	 *         it was created as a sized image
 	 */
 	public String getFileName() {
 		return myFileName;
@@ -188,8 +186,8 @@ public class ImageResource {
 	/**
 	 * Resets the file name associated with this image.
 	 * 
-	 * Useful, for example, when saving the results of changes to this image in
-	 * a different file than the original.
+	 * Useful, for example, when saving the results of changes to this image in a
+	 * different file than the original.
 	 * 
 	 * @param name
 	 *            the new name for the file
@@ -232,11 +230,11 @@ public class ImageResource {
 	}
 
 	/**
-	 * Returns a string representation of the image (file name, width, and
-	 * height).
+	 * Returns a string representation of the image (file name, width, and height).
 	 * 
 	 * @return a string representation of the image
 	 */
+	@Override
 	public String toString() {
 		if (myImage == null) {
 			return "";
@@ -248,8 +246,8 @@ public class ImageResource {
 
 	/**
 	 * Saves the image as a JPEG using its current file name or opens a file
-	 * selection dialog box to allow the user to choose a name if no file name
-	 * set (for example if this image was created as a blank sized image).
+	 * selection dialog box to allow the user to choose a name if no file name set
+	 * (for example if this image was created as a blank sized image).
 	 * 
 	 * @throws exception
 	 *             if the current filename cannot be accessed for saving
@@ -268,8 +266,8 @@ public class ImageResource {
 	}
 
 	/**
-	 * Saves the image as a JPEG by opening a file selection dialog box to allow
-	 * the user to choose the new name for the file.
+	 * Saves the image as a JPEG by opening a file selection dialog box to allow the
+	 * user to choose the new name for the file.
 	 * 
 	 * @throws exception
 	 *             if no file is selected by the user

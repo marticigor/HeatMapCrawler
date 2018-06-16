@@ -134,24 +134,26 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			return (p.getRed() < foregroundColorThreshold);
 		}
 
-		int getNmbOfBackgroundPix(Pixel p){
+		int getNmbOfBackgroundPix(Pixel p) {
 			riop.setPixelToCheckAround(p);
 			int count = 0;
-			for(Pixel pi : riop){
-				if(isBackground(pi)) count ++;
+			for (Pixel pi : riop) {
+				if (isBackground(pi))
+					count++;
 			}
 			return count;
 		}
-		
-		int getNmbOfForegroundPix(Pixel p){
+
+		int getNmbOfForegroundPix(Pixel p) {
 			riop.setPixelToCheckAround(p);
 			int count = 0;
-			for(Pixel pi : riop){
-				if(isForeground(pi)) count ++;
+			for (Pixel pi : riop) {
+				if (isForeground(pi))
+					count++;
 			}
-			return count;			
+			return count;
 		}
-		
+
 		/**
 		 * 
 		 * @param pivot
@@ -189,8 +191,8 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 					background++;
 			}
 
-			boolean neighbors = ((int) background > backThresh && (int) foreground > foreThresh
-					&& (int) background < backMax && (int) foreground < foreMax);
+			boolean neighbors = (background > backThresh && foreground > foreThresh
+					&& background < backMax && foreground < foreMax);
 
 			// hilditch algo specific stuff
 
@@ -198,19 +200,19 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			// p8 pivot p4
 			// ____ p6 ____
 
-			 //Pixel p2 = in.getPixel(pivot.getX(), pivot.getY() - 1);
-			 //Pixel p8 = in.getPixel(pivot.getX() - 1, pivot.getY());
-			 //Pixel p4 = in.getPixel(pivot.getX() + 1, pivot.getY());
-			 //Pixel p6 = in.getPixel(pivot.getX(), pivot.getY() + 1);
+			// Pixel p2 = in.getPixel(pivot.getX(), pivot.getY() - 1);
+			// Pixel p8 = in.getPixel(pivot.getX() - 1, pivot.getY());
+			// Pixel p4 = in.getPixel(pivot.getX() + 1, pivot.getY());
+			// Pixel p6 = in.getPixel(pivot.getX(), pivot.getY() + 1);
 
 			// ensures that 2-pixel wide vertical lines do not get completely
 			// eroded by the algorithm.
-			boolean vert = true;//isBackground(p2) || isBackground(p4) ||
-								 //isBackground(p8);
+			boolean vert = true;// isBackground(p2) || isBackground(p4) ||
+								// isBackground(p8);
 			// ensures that 2-pixel wide horizontal lines do not get completely
 			// eroded by the algorithm.
-			boolean hori = true;//isBackground(p2) || isBackground(p4) ||
-					//isBackground(p6);
+			boolean hori = true;// isBackground(p2) || isBackground(p4) ||
+			// isBackground(p6);
 
 			return neighbors && vert && hori;
 		}
@@ -229,7 +231,7 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 		 * 
 		 */
 		private void computeRemovable() {
-			removable = (! ldt.locallyDisconnects(pivot));
+			removable = (!ldt.locallyDisconnects(pivot));
 		}
 
 		/**
@@ -254,24 +256,29 @@ public class Skeleton extends BaseFilter implements I_ColorScheme {
 			boolean yOk = (y < in.getHeight() && y >= 0);
 			return xOk && yOk;
 		}
-		
-		int clipXToImageBounds(int x){
-			if(x < 0) return 0;
-			if(x >= in.getWidth())return in.getWidth() - 1;
+
+		int clipXToImageBounds(int x) {
+			if (x < 0)
+				return 0;
+			if (x >= in.getWidth())
+				return in.getWidth() - 1;
 			return x;
 		}
-		
-		int clipYToImageBounds(int y){
-			if(y < 0) return 0;
-			if(y >= in.getHeight())return in.getHeight() - 1;
+
+		int clipYToImageBounds(int y) {
+			if (y < 0)
+				return 0;
+			if (y >= in.getHeight())
+				return in.getHeight() - 1;
 			return y;
 		}
-		
-		int cartesianDistPixels(Pixel from, Pixel to){
+
+		int cartesianDistPixels(Pixel from, Pixel to) {
 			int dX = from.getX() - to.getX();
 			int dY = from.getY() - to.getY();
 			return (int) Math.sqrt((dX * dX) + (dY * dY));
 		}
+
 		/**
 		 * 
 		 */

@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 /**
  * This utility class implements a panel for displaying an image.
@@ -26,7 +27,7 @@ class ImageFrame extends JFrame {
 	public ImageFrame(String fileName, Image image) {
 		setTitle(fileName);
 		// setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	/**

@@ -31,23 +31,20 @@ public class DirectoryResource {
 	/**
 	 * Create a <code>DirectoryResource</code> object.
 	 * 
-	 * Creating a <code>DirectoryResource</code> object does not open a dialog
-	 * box for selecting files.
+	 * Creating a <code>DirectoryResource</code> object does not open a dialog box
+	 * for selecting files.
 	 */
 	public DirectoryResource() {
 		// do nothing
 	}
 
 	/**
-	 * Open a file selection dialog box to allow the user to navigate to a
-	 * directory and select one or more files from the chosen directory (or
-	 * folder).
+	 * Open a file selection dialog box to allow the user to navigate to a directory
+	 * and select one or more files from the chosen directory (or folder).
 	 * 
-	 * The file selection dialog box opened starts in the current project
-	 * folder.
+	 * The file selection dialog box opened starts in the current project folder.
 	 * 
-	 * @return an <code>Iterable</code> that accesses the chosen files one at a
-	 *         time
+	 * @return an <code>Iterable</code> that accesses the chosen files one at a time
 	 */
 	public Iterable<File> selectedFiles() {
 		File[] files = FileSelector.selectFiles();

@@ -165,21 +165,21 @@ public class ImagePreprocesor implements I_ColorScheme {
 	public void procesSkeleton(int xFromIncl, int xToExcl, int yFromIncl, int yToExcl, boolean whole) {
 
 		/*
-		I_ImageProcesor skeleton = new Skeleton(
+		 * I_ImageProcesor skeleton = new Skeleton(
+		 * 
+		 * procesedImageResourceStage2, borderAtSharpenStage, whole, debug, xFromIncl,
+		 * xToExcl, yFromIncl, yToExcl, borderAtSharpenStage
+		 * 
+		 * );
+		 */
 
-				procesedImageResourceStage2, borderAtSharpenStage, whole, debug, xFromIncl, xToExcl, yFromIncl, yToExcl,
-				borderAtSharpenStage
-
-		);
-		*/
-		
 		I_ImageProcesor skeleton = new DistanceMapSkeleton(
 
 				procesedImageResourceStage2, borderAtSharpenStage, whole, debug, xFromIncl, xToExcl, yFromIncl, yToExcl,
 				borderAtSharpenStage
 
 		);
-		
+
 		skeleton.doYourThing();
 	}
 

@@ -44,8 +44,8 @@ public class CenterOfGravity implements I_PixelSelector {
 	}
 
 	private double distToCenter(Pixel p) {
-		double deltaX = Math.abs((double) p.getX() - centerGravityX);
-		double deltaY = Math.abs((double) p.getY() - centerGravityY);
+		double deltaX = Math.abs(p.getX() - centerGravityX);
+		double deltaY = Math.abs(p.getY() - centerGravityY);
 		return Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
 	}
 

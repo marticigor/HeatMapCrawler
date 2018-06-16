@@ -68,14 +68,13 @@ public class Runner implements Runnable {
 	/**
 	 *
 	 */
-	public Runner(
-			int devi,
-			
+	public Runner(int devi,
+
 			int look, int v3, int v4, int v5, int v6, int nei,
 
 			int thresholded_look, int thresholded_v3, int thresholded_v4, int thresholded_v5, int thresholded_v6,
 			int thresholded_nei,
-			
+
 			int maxClusterSize,
 
 			boolean visual, boolean debug) {
@@ -96,12 +95,12 @@ public class Runner implements Runnable {
 		this.thresholded_surface4 = thresholded_v6;
 		this.thresholded_neighbours = thresholded_nei;
 
-		assert(passableSize >= bottleneckSize);
-		assert(passableSize <= 9);
+		assert (passableSize >= bottleneckSize);
+		assert (passableSize <= 9);
 
 		this.borderInSharpenStage = Math.max(Math.max((bottleneckSize - 1) / 2, (passableSize - 1) / 2),
 				Math.max(thresholded_look, look));
-		
+
 		this.maxClusterSize = maxClusterSize;
 
 		this.visual = visual;
@@ -111,6 +110,7 @@ public class Runner implements Runnable {
 	/**
 	 *
 	 */
+	@Override
 	public void run() {
 
 		DirectoryResource dirRPng = new DirectoryResource();// opens dialog
@@ -310,11 +310,12 @@ public class Runner implements Runnable {
 					System.err.println("ZERO NODES TO PERSIST!");
 				else {
 					int helpPrintCount = 0;
-					for(Node n : noZeroAdjacents) {
-						if( helpPrintCount < 20 ) {
+					for (Node n : noZeroAdjacents) {
+						if (helpPrintCount < 20) {
 							System.out.println(n.getEntity().toString());
-							helpPrintCount ++;
-						} else break;
+							helpPrintCount++;
+						} else
+							break;
 					}
 					persist(noZeroAdjacents);
 					// OR inject MOCKS

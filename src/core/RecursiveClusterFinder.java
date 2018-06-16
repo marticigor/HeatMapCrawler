@@ -17,8 +17,11 @@ public class RecursiveClusterFinder implements I_ColorScheme {
 
 	private boolean visualize;
 	private Visualizer vis;
-	
-	public enum PixColors{ WHITE,RED,YELLOW };
+
+	public enum PixColors {
+		WHITE, RED, YELLOW
+	};
+
 	private List<PixColors> colorsToCheck;
 	private int maxClusterSize = Integer.MAX_VALUE;
 
@@ -45,11 +48,10 @@ public class RecursiveClusterFinder implements I_ColorScheme {
 	 * called by AdjacencyFinder
 	 */
 	public RecursiveClusterFinder(
-			
-			ImageResource ir,
-			boolean visualize
-			
-			) {
+
+			ImageResource ir, boolean visualize
+
+	) {
 
 		this.ir = ir;
 		this.visualize = visualize;
@@ -70,17 +72,18 @@ public class RecursiveClusterFinder implements I_ColorScheme {
 
 	/**
 	 * loads recursively set of (colorScheme) pixels into neighbors and then
-	 * allClusterAroundNode. Maybe called from outside a few times (thus
-	 * building allClusterAroundNode gradually)
+	 * allClusterAroundNode. Maybe called from outside a few times (thus building
+	 * allClusterAroundNode gradually)
 	 */
 	public void buildPartialCluster(Pixel p) {
-		
-		if (!redClusterSearch && allClusterAroundNode != null && allClusterAroundNode.size() > maxClusterSize) return;
-		
+
+		if (!redClusterSearch && allClusterAroundNode != null && allClusterAroundNode.size() > maxClusterSize)
+			return;
+
 		if (!redClusterSearch)
 			allClusterAroundNode.add(p);
 
-		if (redClusterSearch && (  checkColors(p)  ))
+		if (redClusterSearch && (checkColors(p)))
 			allClusterAroundNode.add(p);
 
 		if (visualize && allClusterAroundNode.size() == 1)
@@ -93,7 +96,7 @@ public class RecursiveClusterFinder implements I_ColorScheme {
 		neighbours = new HashSet<Pixel>();
 
 		for (Pixel px : iteratorRound) {
-			if ((  checkColors(px)  ) && !neighbours.contains(px)) {
+			if ((checkColors(px)) && !neighbours.contains(px)) {
 				neighbours.add(px);
 			}
 		}
@@ -119,45 +122,40 @@ public class RecursiveClusterFinder implements I_ColorScheme {
 		allClusterAroundNode = new HashSet<Pixel>();
 	}
 
-	private boolean isRed(Pixel p){
-		return (
-				p.getRed() == redScheme[0] &&
-				p.getGreen() == redScheme[1] &&
-				p.getBlue() == redScheme[2]
-				);
+	private boolean isRed(Pixel p) {
+		return (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]);
 	}
-	private boolean isYellow(Pixel p){
-		return (
-				p.getRed() == yellowScheme[0] &&
-				p.getGreen() == yellowScheme[1] &&
-				p.getBlue() == yellowScheme[2]
-				);
+
+	private boolean isYellow(Pixel p) {
+		return (p.getRed() == yellowScheme[0] && p.getGreen() == yellowScheme[1] && p.getBlue() == yellowScheme[2]);
 	}
-	private boolean isWhite(Pixel p){
-		return (
-				p.getRed() == whiteScheme[0] &&
-				p.getGreen() == whiteScheme[1] &&
-				p.getBlue() == whiteScheme[2]
-				);
+
+	private boolean isWhite(Pixel p) {
+		return (p.getRed() == whiteScheme[0] && p.getGreen() == whiteScheme[1] && p.getBlue() == whiteScheme[2]);
 	}
-	private boolean checkColors(Pixel p){
-		for(PixColors pc : colorsToCheck){
-	        switch (pc) {
-            	case WHITE:
-            		if(isWhite(p))return true;
-            		break;
-            	case RED:
-            		if(isRed(p))return true;
-            		break;
-            	case YELLOW:
-            		if(isYellow(p))return true;
-            		break;
-            		default:
-           			throw new RuntimeException("switch mess");
-	        }
+
+	private boolean checkColors(Pixel p) {
+		for (PixColors pc : colorsToCheck) {
+			switch (pc) {
+			case WHITE:
+				if (isWhite(p))
+					return true;
+				break;
+			case RED:
+				if (isRed(p))
+					return true;
+				break;
+			case YELLOW:
+				if (isYellow(p))
+					return true;
+				break;
+			default:
+				throw new RuntimeException("switch mess");
+			}
 		}
 		return false;
 	}
+
 	/**
 	  *  
 	  */

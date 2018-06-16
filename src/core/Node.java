@@ -23,7 +23,7 @@ public class Node implements Comparable<Node> {
 	private ArrayList<Pixel> mask; // these are copies of Pixels from noded
 									// ImageResource;
 	private NodeEntity entity = null;
-	
+
 	private static int helpPrintCounter;
 
 	// graph format
@@ -53,9 +53,9 @@ public class Node implements Comparable<Node> {
 		this.shotId = shotId;
 
 		this.entity = new NodeEntity(shotId, lon, lat, weight, new HashSet<NodeEntity>());
-		if(helpPrintCounter < 20) {
+		if (helpPrintCounter < 20) {
 			System.out.println(entity.toString());
-			helpPrintCounter ++;
+			helpPrintCounter++;
 		}
 
 	}
@@ -63,12 +63,13 @@ public class Node implements Comparable<Node> {
 	/**
 	 * Sorted by Y axis vertical
 	 */
+	@Override
 	public int compareTo(Node another) {
 
 		// if (this.getY() < another.getY()) return -1;
 		// if (this.getY() > another.getY()) return 1;
 		// return 0;
-		return ((Integer) (this.getY())).compareTo(((Integer) (another.getY())));
+		return ((Integer) (this.getY())).compareTo(((another.getY())));
 	}
 
 	/**

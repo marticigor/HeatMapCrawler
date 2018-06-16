@@ -26,11 +26,10 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector, I_C
 		this.debug = debug;
 
 		/*
-		 * int surfaceConstant1_1, int surfaceConstant1_2, int
-		 * surfaceConstant2_1, int surfaceConstant2_2, int neighbourghsConstant,
-		 * int borderInSharpenStage, int lookAheadAndBack, int width, int
-		 * height, ImageResource workBench, ImageResource projectWorkInto,
-		 * ImageResource testAgainst
+		 * int surfaceConstant1_1, int surfaceConstant1_2, int surfaceConstant2_1, int
+		 * surfaceConstant2_2, int neighbourghsConstant, int borderInSharpenStage, int
+		 * lookAheadAndBack, int width, int height, ImageResource workBench,
+		 * ImageResource projectWorkInto, ImageResource testAgainst
 		 */
 
 		this.utils = new UtilMethods(surfaceConstant1_1, surfaceConstant1_2, surfaceConstant2_1, surfaceConstant2_2,
@@ -58,10 +57,10 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector, I_C
 		this.height = workBench.getHeight();
 		Set<Pixel> toBeWhite = new HashSet<Pixel>();
 
-		//  case
-		//  000
-		//  0XX
-		//  000
+		// case
+		// 000
+		// 0XX
+		// 000
 		for (int x = lookAheadAndBack; x < width - lookAheadAndBack; x++) {
 			for (int y = lookAheadAndBack; y < height - lookAheadAndBack; y++) {
 
@@ -70,10 +69,10 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector, I_C
 				if (utils.isBackground(p))
 					continue;
 				else {
-					//TODO COHESION!
+					// TODO COHESION!
 					toRed = noded.getPixel(p.getX(), p.getY());
 					utils.setRed(toRed);
-					}//TODO skeletonize does not use red scheme?
+				} // TODO skeletonize does not use red scheme?
 
 				iteratorRound.setPixelToCheckAround(p);
 
@@ -112,7 +111,7 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector, I_C
 				p = workBench.getPixel(x, y);
 
 				if (utils.isForeground(p)) {
-				
+
 					for (int xIn = x - lookAheadAndBack; xIn < x + lookAheadAndBack + 1; xIn++) {
 						for (int yIn = y - lookAheadAndBack; yIn < y + lookAheadAndBack + 1; yIn++) {
 

@@ -341,16 +341,10 @@ public class AdjacencyFinder implements I_ColorScheme {
 	 * @return
 	 */
 	private boolean isRoutable(Pixel p) {
-		return (
-				(p.getRed() == redScheme[0] &&
-				p.getGreen() == redScheme[1] &&
-				p.getBlue() == redScheme[2])
-				||
-				(p.getRed() == yellowScheme[0] &&
-				p.getGreen() == yellowScheme[1] &&
-				p.getBlue() == yellowScheme[2])
-				
-				);
+		return ((p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2])
+				|| (p.getRed() == yellowScheme[0] && p.getGreen() == yellowScheme[1] && p.getBlue() == yellowScheme[2])
+
+		);
 	}
 
 	/**

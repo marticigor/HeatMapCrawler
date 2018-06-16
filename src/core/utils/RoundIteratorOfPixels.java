@@ -60,6 +60,7 @@ public class RoundIteratorOfPixels implements Iterable<Pixel>, Iterator<Pixel> {
 	/**
 	 *  
 	 */
+	@Override
 	public boolean hasNext() {
 
 		if (count < 8)
@@ -71,6 +72,7 @@ public class RoundIteratorOfPixels implements Iterable<Pixel>, Iterator<Pixel> {
 	/**
 	 *  
 	 */
+	@Override
 	public Pixel next() {
 
 		if (print)
@@ -84,10 +86,12 @@ public class RoundIteratorOfPixels implements Iterable<Pixel>, Iterator<Pixel> {
 		return returning;
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public Iterator<Pixel> iterator() {
 		return this;
 	}

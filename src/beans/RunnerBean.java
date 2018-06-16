@@ -5,12 +5,12 @@ import ifaces.spring_beans.I_KickStart;
 
 public class RunnerBean implements I_KickStart {
 
-	//https://stackoverflow.com/questions/43574426/how-to-resolve-java-lang-noclassdeffounderror-javax-xml-bind-jaxbexception-in-j
-	
+	// https://stackoverflow.com/questions/43574426/how-to-resolve-java-lang-noclassdeffounderror-javax-xml-bind-jaxbexception-in-j
+
 	// TODO but how...
 	// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	public static final String NAME = "Thames_ride";//BreconBeaconsHikeWest//whatever
-			//"smallSample_single_file";
+	public static final String NAME = "Thames_ride";// BreconBeaconsHikeWest//whatever
+	// "smallSample_single_file";
 	public static final String TABLE_SHOTS = NAME + "_shots";
 	public static final String TABLE_NODES = NAME + "_nodes";
 	public static final String TABLE_ADJACENTS = NAME + "_adjacents";
@@ -25,7 +25,7 @@ public class RunnerBean implements I_KickStart {
 			thresholded_surfaceOfSalientArea3, thresholded_surfaceOfSalientArea4, thresholded_neighbours;
 
 	private int maxClusterSize;
-	
+
 	// reasonable defaults to start with: - aplicationContext.xml
 	private boolean visual, debug;
 
@@ -42,7 +42,7 @@ public class RunnerBean implements I_KickStart {
 				thresholded_surfaceOfSalientArea3, thresholded_surfaceOfSalientArea4, thresholded_neighbours,
 
 				maxClusterSize,
-				
+
 				visual, debug);
 		Thread forked = new Thread(runner);
 		forked.start();

@@ -23,6 +23,7 @@ public class EdgeHighlight extends BaseFilter implements I_ColorScheme {
 		this.out = out;
 	}
 
+	@Override
 	public void doYourThing() {
 
 		Pixel inP, outP;

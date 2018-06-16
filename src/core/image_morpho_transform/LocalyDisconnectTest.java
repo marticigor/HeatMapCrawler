@@ -36,8 +36,8 @@ public class LocalyDisconnectTest {
 	public boolean locallyDisconnects(Pixel pivot) {
 		// simple iterative counting of "up, down edges" fails in some important
 		// cases
-		
-		//resetLog();
+
+		// resetLog();
 
 		riop.setPixelToCheckAround(pivot);
 
@@ -56,8 +56,9 @@ public class LocalyDisconnectTest {
 			}
 		}
 
-		if(fGround == 1) return true;
-		
+		if (fGround == 1)
+			return true;
+
 		for (Pixel pixForeground : foregroundPixels) {
 			riop.setPixelToCheckAround(pixForeground);
 			Set<Pixel> pixForegroundSet = pixelToDisjointSet.get(pixForeground);
@@ -83,7 +84,7 @@ public class LocalyDisconnectTest {
 				}
 			}
 		}
-		
+
 		int maxSize = 0;
 		for (Pixel p : foregroundPixels) {
 			Set<Pixel> s = pixelToDisjointSet.get(p);

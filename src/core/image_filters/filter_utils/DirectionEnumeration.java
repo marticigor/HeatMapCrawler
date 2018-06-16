@@ -16,14 +16,14 @@ public class DirectionEnumeration {
 		for (int i = 0; i < xA.length; i++) {
 
 			System.out.println(
-					"x " + xA[i] + " y " + yA[i] + " atan2(y,x) = " + Math.atan2((double) yA[i], (double) xA[i])
-							+ " DEG = " + Math.toDegrees(Math.atan2((double) yA[i], (double) xA[i])));
+					"x " + xA[i] + " y " + yA[i] + " atan2(y,x) = " + Math.atan2(yA[i], xA[i])
+							+ " DEG = " + Math.toDegrees(Math.atan2(yA[i], xA[i])));
 
 		}
 
 		for (int x = -5; x < 6; x++) {
 			for (int y = -5; y < 6; y++) {
-				double atanD = Math.atan2((double) y, (double) x);
+				double atanD = Math.atan2(y, x);
 				double dirDegD = Math.toDegrees(atanD) + 180.0;
 				System.out.println("x " + x + " y " + y + " atan2(y,x) = " + atanD + " DEG = " + dirDegD + " >> "
 						+ getDirection(dirDegD));

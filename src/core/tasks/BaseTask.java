@@ -22,15 +22,16 @@ abstract class BaseTask extends RecursiveAction {
 	protected BaseTask(ImagePreprocesor ip, Integer xFrom, Integer xTo, Integer yFrom, Integer yTo) {
 		this.ip = ip;
 		// note (int) only, of course
-		this.xFromIncl = (int) xFrom;
-		this.xToExcl = (int) xTo;
-		this.yFromIncl = (int) yFrom;
-		this.yToExcl = (int) yTo;
+		this.xFromIncl = xFrom;
+		this.xToExcl = xTo;
+		this.yFromIncl = yFrom;
+		this.yToExcl = yTo;
 	}
 
 	/**
 	 * 
 	 */
+	@Override
 	public String toString() {
 		return " -----| " + this.xFromIncl + " | " + this.xToExcl + " | " + this.yFromIncl + " | " + this.yToExcl
 				+ " -----| " + ip;

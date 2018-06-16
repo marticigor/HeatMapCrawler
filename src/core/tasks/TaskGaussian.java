@@ -23,6 +23,7 @@ public class TaskGaussian extends BaseTask {
 																			// segments
 	}
 
+	@Override
 	public String toString() {
 		return super.toString() + this.hashCode() + this.getClass().getName();
 	}

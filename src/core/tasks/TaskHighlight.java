@@ -20,6 +20,7 @@ public class TaskHighlight extends BaseTask {
 		ip.procesHighlight(xFromIncl, xToExcl, yFromIncl, yToExcl, false);
 	}
 
+	@Override
 	public String toString() {
 		return super.toString() + this.hashCode() + this.getClass().getName();
 	}

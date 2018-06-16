@@ -10,7 +10,7 @@ public class OutputTester {
 
 		for (int i = 1; i < 100; i++) {
 
-			Trackpoint t = new Trackpoint((double) i, (double) i);
+			Trackpoint t = new Trackpoint(i, i);
 			track.add(t);
 
 		}

@@ -45,13 +45,14 @@ public class AugmentedPixel {
 		// hypot function
 		gradientComputed = Math.sqrt((verGradient * verGradient) + (horGradient * horGradient));
 		// atan2 function
-		dirDeg = 180 + Math.toDegrees(Math.atan2((double) (verGradient), (double) (horGradient)));// 19
+		dirDeg = 180 + Math.toDegrees(Math.atan2((verGradient), (horGradient)));// 19
 																									// widening
 																									// primitive
 																									// conversions
 		dirEnum = DirectionEnumeration.getDirection(dirDeg);
 	}
 
+	@Override
 	public String toString() {
 		return "\nverGrad " + verGradient + "\nhorGrad " + horGradient + "\ngradientComputed " + gradientComputed
 				+ "\ndirDeg " + dirDeg + "\ndirEnum " + dirEnum;
