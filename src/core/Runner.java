@@ -44,8 +44,8 @@ public class Runner implements Runnable {
 			thresholded_surface4, thresholded_neighbours;
 
 	// config NOT in aplicationContext.xml
-	private final int bottleneckSize = 3; // 3 //1//5
-	private final int passableSize = 3; // 3 //1//7
+	private final int bottleneckSize = 7; // 3 //1//5
+	private final int passableSize = 7; // 3 //1//7
 
 	private final int sizeDivKonq = 4;
 

@@ -36,6 +36,7 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector, I_C
 		this.utils = new UtilMethods(surfaceConstant1_1, surfaceConstant1_2, surfaceConstant2_1, surfaceConstant2_2,
 				neighbourghsConstant, borderInSharpenStage, lookAheadAndBack, width, height, workBench, noded,
 				testAgainst);
+		System.out.println(LOG_TAG + utils.toString());
 	}
 
 	private ImageResource workBench, noded;
@@ -43,11 +44,12 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector, I_C
 	private int width, height;
 	private boolean visual, debug;
 	private UtilMethods utils;
+	private final static String LOG_TAG = "ForegroundCountingSalientDetector: ";
 
 	@Override
 	public void detectSalientAreas(boolean testAgainstAnotherImageResource) {
 
-		System.out.println("border sharpen stage " + borderInSharpenStage);
+		System.out.println(LOG_TAG + "border sharpen stage " + borderInSharpenStage);
 
 		RoundIteratorOfPixels iteratorRound = new RoundIteratorOfPixels();
 		iteratorRound.setImageResource(workBench);
@@ -55,11 +57,15 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector, I_C
 		this.height = workBench.getHeight();
 		Set<Pixel> toBeWhite = new HashSet<Pixel>();
 
+		//  case
+		//  000
+		//  0XX
+		//  000
 		for (int x = lookAheadAndBack; x < width - lookAheadAndBack; x++) {
 			for (int y = lookAheadAndBack; y < height - lookAheadAndBack; y++) {
 
 				Pixel p = workBench.getPixel(x, y);
-				if (!utils.isForeground(p))
+				if (utils.isBackground(p) || utils.isWhite(p))// WHITE AND RED IS FOREGROUND
 					continue;
 
 				iteratorRound.setPixelToCheckAround(p);
@@ -92,19 +98,20 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector, I_C
 		for (int x = lookAheadAndBack; x < width - lookAheadAndBack; x++) {
 			for (int y = lookAheadAndBack; y < height - lookAheadAndBack; y++) {
 
+				// INTERSECTION
 				if (testAgainstAnotherImageResource && !utils.isSalientPixInAnother(x, y))
 					continue;
 
 				p = workBench.getPixel(x, y);
 
-				if (utils.isForeground(p)) {
-
+				if (utils.isForeground(p) && !utils.isWhite(p)) {
+				
 					for (int xIn = x - lookAheadAndBack; xIn < x + lookAheadAndBack + 1; xIn++) {
 						for (int yIn = y - lookAheadAndBack; yIn < y + lookAheadAndBack + 1; yIn++) {
 
 							pIn = workBench.getPixel(xIn, yIn);
 
-							if (utils.isForeground(pIn)) {
+							if (utils.isForeground(pIn)) {//red and white are foreground
 
 								routableNeighbours++;
 								iteratorRound.setPixelToCheckAround(pIn);
@@ -143,7 +150,6 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector, I_C
 			utils.setWhite(px);
 		}
 
-		if (visual || debug)
-			System.out.println("Surface min max " + minSurface + " " + maxSurface);
+		System.out.println(LOG_TAG + "Surface min max " + minSurface + " " + maxSurface);
 	}
 }

@@ -59,8 +59,8 @@ public class SimilaritySalientDetector implements I_SalientDetector, I_ColorSche
 		for (int x = borderInSharpenStage + KERNEL_BORDERS; x < width - (borderInSharpenStage + KERNEL_BORDERS); x++) {
 			for (int y = borderInSharpenStage + KERNEL_BORDERS; y < height
 					- (borderInSharpenStage + KERNEL_BORDERS); y++) {
-				Pixel isItRed = workBench.getPixel(x, y);
-				if (isItRed.getRed() != redScheme[0])
+				Pixel pix = workBench.getPixel(x, y);
+				if (utils.isBackground(pix))
 					continue;
 				// ----------------------------------------------------------------
 				if (utils.isOkBorders(x, y)) {
@@ -105,14 +105,12 @@ public class SimilaritySalientDetector implements I_SalientDetector, I_ColorSche
 	}
 
 	// -------------------------------------------------
-	private static final int MATCH_THRESHOLD = 5;// 5
+	private static final int MATCH_THRESHOLD = 6;// 5
 	// -------------------------------------------------
 	private static final int KERNEL_BORDERS = 1;
 
 	private static final int[][] KERNEL_VER = new int[][] { { 0, 1, 0 }, { 0, 1, 0 }, { 0, 1, 0 } };
-
 	private static final int[][] KERNEL_HOR = new int[][] { { 0, 0, 0 }, { 1, 1, 1 }, { 0, 0, 0 } };
-
 	private static final int[][] KERNEL_DIAG_FORWARD = new int[][] { { 0, 0, 1 }, { 0, 1, 0 }, { 1, 0, 0 } };
 	private static final int[][] KERNEL_DIAG_BACKWARD = new int[][] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
 
@@ -122,10 +120,8 @@ public class SimilaritySalientDetector implements I_SalientDetector, I_ColorSche
 	 * 
 	 * private static final int[][] KERNEL_VER = new int[][] { { 0,0,1,0,0 }, {
 	 * 0,0,1,0,0 }, { 0,0,1,0,0 }, { 0,0,1,0,0 }, { 0,0,1,0,0 } };
-	 * 
 	 * private static final int[][] KERNEL_HOR = new int[][] { { 0,0,0,0,0 }, {
 	 * 0,0,0,0,0 }, { 1,1,1,1,1 }, { 0,0,0,0,0 }, { 0,0,0,0,0 } };
-	 * 
 	 * private static final int[][] KERNEL_DIAG_FORWARD = new int[][] { {
 	 * 0,0,0,0,1 }, { 0,0,0,1,0 }, { 0,0,1,0,0 }, { 0,1,0,0,0 }, { 1,0,0,0,0 }
 	 * }; private static final int[][] KERNEL_DIAG_BACKWARD = new int[][] { {

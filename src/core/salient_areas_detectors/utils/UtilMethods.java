@@ -22,6 +22,15 @@ public class UtilMethods implements I_ColorScheme {
 		this.testAgainst = testAgainst;
 	}
 
+	@Override
+	public String toString() {
+		return "UtilMethods [surfaceConstant1_1=" + surfaceConstant1_1 + ", surfaceConstant1_2=" + surfaceConstant1_2
+				+ ", surfaceConstant2_1=" + surfaceConstant2_1 + ", surfaceConstant2_2=" + surfaceConstant2_2
+				+ ", neighbourghsConstant=" + neighbourghsConstant + ", borderInSharpenStage=" + borderInSharpenStage
+				+ ", lookAheadAndBack=" + lookAheadAndBack + ", width=" + width + ", height=" + height
+				+ ", testAgainst=" + testAgainst + "]";
+	}
+
 	private int surfaceConstant1_1, surfaceConstant1_2, surfaceConstant2_1, surfaceConstant2_2;
 	private int neighbourghsConstant;
 	private int borderInSharpenStage, lookAheadAndBack;
@@ -76,7 +85,7 @@ public class UtilMethods implements I_ColorScheme {
 	 * @return
 	 */
 	public boolean isForeground(Pixel pIn) {
-		return pIn.getRed() == redScheme[0] && pIn.getGreen() == redScheme[1] && pIn.getBlue() == redScheme[2];
+		return pIn.getRed() == redScheme[0];
 	}
 
 	/**
@@ -107,6 +116,14 @@ public class UtilMethods implements I_ColorScheme {
 		p.setRed(whiteScheme[0]);
 		p.setGreen(whiteScheme[1]);
 		p.setBlue(whiteScheme[2]);
+	}
+	
+	/**
+	 * 
+	 * @param p
+	 */
+	public boolean isWhite(Pixel p) {
+		return (p.getRed() == whiteScheme[0] || p.getGreen() == whiteScheme[1] || p.getBlue() == whiteScheme[2]);
 	}
 
 	/**

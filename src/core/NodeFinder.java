@@ -7,6 +7,7 @@ import core.node_finder_utils.TopLeftOfClosest;
 import core.node_finder_utils.CenterOfGravity;
 import core.node_finder_utils.MaximusPixels;
 import core.node_finder_utils.SurrPixels;
+import core.salient_areas_detectors.ForegroundCountingSalientDetector;
 import core.salient_areas_detectors.SimilaritySalientDetector;
 import ifaces.I_ColorScheme;
 import ifaces.I_SalientDetector;
@@ -188,7 +189,9 @@ public class NodeFinder implements I_ColorScheme {
 
 		// detectSalientAreas
 
-		I_SalientDetector detector = new SimilaritySalientDetector(// ForegroundCountingSalientDetector(
+		//SimilaritySalientDetector
+		//ForegroundCountingSalientDetector
+		I_SalientDetector detector = new ForegroundCountingSalientDetector(
 				skeletonized, noded, thresholded, borderSharpenStage, lookAheadAndBack, surfaceConstant1_1,
 				surfaceConstant1_2, surfaceConstant2_1, surfaceConstant2_2, neighbourghsConstant, visual, debug);
 
