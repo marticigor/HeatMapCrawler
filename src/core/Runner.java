@@ -42,10 +42,11 @@ public class Runner implements Runnable {
 	private final int look, surface1, surface2, surface3, surface4, neighbours;
 	private final int thresholded_look, thresholded_surface1, thresholded_surface2, thresholded_surface3,
 			thresholded_surface4, thresholded_neighbours;
+	private int maxClusterSize;
 
 	// config NOT in aplicationContext.xml
-	private final int bottleneckSize = 7; // 3 //1//5
-	private final int passableSize = 7; // 3 //1//7
+	private final int bottleneckSize = 5; // 3 //1//5
+	private final int passableSize = 5; // 3 //1//7
 
 	private final int sizeDivKonq = 4;
 
@@ -74,6 +75,8 @@ public class Runner implements Runnable {
 
 			int thresholded_look, int thresholded_v3, int thresholded_v4, int thresholded_v5, int thresholded_v6,
 			int thresholded_nei,
+			
+			int maxClusterSize,
 
 			boolean visual, boolean debug) {
 
@@ -94,10 +97,12 @@ public class Runner implements Runnable {
 		this.thresholded_neighbours = thresholded_nei;
 
 		assert(passableSize >= bottleneckSize);
-		assert(passableSize <= 3);
+		assert(passableSize <= 5);
 
 		this.borderInSharpenStage = Math.max(Math.max((bottleneckSize - 1) / 2, (passableSize - 1) / 2),
 				Math.max(thresholded_look, look));
+		
+		this.maxClusterSize = maxClusterSize;
 
 		this.visual = visual;
 		this.debug = debug;
@@ -233,7 +238,7 @@ public class Runner implements Runnable {
 						thresholded_look, thresholded_surface1, thresholded_surface2, thresholded_surface3,
 						thresholded_surface4, thresholded_neighbours,
 
-						this, bounds, shotId, debug, visual);
+						this, bounds, shotId, maxClusterSize, debug, visual);
 
 				nf.findNodes();
 

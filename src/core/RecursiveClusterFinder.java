@@ -20,13 +20,15 @@ public class RecursiveClusterFinder implements I_ColorScheme {
 	
 	public enum PixColors{ WHITE,RED,YELLOW };
 	private List<PixColors> colorsToCheck;
+	private int maxClusterSize = Integer.MAX_VALUE;
 
 	/**
 	 * called by NodeFinder
 	 */
-	public RecursiveClusterFinder(ImageResource ir) {
+	public RecursiveClusterFinder(ImageResource ir, int maxClusterSize) {
 
 		this.ir = ir;
+		this.maxClusterSize = maxClusterSize;
 
 		iteratorRound = new RoundIteratorOfPixels();
 		iteratorRound.setImageResource(ir);
@@ -72,7 +74,9 @@ public class RecursiveClusterFinder implements I_ColorScheme {
 	 * building allClusterAroundNode gradually)
 	 */
 	public void buildPartialCluster(Pixel p) {
-
+		
+		if (!redClusterSearch && allClusterAroundNode != null && allClusterAroundNode.size() > maxClusterSize) return;
+		
 		if (!redClusterSearch)
 			allClusterAroundNode.add(p);
 

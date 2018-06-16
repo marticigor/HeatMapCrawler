@@ -24,6 +24,8 @@ public class RunnerBean implements I_KickStart {
 			thresholded_lookVicinity, thresholded_surfaceOfSalientArea1, thresholded_surfaceOfSalientArea2,
 			thresholded_surfaceOfSalientArea3, thresholded_surfaceOfSalientArea4, thresholded_neighbours;
 
+	private int maxClusterSize;
+	
 	// reasonable defaults to start with: - aplicationContext.xml
 	private boolean visual, debug;
 
@@ -39,6 +41,8 @@ public class RunnerBean implements I_KickStart {
 				thresholded_lookVicinity, thresholded_surfaceOfSalientArea1, thresholded_surfaceOfSalientArea2,
 				thresholded_surfaceOfSalientArea3, thresholded_surfaceOfSalientArea4, thresholded_neighbours,
 
+				maxClusterSize,
+				
 				visual, debug);
 		Thread forked = new Thread(runner);
 		forked.start();
@@ -170,5 +174,13 @@ public class RunnerBean implements I_KickStart {
 
 	public void setDebug(boolean debug) {
 		this.debug = debug;
+	}
+
+	public int getMaxClusterSize() {
+		return maxClusterSize;
+	}
+
+	public void setMaxClusterSize(int maxClusterSize) {
+		this.maxClusterSize = maxClusterSize;
 	}
 }

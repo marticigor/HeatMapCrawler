@@ -71,6 +71,7 @@ public class NodeFinder implements I_ColorScheme {
 	private I_PixelExam surrPixels;
 	private final Runner myHandler;
 	private RecursiveClusterFinder rcf;
+	private int maxClusterSize;
 
 	/**
 	 *
@@ -82,7 +83,7 @@ public class NodeFinder implements I_ColorScheme {
 			int thresholded_look, int thresholded_surface1, int thresholded_surface2, int thresholded_surface3,
 			int thresholded_surface4, int thresholded_neighbours,
 
-			Runner myHandler, double[] bounds, long shotId, boolean debug, boolean visual) {
+			Runner myHandler, double[] bounds, long shotId, int maxClusterSize, boolean debug, boolean visual) {
 
 		this.lookAheadAndBack = look;
 		this.surfaceConstantInterval1_MinExcl = surface1;
@@ -107,6 +108,7 @@ public class NodeFinder implements I_ColorScheme {
 		this.borderSharpenStage = myHandler.getBorderInSharpenStage();
 		this.bounds = bounds;
 		this.shotId = shotId;
+		this.maxClusterSize = maxClusterSize;
 		this.debug = debug;
 		this.visual = visual;
 
@@ -214,12 +216,15 @@ public class NodeFinder implements I_ColorScheme {
 			mergeIntoNoded(p);
 		}
 		
+		//nodedCopySimilarity.draw();
+		//nodedCopyForeground.draw();
+		
 		if (visual) {
 			noded.draw();
 			Pause.pause(5000);
 		}
 
-		rcf = new RecursiveClusterFinder(noded);
+		rcf = new RecursiveClusterFinder(noded, maxClusterSize);
 
 		int x, y;
 		double lon, lat;
