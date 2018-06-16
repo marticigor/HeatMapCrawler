@@ -23,6 +23,8 @@ public class Node implements Comparable<Node> {
 	private ArrayList<Pixel> mask; // these are copies of Pixels from noded
 									// ImageResource;
 	private NodeEntity entity = null;
+	
+	private static int helpPrintCounter;
 
 	// graph format
 	// https://www.dropbox.com/s/8et183ufeskkibi/IMG_20171019_194557.jpg?dl=0
@@ -51,6 +53,10 @@ public class Node implements Comparable<Node> {
 		this.shotId = shotId;
 
 		this.entity = new NodeEntity(shotId, lon, lat, weight, new HashSet<NodeEntity>());
+		if(helpPrintCounter < 20) {
+			System.out.println(entity.toString());
+			helpPrintCounter ++;
+		}
 
 	}
 
