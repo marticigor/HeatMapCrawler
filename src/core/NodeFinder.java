@@ -3,6 +3,8 @@ package core;
 import java.util.*;
 
 import core.image_filters.JustCopy;
+import core.image_morpho_transform.LocalyDisconnectTest;
+import core.image_morpho_transform.Skeleton;
 import core.node_finder_utils.TopLeftOfClosest;
 import core.node_finder_utils.CenterOfGravity;
 import core.node_finder_utils.MaximusPixels;
@@ -72,6 +74,7 @@ public class NodeFinder implements I_ColorScheme {
 	private final Runner myHandler;
 	private RecursiveClusterFinder rcf;
 	private int maxClusterSize;
+	private LocalyDisconnectTest ldt;
 
 	/**
 	 *
@@ -153,6 +156,12 @@ public class NodeFinder implements I_ColorScheme {
 				System.out.println(d);
 			System.out.println("______________________________");
 		}
+		
+		Skeleton skeletonMock = new Skeleton(noded, borderSharpenStage, true, false, -1, -1, -1, -1,
+				borderSharpenStage);
+		Skeleton.SkeletonUtils utils = skeletonMock.new SkeletonUtils(skeletonMock.getThresholdForeBack());
+		ldt = new LocalyDisconnectTest(utils);
+		
 	}
 
 	/**
@@ -308,6 +317,10 @@ public class NodeFinder implements I_ColorScheme {
 				weight = computeWeight(x, y);
 
 				Node node = new Node(x, y, weight, lon, lat, myHandler.incrAndGetId(), shotId);
+				
+				//TODO think how to move node a bit so it really is bottleneck
+				
+				if(isBottleNeck(node)) node.setBottleneck(true);
 				nodes.add(node);
 
 				// we are done with white pixels in allClusterAroundNode
@@ -457,7 +470,11 @@ public class NodeFinder implements I_ColorScheme {
 			if(! isWhite(nodedBackGround))
 				setRed(nodedBackGround);
 		}
-	} 
+	}
+	
+	private boolean isBottleNeck(Node n) {
+		return ldt.locallyDisconnects(noded.getPixel(n.getX(), n.getY()));
+	}
 	
 	public ImageResource getNodedImage() {
 		return noded;

@@ -2,8 +2,6 @@ package core;
 
 import java.util.*;
 
-import core.image_morpho_transform.LocalyDisconnectTest;
-import core.image_morpho_transform.Skeleton;
 import core.utils.RoundIteratorOfPixels;
 import ifaces.I_ColorScheme;
 import lib_duke.ImageResource;
@@ -25,7 +23,6 @@ public class AdjacencyFinder implements I_ColorScheme {
 	private Set<Node> adjacentNodes;
 
 	private int bottleneckSize, passableSize;
-	private LocalyDisconnectTest ldt;
 	private HashSet<Pixel> branch;
 	private int borderInSharpenStage;
 
@@ -56,14 +53,6 @@ public class AdjacencyFinder implements I_ColorScheme {
 		if (this.visual) {
 			visualizeIR = new ImageResource(noded.getWidth(), noded.getHeight());
 		}
-
-		Skeleton skeletonMock = new Skeleton(noded, borderInSharpenStage, true, false, -1, -1, -1, -1,
-				borderInSharpenStage);
-
-		// OuterClass.InnerClass innerObject = outerObject.new InnerClass();
-		Skeleton.SkeletonUtils utils = skeletonMock.new SkeletonUtils(skeletonMock.getThresholdForeBack());
-		ldt = new LocalyDisconnectTest(utils);
-
 	}
 
 	/**
@@ -71,18 +60,9 @@ public class AdjacencyFinder implements I_ColorScheme {
 	 */
 	public void buildAdjacencyLists() {
 
-		int nmbOfBottlenecks = 0;
 		Pixel p;
 
-		for (Node n : nodes) {
-			if (isBottleNeck(n)) {
-				n.setBottleneck(true);
-				nmbOfBottlenecks++;
-			}
-		}
-
 		System.out.println("Number of all nodes: " + nodes.size());
-		System.out.println("Number of bottleneck nodes: " + nmbOfBottlenecks);
 
 		for (Node n : nodes) {
 
@@ -391,13 +371,6 @@ public class AdjacencyFinder implements I_ColorScheme {
 		for (Node node : nodes) {
 			maskOrDemaskNode(node, false);
 		}
-	}
-
-	/**
-	 *
-	 */
-	private boolean isBottleNeck(Node n) {
-		return ldt.locallyDisconnects(noded.getPixel(n.getX(), n.getY()));
 	}
 
 	/**
