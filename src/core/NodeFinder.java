@@ -261,8 +261,7 @@ public class NodeFinder implements I_ColorScheme {
 										// is build
 
 				if (debug && nodes.size() % 20 == 0)
-					printAllClustered(allClusterSetResource); // size of print
-																// REDUCED
+					printAllClustered(allClusterSetResource); // size of print REDUCED
 
 				// find the Pixel - future Node queue start
 
@@ -287,8 +286,7 @@ public class NodeFinder implements I_ColorScheme {
 
 				I_PixelSelector topLeft = new TopLeftOfClosest();
 				topLeft.proces(closestToCenter, null, 0);
-				Set<Pixel> theWinnerSet = topLeft.getSet();// guaranteed to have
-															// only one member
+				Set<Pixel> theWinnerSet = topLeft.getSet();	// guaranteed to have only one member
 				for (Pixel pixel : theWinnerSet)
 					theOneP = pixel;
 
@@ -325,7 +323,7 @@ public class NodeFinder implements I_ColorScheme {
 			px = noded.getPixel(n.getX(), n.getY());
 			setWhite(px);
 		}
-		// ##############################################
+
 		if (visual) {
 			noded.draw();
 			Pause.pause(5000);
