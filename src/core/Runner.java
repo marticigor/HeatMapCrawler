@@ -56,7 +56,7 @@ public class Runner implements Runnable {
 	boolean debug;
 
 	private ImageChunks chunks;
-	private int nmbOfShots; // not necesearilly all shots appear in nodes (blank
+	private int nmbOfShots; // not necessarily all shots appear in nodes (blank
 							// images)
 
 	private int nodeCount = 0;
@@ -97,7 +97,7 @@ public class Runner implements Runnable {
 		this.thresholded_neighbours = thresholded_nei;
 
 		assert(passableSize >= bottleneckSize);
-		assert(passableSize <= 5);
+		assert(passableSize <= 9);
 
 		this.borderInSharpenStage = Math.max(Math.max((bottleneckSize - 1) / 2, (passableSize - 1) / 2),
 				Math.max(thresholded_look, look));

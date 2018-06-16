@@ -180,6 +180,9 @@ public class DistanceMapSkeleton extends BaseFilter implements I_ColorScheme {
 		dist ++;
 		}
 		
+		for(Pixel p : in.pixels())
+			removeIfApplicableIgnoringDistance(p);
+		
 	}
 	
 	private void putOnRemoveIfApplicable(int x, int y, int dist) {
@@ -192,7 +195,15 @@ public class DistanceMapSkeleton extends BaseFilter implements I_ColorScheme {
         	listeningToForeground = false;
         } else if (utils.isForeground(current)){
         	listeningToForeground = false;
-        	}
+        }
+	}
+	
+	private void removeIfApplicableIgnoringDistance(Pixel current) {
+		if(utils.isForeground(current) && utils.isRemovable(current)) {
+			current.setRed(lightGreenScheme[0]);
+			current.setGreen(lightGreenScheme[1]);
+			current.setBlue(lightGreenScheme[2]);
+		}
 	}
 	
 	private void removeForegroundPixels() {
