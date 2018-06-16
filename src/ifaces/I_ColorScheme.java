@@ -5,7 +5,7 @@ public interface I_ColorScheme {
 	// TODO check all calls and test all members of scheme, not just one
 
 	public int[] redScheme = { 255, 3, 3 };
-	public int[] whiteScheme = { 250, 250, 250 };
+	public int[] whiteScheme = { 255, 255, 255 };
 	public int[] yellowScheme = { 250, 250, 4 };
 	public int[] greenScheme = { 5, 250, 100 };
 	public int[] lightGreenScheme = { 6, 80, 6 };

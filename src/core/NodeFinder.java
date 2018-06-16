@@ -189,15 +189,31 @@ public class NodeFinder implements I_ColorScheme {
 
 		// detectSalientAreas
 
-		//SimilaritySalientDetector
-		//ForegroundCountingSalientDetector
-		I_SalientDetector detector = new ForegroundCountingSalientDetector(
-				skeletonized, noded, thresholded, borderSharpenStage, lookAheadAndBack, surfaceConstant1_1,
+		//TODO memory wasting...
+		ImageResource nodedCopySimilarity = new ImageResource(noded);//returns blank image
+		ImageResource nodedCopyForeground = new ImageResource(noded);
+
+		I_SalientDetector detectorSimilarity = new SimilaritySalientDetector(
+				skeletonized, nodedCopySimilarity, thresholded, borderSharpenStage, lookAheadAndBack, surfaceConstant1_1,
 				surfaceConstant1_2, surfaceConstant2_1, surfaceConstant2_2, neighbourghsConstant, visual, debug);
 
-		detector.detectSalientAreas(false);
+		detectorSimilarity.detectSalientAreas(false);
+			
+		I_SalientDetector detectorForeground = new ForegroundCountingSalientDetector(
+				skeletonized, nodedCopyForeground, thresholded, borderSharpenStage, lookAheadAndBack, surfaceConstant1_1,
+				surfaceConstant1_2, surfaceConstant2_1, surfaceConstant2_2, neighbourghsConstant, visual, debug);
 
-		// ##############################################
+		detectorForeground.detectSalientAreas(false);
+		
+		//merge white pixels from both detectors ( OR )
+		
+		for(Pixel p : nodedCopySimilarity.pixels()) {
+			mergeIntoNoded(p);
+		}
+		for(Pixel p : nodedCopyForeground.pixels()) {
+			mergeIntoNoded(p);
+		}
+		
 		if (visual) {
 			noded.draw();
 			Pause.pause(5000);
@@ -426,6 +442,20 @@ public class NodeFinder implements I_ColorScheme {
 		}
 	}
 
+	// no need to optimize
+	Pixel toBeWhite = null;
+	Pixel nodedBackGround = null;
+	private void mergeIntoNoded(Pixel p) {
+		if(isWhite(p)) {
+			toBeWhite = noded.getPixel(p.getX(), p.getY());
+			setWhite(toBeWhite);
+		} else if (isRed(p)) {
+			nodedBackGround = noded.getPixel(p.getX(), p.getY());
+			if(! isWhite(nodedBackGround))
+				setRed(nodedBackGround);
+		}
+	} 
+	
 	public ImageResource getNodedImage() {
 		return noded;
 	}
@@ -444,6 +474,14 @@ public class NodeFinder implements I_ColorScheme {
 		p.setRed(whiteScheme[0]);
 		p.setGreen(whiteScheme[1]);
 		p.setBlue(whiteScheme[2]);
+	}
+	
+	private boolean isWhite(Pixel p) {
+		return (p.getRed() == whiteScheme[0] && p.getGreen() == whiteScheme[1] && p.getBlue() == whiteScheme[2]); 
+	}
+	
+	private boolean isRed(Pixel p) {
+		return (p.getRed() == redScheme[0] && p.getGreen() == redScheme[1] && p.getBlue() == redScheme[2]); 
 	}
 
 	@SuppressWarnings("unused")

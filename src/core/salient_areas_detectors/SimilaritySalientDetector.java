@@ -91,7 +91,7 @@ public class SimilaritySalientDetector implements I_SalientDetector, I_ColorSche
 						if (debug)
 							System.out.println("SIMILARITY_SALIENT_DETECTOR match " + match);
 						if (match > MATCH_THRESHOLD) {
-							utils.setRed(noded.getPixel(x, y));
+							utils.setRed(noded.getPixel(x, y));//TODO skeletonize does not use red scheme?
 							break;
 						}
 					} // iterate kernels

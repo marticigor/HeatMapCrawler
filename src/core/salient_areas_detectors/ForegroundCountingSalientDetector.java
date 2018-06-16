@@ -42,6 +42,7 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector, I_C
 	private ImageResource workBench, noded;
 	private int borderInSharpenStage, lookAheadAndBack;
 	private int width, height;
+	@SuppressWarnings("unused")
 	private boolean visual, debug;
 	private UtilMethods utils;
 	private final static String LOG_TAG = "ForegroundCountingSalientDetector: ";
@@ -65,8 +66,14 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector, I_C
 			for (int y = lookAheadAndBack; y < height - lookAheadAndBack; y++) {
 
 				Pixel p = workBench.getPixel(x, y);
-				if (utils.isBackground(p) || utils.isWhite(p))// WHITE AND RED IS FOREGROUND
+				Pixel toRed = null;
+				if (utils.isBackground(p))
 					continue;
+				else {
+					//TODO COHESION!
+					toRed = noded.getPixel(p.getX(), p.getY());
+					utils.setRed(toRed);
+					}//TODO skeletonize does not use red scheme?
 
 				iteratorRound.setPixelToCheckAround(p);
 
@@ -104,14 +111,14 @@ public class ForegroundCountingSalientDetector implements I_SalientDetector, I_C
 
 				p = workBench.getPixel(x, y);
 
-				if (utils.isForeground(p) && !utils.isWhite(p)) {
+				if (utils.isForeground(p)) {
 				
 					for (int xIn = x - lookAheadAndBack; xIn < x + lookAheadAndBack + 1; xIn++) {
 						for (int yIn = y - lookAheadAndBack; yIn < y + lookAheadAndBack + 1; yIn++) {
 
 							pIn = workBench.getPixel(xIn, yIn);
 
-							if (utils.isForeground(pIn)) {//red and white are foreground
+							if (utils.isForeground(pIn)) {
 
 								routableNeighbours++;
 								iteratorRound.setPixelToCheckAround(pIn);
