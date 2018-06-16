@@ -47,7 +47,7 @@ public class UtilMethods implements I_ColorScheme {
 	public boolean evaluateAgainstConstants(int surface, int routableNeighbours) {
 		boolean firstInterval = (surface > surfaceConstant1_1 && surface <= surfaceConstant1_2);
 		boolean secondInterval = (surface > surfaceConstant2_1 && surface <= surfaceConstant2_2);
-		boolean neighbours = routableNeighbours > neighbourghsConstant;
+		boolean neighbours = routableNeighbours >= neighbourghsConstant;
 		return (firstInterval || secondInterval) && neighbours;
 	}
 
