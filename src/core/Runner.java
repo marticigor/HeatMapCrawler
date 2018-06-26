@@ -45,8 +45,8 @@ public class Runner implements Runnable {
 	private int maxClusterSize;
 
 	// config NOT in aplicationContext.xml
-	private final int bottleneckSize = 5; // 3 //1//5
-	private final int passableSize = 5; // 3 //1//7
+	private final int bottleneckSize = 3; // 3 //1//5
+	private final int passableSize = 3; // 3 //1//7
 
 	private final int sizeDivKonq = 4;
 
