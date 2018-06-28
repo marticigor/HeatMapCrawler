@@ -28,7 +28,7 @@
         
         <property name="maxClusterSize" value="38" />
         
-        <property name="visual" value="true" />
+        <property name="visual" value="false" />
         <property name="debug" value="false" />
         
     </bean>
