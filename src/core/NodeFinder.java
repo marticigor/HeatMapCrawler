@@ -11,6 +11,7 @@ import core.node_finder_utils.MaximusPixels;
 import core.node_finder_utils.SurrPixels;
 import core.salient_areas_detectors.ForegroundCountingSalientDetector;
 import core.salient_areas_detectors.SimilaritySalientDetector;
+import core.utils.RoundIteratorOfPixels;
 import ifaces.I_ColorScheme;
 import ifaces.I_SalientDetector;
 import ifaces.node_finder.I_PixelExam;
@@ -38,19 +39,6 @@ public class NodeFinder implements I_ColorScheme {
 	private int surfaceConstantInterval2_MaxIncl;
 	private int routableNeighbourghsConstant;
 
-	@SuppressWarnings("unused")
-	private int thresholded_lookAheadAndBack;
-	@SuppressWarnings("unused")
-	private int thresholded_surfaceConstantInterval1_MinExcl;
-	@SuppressWarnings("unused")
-	private int thresholded_surfaceConstantInterval1_MaxIncl;
-	@SuppressWarnings("unused")
-	private int thresholded_surfaceConstantInterval2_MinExcl;
-	@SuppressWarnings("unused")
-	private int thresholded_surfaceConstantInterval2_MaxIncl;
-	@SuppressWarnings("unused")
-	private int thresholded_routableNeighbourghsConstant;
-
 	private int surfaceConstant1_1;
 	private int surfaceConstant1_2;
 	private int surfaceConstant2_1;
@@ -75,10 +63,12 @@ public class NodeFinder implements I_ColorScheme {
 	private RecursiveClusterFinder rcf;
 	private int maxClusterSize;
 	private LocalyDisconnectTest ldt;
+	
+	private double dLon;
+	private double lonShiftToPixCenter;
+	private double dLat;
+	private double latShiftToPixCenter;
 
-	/**
-	 *
-	 */
 	public NodeFinder(ImageResource thresholded, ImageResource skeletonized,
 
 			int look, int surface1, int surface2, int surface3, int surface4, int neighbours,
@@ -94,13 +84,6 @@ public class NodeFinder implements I_ColorScheme {
 		this.surfaceConstantInterval2_MinExcl = surface3;
 		this.surfaceConstantInterval2_MaxIncl = surface4;
 		this.routableNeighbourghsConstant = neighbours;
-
-		this.thresholded_lookAheadAndBack = thresholded_look;
-		this.thresholded_surfaceConstantInterval1_MinExcl = thresholded_surface1;
-		this.thresholded_surfaceConstantInterval1_MaxIncl = thresholded_surface2;
-		this.thresholded_surfaceConstantInterval2_MinExcl = thresholded_surface3;
-		this.thresholded_surfaceConstantInterval2_MaxIncl = thresholded_surface4;
-		this.thresholded_routableNeighbourghsConstant = thresholded_neighbours;
 
 		this.skeletonized = skeletonized;
 		this.thresholded = thresholded;
@@ -161,12 +144,14 @@ public class NodeFinder implements I_ColorScheme {
 				borderSharpenStage);
 		Skeleton.SkeletonUtils utils = skeletonMock.new SkeletonUtils(skeletonMock.getThresholdForeBack());
 		ldt = new LocalyDisconnectTest(utils);
+
+		dLon = Math.abs(bounds[0] - bounds[3]);
+		lonShiftToPixCenter = (dLon / width) / 2;
+		dLat = Math.abs(bounds[1] - bounds[2]);
+		latShiftToPixCenter = (dLat / height) / 2;
 		
 	}
 
-	/**
-	 *
-	 */
 	public void findNodes() {
 
 		surfaceConstant1_1 = surfaceConstantInterval1_MinExcl;
@@ -219,14 +204,7 @@ public class NodeFinder implements I_ColorScheme {
 		rcf = new RecursiveClusterFinder(noded, maxClusterSize);
 
 		int x, y;
-		double lon, lat;
-		short weight;
 		Pixel theOneP = null;
-
-		final double dLon = Math.abs(bounds[0] - bounds[3]);
-		final double lonShiftToPixCenter = (dLon / width) / 2;
-		final double dLat = Math.abs(bounds[1] - bounds[2]);
-		final double latShiftToPixCenter = (dLat / height) / 2;
 
 		if (debug || visual) {
 			System.out.println("______________________________________");
@@ -237,7 +215,6 @@ public class NodeFinder implements I_ColorScheme {
 			System.out.println("______________________________________");
 		}
 
-		// int helperCountOne = 0, helperCountTwo = 0;
 		for (Pixel pOfNoded : noded.pixels()) { // 1
 
 			if (isSetToBeClustered(pOfNoded)) { // 2 is the pixel white?
@@ -284,17 +261,7 @@ public class NodeFinder implements I_ColorScheme {
 				x = theOneP.getX();
 				y = theOneP.getY();
 
-				lon = bounds[3] + ((((double) x / ((double) (width))) * dLon) + lonShiftToPixCenter);
-				lat = bounds[1] - ((((double) y / ((double) (height))) * dLat) + latShiftToPixCenter);
-
-				weight = computeWeight(x, y);
-
-				Node node = new Node(x, y, weight, lon, lat, myHandler.incrAndGetId(), shotId);
-				
-				//TODO think how to move node a bit so it really is bottleneck
-				
-				if(isBottleNeck(node)) node.setBottleneck(true);
-				nodes.add(node);
+				nodes.add(getNewNode(x,y));
 
 				// we are done with white pixels in allClusterAroundNode
 				for (Pixel toRed : allClusterSetResource) {
@@ -302,13 +269,44 @@ public class NodeFinder implements I_ColorScheme {
 				}
 			} // 2
 		} // 1
-
-		// now set pixels white
-		Pixel px;
-		for (Node n : nodes) {
-			px = noded.getPixel(n.getX(), n.getY());
-			setWhite(px);
+		
+		//TODO refactor AWAY
+		RoundIteratorOfPixels riop = new RoundIteratorOfPixels(noded);
+		int count = 0;
+		List<Node> list3or4salient = new ArrayList<Node>();
+		for (Pixel curr : noded.pixels()) {
+			if(isRed(curr)) {
+				count = 0;
+				riop.setPixelToCheckAround(curr);
+				for(Pixel iter : riop) {
+					if(isRed(iter)) count ++;
+				}
+				if (count > 2 && count < 5) {
+					Node salientCertainly = getNewNode(curr.getX(), curr.getY());
+					list3or4salient.add(salientCertainly);
+				}
+			}
 		}
+		
+		// now set pixels white
+		Pixel ofNoded = null;
+		for (Node n : nodes) {
+			ofNoded = noded.getPixel(n.getX(), n.getY());
+			setWhite(ofNoded);
+		}
+		
+		int added = 0;
+		
+		for (Node n : list3or4salient) {
+			ofNoded = noded.getPixel(n.getX(), n.getY());
+			if(isRed(ofNoded)) {
+				setWhite(ofNoded);
+				nodes.add(n);
+				added ++;
+			}
+		}
+		
+		System.out.println("ADDED Nodes from list3or4salient: " + added);
 
 		if (visual) {
 			noded.draw();
@@ -316,6 +314,24 @@ public class NodeFinder implements I_ColorScheme {
 		}
 	}
 
+	private Node getNewNode(int x, int y) {
+		double lon = getLon(x);
+		double lat = getLat(y);
+		short weight = computeWeight(x, y);
+		Node node = new Node (x, y, weight, lon, lat, myHandler.incrAndGetId(), shotId);
+		if (isBottleNeck(node))
+			node.setBottleneck(true);
+		return node;
+	}
+	
+	private double getLon(int x) {
+		return bounds[3] + ((((double) x / ((double) (width))) * dLon) + lonShiftToPixCenter);
+	}
+	
+	private double getLat(int y) {
+		return bounds[1] - ((((double) y / ((double) (height))) * dLat) + latShiftToPixCenter);
+	}
+	
 	/**
 	 * Loads recursively set of white pixels into allClusterAroundNode. No
 	 * locally disconnecting nodes (and their Pixels) yet, a branch is always
